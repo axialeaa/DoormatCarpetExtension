@@ -1,0 +1,38 @@
+{
+  "required": true,
+  "package": "com.axialeaa.doormat.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "block.damage.TallFlowerBlockMixin_RoseDamage",
+    "block.fertilize.AzaleaBlockMixin_AccurateFlowers",
+    "block.fertilize.BlockMixin_GrassSpread",
+    "block.fertilize.LeavesBlockMixin_GrowFlowers",
+    "block.fertilize.MossBlockMixin_SporeBlossom_Patch",
+    "block.fertilize.SaplingBlockMixin_GrowSwampOak",
+    "block.fertilize.SporeBlossomBlockMixin_Duplicate",
+    "block.piston_behavior.PillarBlockMixin_StickyMove",
+    "block.piston_behavior.PistonBlockMixin_StickyMove",
+    "block.random_tick.BlocksMixin_Settings",
+    "block.random_tick.MagmaBlockMixin_GenerateGildedBlackstone",
+    "block.random_tick.NetherPortalBlockMixin_Parity",
+    "block.update.BellBlockMixin_Update",
+    "block.update.DispenserBlockMixin_Update",
+    "block.update.DoorBlockMixin_Update",
+    "block.update.FenceGateBlock_Update",
+    "block.update.HopperBlockMixin_Update",
+    "block.update.NoteBlockMixin_Update",
+    "block.update.RedstoneLampBlockMixin_Update",
+    "block.update.TrapdoorBlockMixin_Update",
+    "block_entity.BeaconBlockEntityMixin_PetHeal",
+    "block_entity.PistonBlockEntityMixin_Timing",
+    "entity.HuskEntityMixin_DropOnConvert",
+    "entity.PhantomSpawnerMixin_Insomnia",
+    "entity.TameableEntityMixin_Hurt",
+    "inheritance_parents.AbstractBlockMixin",
+    "item.ItemEntityMixin_Damage",
+    "world.MobSpawnerLogicMixin_CobwebGenerate"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

@@ -1,0 +1,3 @@
+accessWidener	v2	named
+
+accessible method net/minecraft/entity/damage/DamageSources create (Lnet/minecraft/registry/RegistryKey;)Lnet/minecraft/entity/damage/DamageSource;

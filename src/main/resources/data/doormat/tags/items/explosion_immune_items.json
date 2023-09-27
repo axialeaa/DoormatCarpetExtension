@@ -1,0 +1,24 @@
+{
+    "values": [
+        "minecraft:ender_chest",
+
+        "minecraft:reinforced_deepslate",
+        "minecraft:obsidian",
+        "minecraft:enchanting_table",
+        "minecraft:respawn_anchor",
+        "minecraft:crying_obsidian",
+        "minecraft:netherite_block",
+        "minecraft:anvil",
+        "minecraft:ancient_debris",
+
+        "minecraft:structure_block",
+        "minecraft:jigsaw",
+        "minecraft:end_portal_frame",
+        "minecraft:command_block",
+        "minecraft:chain_command_block",
+        "minecraft:repeating_command_block",
+        "minecraft:bedrock",
+        "minecraft:light",
+        "minecraft:barrier"
+    ]
+}
