@@ -19,13 +19,13 @@
   "carpet.rule.doorUpdateType.desc": "The type of update doors, trapdoors and fence gates emit when changing state",
   "carpet.rule.bellUpdateType.desc": "The type of update bells emit when changing state",
   "carpet.rule.noteBlockUpdateType.desc": "The type of update note blocks emit when changing state",
-  "carpet.rule.railUpdateType.desc": "The type of update powered and activator rails emit when changing state",
   "carpet.rule.hopperUpdateType.desc": "The type of update hoppers emit when changing state",
   "carpet.rule.dispenserUpdateType.desc": "The type of update dispensers emit when changing state",
   "carpet.rule.consistentItemExplosionDamage.desc": "Blocks that are immune to certain kinds of damage also apply this property to their item variants",
   "carpet.rule.mossSpreadToCobblestone.desc": "Moss can convert nearby cobblestone to mossy cobblestone when fertilized",
   "carpet.rule.mossSpreadToStoneBricks.desc": "Moss can convert nearby stone bricks to mossy stone bricks when fertilized",
   "carpet.rule.accurateAzaleaLeafDistribution.desc": "The distribution of azalea leaf types matches the azalea bush the tree is grown from",
+  "carpet.rule.propagulePropagation.desc": "Mangrove propagules actually propagate, falling from trees and planting themselves automatically",
 
   "carpet.rule.commandIdentity.desc": "Enables /identity command to specify pronouns and plural systems on the server side",
 

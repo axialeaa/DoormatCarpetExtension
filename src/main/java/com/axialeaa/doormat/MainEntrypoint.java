@@ -24,7 +24,7 @@ public class MainEntrypoint implements ModInitializer, CarpetExtension {
 	@Override
 	public void onInitialize() {
 		CarpetServer.manageExtension(new MainEntrypoint());
-		LOGGER.info(MODID + " initialized!");
+		LOGGER.info(MODID + " initialized. Wipe your feet!");
 	}
 
 	@Override

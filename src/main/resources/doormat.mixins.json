@@ -3,10 +3,11 @@
   "package": "com.axialeaa.doormat.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "block.PropaguleBlockMixin_SelfPlant",
     "block.damage.TallFlowerBlockMixin_RoseDamage",
     "block.fertilize.AzaleaBlockMixin_AccurateFlowers",
     "block.fertilize.BlockMixin_GrassSpread",
-    "block.fertilize.LeavesBlockMixin_GrowFlowers",
+    "block.fertilize.LeavesBlockMixin_GrowFlowers_Collision",
     "block.fertilize.MossBlockMixin_SporeBlossom_Patch",
     "block.fertilize.SaplingBlockMixin_GrowSwampOak",
     "block.fertilize.SporeBlossomBlockMixin_Duplicate",

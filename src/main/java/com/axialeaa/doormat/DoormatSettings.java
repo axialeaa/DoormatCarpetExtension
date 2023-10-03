@@ -117,6 +117,9 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean growSwampOakTrees = false;
 
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean propagulePropagation = false;
+
     /* FUN */
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
