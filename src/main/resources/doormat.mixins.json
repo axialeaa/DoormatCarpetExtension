@@ -7,7 +7,6 @@
     "block.damage.TallFlowerBlockMixin_RoseDamage",
     "block.fertilize.AzaleaBlockMixin_AccurateFlowers",
     "block.fertilize.BlockMixin_GrassSpread",
-    "block.fertilize.FlowerBlockMixin_Spread",
     "block.fertilize.MossBlockMixin_SporeBlossom_Patch",
     "block.fertilize.SaplingBlockMixin_GrowSwampOak",
     "block.fertilize.SporeBlossomBlockMixin_Duplicate",

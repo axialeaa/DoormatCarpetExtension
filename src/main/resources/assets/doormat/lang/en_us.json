@@ -34,13 +34,18 @@
 
 
 
-  "carpet.rule.consistentItemExplosionDamage.extra.0": "The IDs of the blocks this affects is defined in doormat/tags/items/explosion_immune_items.json.",
+  "carpet.rule.consistentItemExplosionDamage.extra.0": "The IDs of the blocks this affects are defined in doormat/tags/items/explosion_immune_items.json.",
   "carpet.rule.disablePetAttacking.extra.0": "\"if_owner\" disallows players to hit pets that aren't their own.",
 
   "carpet.rule.maxMinecartSpeed.extra.0": "Underwater max speed will always be half of this number.",
 
+  "carpet.rule.renewableCobwebs.extra.0": "Cobwebs generate within a 9x9x9 cube centred on the spawner, forming only in block positions that have two or more supporting faces.",
+  "carpet.rule.renewableCobwebs.extra.1": "The more supporting faces, the more likely the cobweb is to generate.",
   "carpet.rule.renewableSporeBlossoms.extra.0": "\"self\" drops an item the same way tall flowers do.",
+  "carpet.rule.mossSpreadToCobblestone.extra.0": "This feature is controlled through doormat/worldgen/configured_feature/mossy_cobblestone_patch.json.",
+  "carpet.rule.mossSpreadToStoneBricks.extra.0": "This feature is controlled through doormat/worldgen/configured_feature/mossy_stone_bricks_patch.json.",
   "carpet.rule.forceGrassSpread.extra.0": "This behaves the same as nylium in vanilla.",
+  "carpet.rule.accurateAzaleaLeafDistribution.extra.0": "This feature is controlled through doormat/worldgen/configured_feature/azalea_tree_<many/no>_flowers.json.",
 
   "carpet.rule.stickyStickyPistons.extra.0": "\"stick_to_all\" causes them to be omnidirectional like normal slime blocks.",
   "carpet.rule.stickyPillarBlocks.extra.0": "\"stick_to_all\" causes them to connect to each other regardless of axis direction.",
