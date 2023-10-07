@@ -37,7 +37,7 @@
   "carpet.rule.consistentItemExplosionDamage.extra.0": "The IDs of the blocks this affects is defined in doormat/tags/items/explosion_immune_items.json.",
   "carpet.rule.disablePetAttacking.extra.0": "\"if_owner\" disallows players to hit pets that aren't their own.",
 
-  "carpet.rule.maxMinecartSpeed.extra.0": "Underwater speed will always be this number divided by 2.",
+  "carpet.rule.maxMinecartSpeed.extra.0": "Underwater max speed will always be half of this number.",
 
   "carpet.rule.renewableSporeBlossoms.extra.0": "\"self\" drops an item the same way tall flowers do.",
   "carpet.rule.forceGrassSpread.extra.0": "This behaves the same as nylium in vanilla.",

@@ -17,7 +17,7 @@ public abstract class AbstractMinecartEntityMixin_Speed extends Entity {
     }
 
     @ModifyReturnValue(method = "getMaxSpeed", at = @At("RETURN"))
-    public double test(double original) {
+    public double adjustMaxSpeed(double original) {
         return (this.isTouchingWater() ? DoormatSettings.maxMinecartSpeed / 2.0 : DoormatSettings.maxMinecartSpeed) / 20.0;
     }
 
