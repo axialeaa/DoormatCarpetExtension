@@ -1,9 +1,7 @@
 package com.axialeaa.doormat.mixin.block;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.MainEntrypoint;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.LandingBlock;
 import net.minecraft.block.PropaguleBlock;
 import net.minecraft.entity.FallingBlockEntity;
@@ -12,7 +10,6 @@ import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -34,11 +31,6 @@ public class PropaguleBlockMixin_SelfPlant implements LandingBlock {
         BlockPos.Mutable mutable = pos.mutableCopy();
         FallingBlockEntity.spawnFromBlock(world, mutable, state);
         mutable.move(Direction.DOWN);
-    }
-
-    public void onLanding(World world, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingBlockEntity fallingBlockEntity) {
-        world.setBlockState(pos, Blocks.MANGROVE_PROPAGULE.getDefaultState(), 3);
-        MainEntrypoint.LOGGER.info("placed");
     }
 
 }

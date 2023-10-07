@@ -20,7 +20,7 @@ import java.util.List;
 @Mixin(BeaconBlockEntity.class)
 public class BeaconBlockEntityMixin_PetHeal {
 
-    @Inject(method = "applyPlayerEffects", at = @At(value = "RETURN"))
+    @Inject(method = "applyPlayerEffects", at = @At(value = "HEAD"))
     private static void regenNearbyPets(World world, BlockPos pos, int beaconLevel, StatusEffect primaryEffect, StatusEffect secondaryEffect, CallbackInfo ci) {
         if (DoormatSettings.beaconsHealPets && secondaryEffect == StatusEffects.REGENERATION) {
             Box box = (new Box(pos)).expand(50).stretch(0.0, world.getHeight(), 0.0);

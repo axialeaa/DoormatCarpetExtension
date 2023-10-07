@@ -85,6 +85,9 @@ public class DoormatSettings {
     @Rule( options = "3", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int insomniaDaysSinceSlept = 3;
 
+    @Rule( options = "8.0", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { FEATURE, DOORMAT } )
+    public static double maxMinecartSpeed = 8.0;
+
     /* FARMING */
 
     @Rule( categories = { FEATURE, DOORMAT } )
@@ -161,7 +164,9 @@ public class DoormatSettings {
 
     /* COMMANDS */
 
+    /*
     @Rule( categories = { COMMAND, DOORMAT } )
-    public static String commandIdentity = "true";
+    public static String commandPronoun = "true";
+    */
 
 }

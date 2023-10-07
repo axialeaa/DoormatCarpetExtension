@@ -15,7 +15,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.axialeaa.doormat.MainEntrypoint"
+          "com.axialeaa.doormat.DoormatServer"
 		]
 	},
 	"mixins": [

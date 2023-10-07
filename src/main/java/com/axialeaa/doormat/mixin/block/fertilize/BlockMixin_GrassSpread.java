@@ -1,10 +1,7 @@
 package com.axialeaa.doormat.mixin.block.fertilize;
 
 import com.axialeaa.doormat.DoormatSettings;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Fertilizable;
+import net.minecraft.block.*;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -43,7 +40,7 @@ public class BlockMixin_GrassSpread implements Fertilizable {
             if (blockState.isOf(Blocks.MYCELIUM)) {
                 isMycelium = true;
             }
-            if (!isGrass || !isMycelium) continue;
+            if (!SpreadableBlock.canSpread(state, world, pos) || !isGrass || !isMycelium) continue;
             break;
         }
         if (isGrass && isMycelium) {

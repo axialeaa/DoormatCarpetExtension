@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.world;
 
-import com.axialeaa.doormat.MainEntrypoint;
+import com.axialeaa.doormat.DoormatServer;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
@@ -14,6 +14,6 @@ public class DoormatConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> MOSSY_STONE_BRICKS_PATCH = registerKey("mossy_stone_bricks_patch");
 
     public static RegistryKey<ConfiguredFeature<?,?>> registerKey(String name) {
-        return RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, new Identifier(MainEntrypoint.MODID, name));
+        return RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, new Identifier(DoormatServer.MODID, name));
     }
 }

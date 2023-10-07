@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.block.fertilize;
+package com.axialeaa.doormat.mixin.block.multiple_categories;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.mixin.inheritance_parents.AbstractBlockMixin;

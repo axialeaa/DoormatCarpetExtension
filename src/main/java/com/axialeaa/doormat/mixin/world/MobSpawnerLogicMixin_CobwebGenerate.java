@@ -1,7 +1,6 @@
 package com.axialeaa.doormat.mixin.world;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -34,18 +33,19 @@ public abstract class MobSpawnerLogicMixin_CobwebGenerate {
         Entity storedEntity = EntityType.loadEntityWithPassengers(this.getSpawnEntry(world, random, pos).getNbt(), world, entity -> entity);
         // get the entity that the spawner will spawn
         if (DoormatSettings.renewableCobwebs && storedEntity instanceof CaveSpiderEntity) { // if the rule is enabled and the stored entity is a cave spider...
-            ImmutableList<Direction> CHECK_DIRECTIONS = ImmutableList.of(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST, Direction.UP);
             for (BlockPos blockPos : BlockPos.iterate(pos.add(-this.spawnRange, -this.spawnRange, -this.spawnRange), pos.add(this.spawnRange, this.spawnRange, this.spawnRange))) {
-                // for every block position in a box that extends out from the spawner by a number of blocks equal to the spawn range (compatibility with mods that tweak the spawn range)
+                // for every block position in a box that extends out from the spawner by a number of blocks equal to the spawn range (compatibility with mods that tweak the spawn range)...
                 int i = 0; // define a new integer
-                for (Direction direction : CHECK_DIRECTIONS) { // and check the north, east, south, west and up directions of the block position
-                    if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, pos, direction.getOpposite())) i++;
-                        // if the block position is air and the block in the checked direction can feasibly "support" cobwebs, increment the integer by 1
+                for (Direction direction : Direction.values()) { // and check the blocks adjacent to the block position in every direction
+                    if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, pos, direction.getOpposite()))
+                        i++; // if the block position is air and the block in the checked direction can feasibly "support" cobwebs, increment the integer by 1
                 }
-                if (i >= 2 && random.nextInt(i + 128) > 128) world.setBlockState(blockPos, Blocks.COBWEB.getDefaultState());
+                if (i >= 2 && random.nextInt(i + 128) > 128)
+                    world.setBlockState(blockPos, Blocks.COBWEB.getDefaultState());
                     // if the integer is greater than or equal to 2 (in essence, if there are 2 or more supporting blocks around the checked block position)
                     // and a random integer between 0 inc. and the number of supporting sides + 128 exc. is greater than 128, place a cobweb here!
             }
         }
     }
+
 }

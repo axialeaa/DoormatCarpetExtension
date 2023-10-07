@@ -1,40 +1,53 @@
 {
-  "carpet.rule.insomniaDaysSinceSlept.desc": "The number of sleepless nights after which phantoms can spawn",
-  "carpet.rule.renewableSporeBlossoms.desc": "Whether spore blossoms should generate when this block is fertilized",
   "carpet.rule.leavesNoCollision.desc": "Disables the tangibility of leaves, making it easier to traverse areas with lots of trees",
+  "carpet.rule.consistentItemExplosionDamage.desc": "Blocks that are immune to certain kinds of damage also apply this property to their item variants",
   "carpet.rule.beaconsHealPets.desc": "Beacons with their secondary effect set to regeneration can heal nearby tamed mobs",
   "carpet.rule.disablePetAttacking.desc": "Disables players harming tamed mobs",
+  "carpet.rule.insomniaDaysSinceSlept.desc": "The number of sleepless nights after which phantoms can spawn",
+  "carpet.rule.maxMinecartSpeed.desc": "The speed minecarts can travel in blocks per second",
+
+  "carpet.rule.renewableGildedBlackstone.desc": "Blackstone adjacent to underwater magma blocks slowly becomes gilded over time",
+  "carpet.rule.renewableCobwebs.desc": "Cave spider spawners generate cobwebs between blocks each spawn cycle",
+  "carpet.rule.renewableSporeBlossoms.desc": "Whether spore blossoms should generate when this block is fertilized",
   "carpet.rule.huskWashing.desc": "Adult husks drop 1-3 sand when converting into zombies",
+  "carpet.rule.mossSpreadToCobblestone.desc": "Moss can convert nearby cobblestone to mossy cobblestone when fertilized",
+  "carpet.rule.mossSpreadToStoneBricks.desc": "Moss can convert nearby stone bricks to mossy stone bricks when fertilized",
   "carpet.rule.forceGrassSpread.desc": "Grass and mycelium can spread to adjacent dirt when the dirt is fertilized",
   "carpet.rule.azaleaLeavesGrowFlowers.desc": "Azalea leaves grow flowers when fertilized",
+  "carpet.rule.accurateAzaleaLeafDistribution.desc": "The distribution of azalea leaf types matches the azalea bush the tree is grown from",
   "carpet.rule.growSwampOakTrees.desc": "Oak trees grow into swamp oaks in swamp biomes",
-  "carpet.rule.parityPortalTicking.desc": "Nether portal blocks randomTick when lit, like they do on Bedrock Edition",
+  "carpet.rule.propagulePropagation.desc": "Mangrove propagules actually propagate, falling from trees and planting themselves automatically",
+
+  "carpet.rule.thornyRoseBush.desc": "Similarly to sweet berry bushes, rose bushes deal damage when you walk inside them",
+
   "carpet.rule.stickyStickyPistons.desc": "Sticky pistons act like directional slime blocks",
   "carpet.rule.stickyPillarBlocks.desc": "Pillar blocks like logs and bone blocks stick to each other based on the axis direction when moved",
   "carpet.rule.pistonMovementTime.desc": "The number of ticks it takes for a piston to extend or retract",
-  "carpet.rule.renewableGildedBlackstone.desc": "Blackstone adjacent to underwater magma blocks slowly becomes gilded over time",
-  "carpet.rule.renewableCobwebs.desc": "Cave spider spawners generate cobwebs in corners each spawn cycle",
-  "carpet.rule.thornyRoseBush.desc": "Similarly to sweet berry bushes, rose bushes deal damage when you walk inside them",
   "carpet.rule.lampUpdateType.desc": "The type of update redstone lamps emit when changing state",
   "carpet.rule.doorUpdateType.desc": "The type of update doors, trapdoors and fence gates emit when changing state",
-  "carpet.rule.bellUpdateType.desc": "The type of update bells emit when changing state",
   "carpet.rule.noteBlockUpdateType.desc": "The type of update note blocks emit when changing state",
   "carpet.rule.hopperUpdateType.desc": "The type of update hoppers emit when changing state",
   "carpet.rule.dispenserUpdateType.desc": "The type of update dispensers emit when changing state",
-  "carpet.rule.consistentItemExplosionDamage.desc": "Blocks that are immune to certain kinds of damage also apply this property to their item variants",
-  "carpet.rule.mossSpreadToCobblestone.desc": "Moss can convert nearby cobblestone to mossy cobblestone when fertilized",
-  "carpet.rule.mossSpreadToStoneBricks.desc": "Moss can convert nearby stone bricks to mossy stone bricks when fertilized",
-  "carpet.rule.accurateAzaleaLeafDistribution.desc": "The distribution of azalea leaf types matches the azalea bush the tree is grown from",
-  "carpet.rule.propagulePropagation.desc": "Mangrove propagules actually propagate, falling from trees and planting themselves automatically",
+  "carpet.rule.bellUpdateType.desc": "The type of update bells emit when changing state",
 
-  "carpet.rule.commandIdentity.desc": "Enables /identity command to specify pronouns and plural systems on the server side",
+  "carpet.rule.parityPortalTicking.desc": "Nether portal blocks randomTick when lit, like they do on Bedrock Edition",
+
+
+
+  "carpet.rule.consistentItemExplosionDamage.extra.0": "The IDs of the blocks this affects is defined in doormat/tags/items/explosion_immune_items.json.",
+  "carpet.rule.disablePetAttacking.extra.0": "\"if_owner\" disallows players to hit pets that aren't their own.",
+
+  "carpet.rule.maxMinecartSpeed.extra.0": "Underwater speed will always be this number divided by 2.",
 
   "carpet.rule.renewableSporeBlossoms.extra.0": "\"self\" drops an item the same way tall flowers do.",
-  "carpet.rule.tamedPetHurtDisabled.extra.0": "\"if_owner\" disallows players to hit pets that aren't their own.",
   "carpet.rule.forceGrassSpread.extra.0": "This behaves the same as nylium in vanilla.",
+
   "carpet.rule.stickyStickyPistons.extra.0": "\"stick_to_all\" causes them to be omnidirectional like normal slime blocks.",
   "carpet.rule.stickyPillarBlocks.extra.0": "\"stick_to_all\" causes them to connect to each other regardless of axis direction.",
+
   "carpet.rule.thornyRoseBush.extra.0": "This even has a unique death message!",
+
+
 
   "death.attack.roseBush": "%1$s smelled the roses too much",
   "death.attack.roseBush.player": "%1$s smelled the roses too much whilst trying to escape %2$s"
