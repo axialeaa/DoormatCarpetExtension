@@ -15,10 +15,7 @@ public class EnderEyeItemMixin_Portal {
 
     @Redirect(method = "useOnBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/pattern/BlockPattern;searchAround(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/pattern/BlockPattern$Result;"))
     private BlockPattern.Result test(BlockPattern pattern, WorldView world, BlockPos pos) {
-        if (DoormatSettings.disableEndPortals)
-            return null;
-        else
-            return EndPortalFrameBlock.getCompletedFramePattern().searchAround(world, pos);
+        return DoormatSettings.disableEndPortals ? null : EndPortalFrameBlock.getCompletedFramePattern().searchAround(world, pos);
     }
 
 }

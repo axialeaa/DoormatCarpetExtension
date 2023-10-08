@@ -32,7 +32,6 @@ public class BeaconBlockEntityMixin_PetHeal {
                 tameableEntity = tameableEntityIterator.next();
                 tameableEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 340, 0, true, true));
             }
-
         }
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 
 public class DoormatConfiguredFeatures {
+
     public static final RegistryKey<ConfiguredFeature<?, ?>> AZALEA_TREE_NO_FLOWERS = registerKey("azalea_tree_no_flowers");
     public static final RegistryKey<ConfiguredFeature<?, ?>> AZALEA_TREE_MANY_FLOWERS = registerKey("azalea_tree_many_flowers");
 
@@ -16,4 +17,5 @@ public class DoormatConfiguredFeatures {
     public static RegistryKey<ConfiguredFeature<?,?>> registerKey(String name) {
         return RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, new Identifier(DoormatServer.MODID, name));
     }
+
 }

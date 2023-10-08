@@ -31,6 +31,7 @@
     "entity.HuskEntityMixin_DropOnConvert",
     "entity.ItemEntityMixin_Damage",
     "entity.PhantomSpawnerMixin_Insomnia",
+    "entity.PlayerEntityMixin_XPDrop",
     "entity.TameableEntityMixin_Hurt",
     "inheritance_parents.AbstractBlockMixin",
     "item.EnderEyeItemMixin_Portal",

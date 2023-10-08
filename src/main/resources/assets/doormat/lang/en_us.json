@@ -1,6 +1,7 @@
 {
   "carpet.rule.leavesNoCollision.desc": "Disables the tangibility of leaves, making it easier to traverse areas with lots of trees",
   "carpet.rule.consistentItemExplosionDamage.desc": "Blocks that are immune to certain kinds of damage also apply this property to their item variants",
+  "carpet.rule.playerDropAllXp.desc": "Players drop all of their XP on death instead of a capped amount",
   "carpet.rule.beaconsHealPets.desc": "Beacons with their secondary effect set to regeneration can heal nearby tamed mobs",
   "carpet.rule.disablePetAttacking.desc": "Disables players harming tamed mobs",
   "carpet.rule.insomniaDaysSinceSlept.desc": "The number of sleepless nights after which phantoms can spawn",

@@ -19,10 +19,9 @@ public class FallingBlockEntity_SelfPlant {
     @Shadow private BlockState block;
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
-    private void setBlock(CallbackInfo ci) {
-        if (DoormatSettings.propagulePropagation && this.block.isOf(Blocks.MANGROVE_PROPAGULE) && this.block.get(PropaguleBlock.HANGING) && this.block.get(PropaguleBlock.AGE) == 4) {
+    private void modifyMangrovePropagule(CallbackInfo ci) {
+        if (DoormatSettings.propagulePropagation && this.block.isOf(Blocks.MANGROVE_PROPAGULE) && this.block.get(PropaguleBlock.HANGING) && this.block.get(PropaguleBlock.AGE) == 4)
             this.block = Blocks.MANGROVE_PROPAGULE.getDefaultState();
-        }
     }
 
 }
