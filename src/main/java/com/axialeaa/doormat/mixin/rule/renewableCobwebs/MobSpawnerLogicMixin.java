@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MobSpawnerLogic.class)
-public abstract class MobSpawnerLogicMixin_CobwebGenerate {
+public abstract class MobSpawnerLogicMixin {
 
     @Shadow protected abstract MobSpawnerEntry getSpawnEntry(@Nullable World world, Random random, BlockPos pos);
     @Shadow private int spawnRange;

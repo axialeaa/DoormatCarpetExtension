@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Mixin(BeaconBlockEntity.class)
-public class BeaconBlockEntityMixin_PetHeal {
+public class BeaconBlockEntityMixin {
 
     @Inject(method = "applyPlayerEffects", at = @At(value = "HEAD"))
     private static void regenNearbyPets(World world, BlockPos pos, int beaconLevel, StatusEffect primaryEffect, StatusEffect secondaryEffect, CallbackInfo ci) {

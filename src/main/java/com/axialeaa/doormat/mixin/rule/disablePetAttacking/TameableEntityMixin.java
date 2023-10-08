@@ -17,9 +17,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Mixin(TameableEntity.class)
-public abstract class TameableEntityMixin_Hurt extends AnimalEntity {
+public abstract class TameableEntityMixin extends AnimalEntity {
 
-    protected TameableEntityMixin_Hurt(EntityType<? extends AnimalEntity> entityType, World world) {
+    protected TameableEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
     }
 

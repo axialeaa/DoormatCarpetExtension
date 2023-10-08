@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(PistonBlockEntity.class)
-public class PistonBlockEntityMixin_Timing {
+public class PistonBlockEntityMixin {
 
     @ModifyConstant(method = "tick", constant = @Constant(floatValue = 0.5f))
     private static float adjustTiming(float constant) {

@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(AzaleaBlock.class)
-public class AzaleaBlockMixin_AccurateFlowers {
+public class AzaleaBlockMixin {
 
     @Unique private static final AzaleaSaplingManyFlowersGenerator MANY_FLOWERS_GENERATOR = new AzaleaSaplingManyFlowersGenerator();
     @Unique private static final AzaleaSaplingNoFlowersGenerator NO_FLOWERS_GENERATOR = new AzaleaSaplingNoFlowersGenerator();

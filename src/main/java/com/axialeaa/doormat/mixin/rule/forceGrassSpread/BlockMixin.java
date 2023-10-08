@@ -10,7 +10,7 @@ import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(Block.class)
-public class BlockMixin_GrassSpread implements Fertilizable {
+public class BlockMixin implements Fertilizable {
 
     public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
         if (DoormatSettings.forceGrassSpread && world.getBlockState(pos).isOf(Blocks.DIRT)) {

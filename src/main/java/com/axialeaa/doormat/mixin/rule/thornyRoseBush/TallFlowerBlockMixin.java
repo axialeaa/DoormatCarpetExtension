@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TallFlowerBlock.class)
-public class TallFlowerBlockMixin_RoseDamage extends AbstractBlockMixin {
+public class TallFlowerBlockMixin extends AbstractBlockMixin {
 
     @Override
     public void injectedOnEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {

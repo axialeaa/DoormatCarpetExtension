@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 
 @Mixin(PhantomSpawner.class)
-public class PhantomSpawnerMixin_Insomnia {
+public class PhantomSpawnerMixin {
 
     @ModifyConstant(method = "spawn", constant = @Constant(intValue = 72000))
     private int spawn(int constant) {

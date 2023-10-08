@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MossBlock.class)
-public class MossBlockMixin_SporeBlossom_Patch {
+public class MossBlockMixin {
 
     @Inject(method = "grow", at = @At("HEAD"))
     private void grow(ServerWorld world, Random random, BlockPos pos, BlockState state, CallbackInfo ci) {

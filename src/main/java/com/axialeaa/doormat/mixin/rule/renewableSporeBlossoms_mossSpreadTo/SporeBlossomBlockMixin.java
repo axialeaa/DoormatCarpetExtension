@@ -15,7 +15,7 @@ import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(SporeBlossomBlock.class)
-public class SporeBlossomBlockMixin_Duplicate implements Fertilizable {
+public class SporeBlossomBlockMixin implements Fertilizable {
 
     @Override
     public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {

@@ -10,7 +10,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(PillarBlock.class)
-public class PillarBlockMixin_StickyMove implements BlockPistonBehaviourInterface {
+public class PillarBlockMixin implements BlockPistonBehaviourInterface {
 
     @Override
     public boolean isSticky(BlockState state) {

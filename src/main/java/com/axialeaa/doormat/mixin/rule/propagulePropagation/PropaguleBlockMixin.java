@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Debug(export = true)
 @Mixin(PropaguleBlock.class)
-public class PropaguleBlockMixin_SelfPlant implements LandingBlock {
+public class PropaguleBlockMixin implements LandingBlock {
 
     @Shadow @Final public static IntProperty AGE;
 

@@ -13,9 +13,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HuskEntity.class)
-public class HuskEntityMixin_DropOnConvert extends ZombieEntity {
+public class HuskEntityMixin extends ZombieEntity {
 
-    public HuskEntityMixin_DropOnConvert(World world) {
+    public HuskEntityMixin(World world) {
         super(world);
     }
 

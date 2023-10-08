@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(SaplingBlock.class)
-public class SaplingBlockMixin_GrowSwampOak {
+public class SaplingBlockMixin {
 
     @Unique private static final SwampOakSaplingGenerator SWAMP_OAK_GENERATOR = new SwampOakSaplingGenerator();
 

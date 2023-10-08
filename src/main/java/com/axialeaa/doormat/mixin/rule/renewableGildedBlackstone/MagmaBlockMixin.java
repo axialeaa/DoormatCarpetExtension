@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Debug(export = true)
 @Mixin(MagmaBlock.class)
-public class MagmaBlockMixin_GenerateGildedBlackstone extends AbstractBlockMixin {
+public class MagmaBlockMixin extends AbstractBlockMixin {
 
     @Override
     public void injectedRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
