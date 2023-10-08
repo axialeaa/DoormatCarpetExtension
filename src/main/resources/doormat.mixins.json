@@ -29,10 +29,11 @@
     "entity.AbstractMinecartEntityMixin_Speed",
     "entity.FallingBlockEntity_SelfPlant",
     "entity.HuskEntityMixin_DropOnConvert",
+    "entity.ItemEntityMixin_Damage",
     "entity.PhantomSpawnerMixin_Insomnia",
     "entity.TameableEntityMixin_Hurt",
     "inheritance_parents.AbstractBlockMixin",
-    "item.ItemEntityMixin_Damage",
+    "item.EnderEyeItemMixin_Portal",
     "world.MobSpawnerLogicMixin_CobwebGenerate"
   ],
   "injectors": {

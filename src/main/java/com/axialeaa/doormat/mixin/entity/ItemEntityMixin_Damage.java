@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.item;
+package com.axialeaa.doormat.mixin.entity;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.util.DoormatTags;

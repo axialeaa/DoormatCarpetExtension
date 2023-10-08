@@ -85,8 +85,14 @@ public class DoormatSettings {
     @Rule( options = "3", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int insomniaDaysSinceSlept = 3;
 
+    @Rule( options = { "63", "127" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
+    public static int phantomMinSpawnAltitude = 63;
+
     @Rule( options = "8.0", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { FEATURE, DOORMAT } )
     public static double maxMinecartSpeed = 8.0;
+
+    @Rule( categories = { SURVIVAL, DOORMAT } )
+    public static boolean disableEndPortals = false;
 
     /* FARMING */
 

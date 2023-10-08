@@ -4,7 +4,9 @@
   "carpet.rule.beaconsHealPets.desc": "Beacons with their secondary effect set to regeneration can heal nearby tamed mobs",
   "carpet.rule.disablePetAttacking.desc": "Disables players harming tamed mobs",
   "carpet.rule.insomniaDaysSinceSlept.desc": "The number of sleepless nights after which phantoms can spawn",
+  "carpet.rule.phantomMinSpawnAltitude.desc": "Phantoms will only spawn when the instigator is standing above this y height",
   "carpet.rule.maxMinecartSpeed.desc": "The speed minecarts can travel in blocks per second",
+  "carpet.rule.disableEndPortals.desc": "Disables the opening of overworld end portals",
 
   "carpet.rule.renewableGildedBlackstone.desc": "Blackstone adjacent to underwater magma blocks slowly becomes gilded over time",
   "carpet.rule.renewableCobwebs.desc": "Cave spider spawners generate cobwebs between blocks each spawn cycle",
