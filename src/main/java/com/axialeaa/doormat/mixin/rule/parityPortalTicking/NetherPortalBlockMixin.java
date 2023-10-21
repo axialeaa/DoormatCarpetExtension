@@ -17,7 +17,8 @@ public abstract class NetherPortalBlockMixin extends AbstractBlockMixin {
     @Override
     public void injectedOnBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
         Random random = world.getRandom();
-        if (DoormatSettings.parityPortalTicking) state.randomTick((ServerWorld)world, pos, random);
+        if (DoormatSettings.parityPortalTicking)
+            state.randomTick((ServerWorld)world, pos, random);
     }
 
 }

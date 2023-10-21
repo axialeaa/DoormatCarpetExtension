@@ -16,6 +16,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity {
         super(type, world);
     }
 
+    @SuppressWarnings("unused") // otherwise it will throw a warning at "original"
     @ModifyReturnValue(method = "getMaxSpeed", at = @At("RETURN"))
     public double adjustMaxSpeed(double original) {
         return (this.isTouchingWater() ? DoormatSettings.maxMinecartSpeed / 2.0 : DoormatSettings.maxMinecartSpeed) / 20.0;

@@ -28,14 +28,14 @@ public abstract class TameableEntityMixin extends AnimalEntity {
     @Unique
     public boolean damage(DamageSource source, float amount) {
         Entity attacker = source.getAttacker();
-        if (DoormatSettings.disablePetAttacking.isEnabled() && attacker instanceof PlayerEntity playerEntity) {
-            // if disablePetAttacking is "true" or "if_owner" and the attacker in question is a player, get the uuid of the owner of the mob
+        if (attacker instanceof PlayerEntity playerEntity) {
             Optional<UUID> optional = Optional.ofNullable(this.getOwnerUuid());
-            if ((DoormatSettings.disablePetAttacking == DoormatSettings.PetHurtMode.TRUE) || (DoormatSettings.disablePetAttacking == DoormatSettings.PetHurtMode.IF_OWNER && optional.isPresent() && playerEntity.getUuid().equals(optional.get()))) {
-                //if the owner uuid exists (optional.isPresent()), that means the mob is tamed
-                // if disablePetAttacking is either "true", or "if_owner" and the uuid matches the owner of the pet, return false
+            // if the attacker is a player, get the uuid of the owner of the mob
+            if (DoormatSettings.disablePetAttacking == DoormatSettings.PetHurtMode.TRUE ||
+                (DoormatSettings.disablePetAttacking == DoormatSettings.PetHurtMode.IF_OWNER && optional.isPresent() && playerEntity.getUuid().equals(optional.get())))
+                // if disablePetAttacking is "true" or "if_owner" and the attacking player is the owner, return false
+                // if the owner uuid exists (optional.isPresent()), that means the mob is tamed
                 return false;
-            }
         }
         return super.damage(source, amount);
     }

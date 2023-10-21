@@ -23,10 +23,9 @@ public class PistonBlockMixin implements BlockPistonBehaviourInterface {
 
     @Override
     public boolean isStickyToNeighbor(World level, BlockPos pos, BlockState state, BlockPos neighborPos, BlockState neighborState, Direction dir, Direction moveDir) {
-        if (DoormatSettings.stickyStickyPistons == DoormatSettings.StickyBlockMode.TRUE)
-            return dir == state.get(PistonBlock.FACING);
-        else
-            return DoormatSettings.stickyStickyPistons == DoormatSettings.StickyBlockMode.STICK_TO_ALL;
+        return DoormatSettings.stickyStickyPistons == DoormatSettings.StickyBlockMode.TRUE ?
+            dir == state.get(PistonBlock.FACING) :
+            DoormatSettings.stickyStickyPistons == DoormatSettings.StickyBlockMode.STICK_TO_ALL;
     }
 
 }

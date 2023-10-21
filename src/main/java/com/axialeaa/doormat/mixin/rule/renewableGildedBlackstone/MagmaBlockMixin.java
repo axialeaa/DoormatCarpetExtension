@@ -21,15 +21,14 @@ public class MagmaBlockMixin extends AbstractBlockMixin {
 
     @Override
     public void injectedRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (DoormatSettings.renewableGildedBlackstone && world.getFluidState(pos.up()).isOf(Fluids.WATER)) {
+        if (DoormatSettings.renewableGildedBlackstone && world.getFluidState(pos.up()).isOf(Fluids.WATER))
             for (Direction direction : Direction.values()) {
-                BlockPos offsetBlockPos = pos.offset(direction);
-                if (world.getBlockState(offsetBlockPos).isOf(Blocks.BLACKSTONE) && random.nextFloat() < 0.001) {
-                    world.emitGameEvent(GameEvent.BLOCK_CHANGE, offsetBlockPos, GameEvent.Emitter.of(world.getBlockState(offsetBlockPos)));
-                    world.setBlockState(offsetBlockPos, Blocks.GILDED_BLACKSTONE.getDefaultState());
+                BlockPos blockPos = pos.offset(direction);
+                if (world.getBlockState(blockPos).isOf(Blocks.BLACKSTONE) && random.nextFloat() < 0.001) {
+                    world.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(world.getBlockState(blockPos)));
+                    world.setBlockState(blockPos, Blocks.GILDED_BLACKSTONE.getDefaultState());
                 }
             }
-        }
     }
 
 }

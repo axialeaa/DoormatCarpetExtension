@@ -23,12 +23,12 @@ public class AzaleaBlockMixin {
     @Unique private static final AzaleaSaplingNoFlowersGenerator NO_FLOWERS_GENERATOR = new AzaleaSaplingNoFlowersGenerator();
 
     @Redirect(method = "grow", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/sapling/AzaleaSaplingGenerator;generate(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/gen/chunk/ChunkGenerator;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/random/Random;)Z"))
-    public boolean grow(AzaleaSaplingGenerator instance, ServerWorld world, ChunkGenerator chunkGenerator, BlockPos pos, BlockState state, Random random) {
-        ChunkGenerator getChunkGen = world.getChunkManager().getChunkGenerator();
-        if (DoormatSettings.accurateAzaleaLeafDistribution) {
-            return state.getBlock() == Blocks.FLOWERING_AZALEA ? MANY_FLOWERS_GENERATOR.generate(world, getChunkGen, pos, state, random) : NO_FLOWERS_GENERATOR.generate(world, getChunkGen, pos, state, random);
-        }
-        return instance.generate(world, getChunkGen, pos, state, random);
+    public boolean grow(AzaleaSaplingGenerator generator, ServerWorld world, ChunkGenerator chunkGenerator, BlockPos pos, BlockState state, Random random) {
+        return DoormatSettings.accurateAzaleaLeafDistribution ?
+            state.getBlock() == Blocks.FLOWERING_AZALEA ?
+                MANY_FLOWERS_GENERATOR.generate(world, chunkGenerator, pos, state, random) :
+                NO_FLOWERS_GENERATOR.generate(world, chunkGenerator, pos, state, random) :
+            generator.generate(world, chunkGenerator, pos, state, random);
     }
 
 }

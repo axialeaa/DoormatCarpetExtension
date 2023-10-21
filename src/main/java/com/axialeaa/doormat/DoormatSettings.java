@@ -8,6 +8,7 @@ import net.minecraft.server.command.ServerCommandSource;
 
 import static carpet.api.settings.RuleCategory.*;
 
+@SuppressWarnings("unused")
 public class DoormatSettings {
 
     /*
@@ -46,7 +47,6 @@ public class DoormatSettings {
             return this != FALSE;
         } }
     public enum NeighbourUpdateMode {
-
         NONE(0),
         BLOCK(1),
         SHAPE(2),
@@ -95,6 +95,9 @@ public class DoormatSettings {
     public static double maxMinecartSpeed = 8.0;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
+    public static boolean disableNetherPortals = false;
+
+    @Rule( categories = { SURVIVAL, DOORMAT } )
     public static boolean disableEndPortals = false;
 
     /* FARMING */
@@ -137,7 +140,7 @@ public class DoormatSettings {
     @Rule( categories = { SURVIVAL, DOORMAT } )
     public static boolean thornyRoseBush = false;
 
-    /* REDSTONE FUN */
+    /* REDSTONE TINKERING */
 
     @Rule( categories = { FEATURE, DOORMAT, PISTON, FUN } )
     public static StickyBlockMode stickyStickyPistons = StickyBlockMode.FALSE;
@@ -155,6 +158,12 @@ public class DoormatSettings {
     public static NeighbourUpdateMode doorUpdateType = NeighbourUpdateMode.SHAPE;
 
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static NeighbourUpdateMode trapdoorUpdateType = NeighbourUpdateMode.SHAPE;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static NeighbourUpdateMode fenceGateUpdateType = NeighbourUpdateMode.SHAPE;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
     public static NeighbourUpdateMode noteBlockUpdateType = NeighbourUpdateMode.BOTH;
 
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
@@ -166,16 +175,43 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
     public static NeighbourUpdateMode bellUpdateType = NeighbourUpdateMode.BOTH;
 
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static NeighbourUpdateMode tntUpdateType = NeighbourUpdateMode.BOTH;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static boolean lampQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static boolean trapdoorQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static boolean fenceGateQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static boolean noteBlockQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static boolean hopperQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static boolean bellQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static boolean tntQuasiConnecting = false;
+
     /* PARITY */
 
     @Rule( categories = { FEATURE, DOORMAT, PARITY } )
     public static boolean parityPortalTicking = false;
 
+    @Rule( categories = { FEATURE, DOORMAT, PARITY } )
+    public static boolean parityFireAspectLighting = false;
+
     /* COMMANDS */
 
-    /*
+/*
     @Rule( categories = { COMMAND, DOORMAT } )
     public static String commandPronoun = "true";
-    */
+*/
 
 }

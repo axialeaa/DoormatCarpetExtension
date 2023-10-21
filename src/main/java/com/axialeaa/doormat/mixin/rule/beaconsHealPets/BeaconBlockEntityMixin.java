@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Mixin(BeaconBlockEntity.class)
@@ -24,14 +23,9 @@ public class BeaconBlockEntityMixin {
     private static void regenNearbyPets(World world, BlockPos pos, int beaconLevel, StatusEffect primaryEffect, StatusEffect secondaryEffect, CallbackInfo ci) {
         if (DoormatSettings.beaconsHealPets && secondaryEffect == StatusEffects.REGENERATION) {
             Box box = (new Box(pos)).expand(50).stretch(0.0, world.getHeight(), 0.0);
-            List<TameableEntity> tameableEntityList = world.getEntitiesByClass(TameableEntity.class, box, TameableEntity::isTamed);
-            Iterator<TameableEntity> tameableEntityIterator = tameableEntityList.iterator();
-
-            TameableEntity tameableEntity;
-            while (tameableEntityIterator.hasNext()) {
-                tameableEntity = tameableEntityIterator.next();
+            List<TameableEntity> list = world.getEntitiesByClass(TameableEntity.class, box, TameableEntity::isTamed);
+            for (TameableEntity tameableEntity : list)
                 tameableEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 340, 0, true, true));
-            }
         }
     }
 

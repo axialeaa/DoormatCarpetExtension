@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.dispenserUpdateType;
+package com.axialeaa.doormat.mixin.rule._updateTypes_quasiConnecting;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.DispenserBlock;

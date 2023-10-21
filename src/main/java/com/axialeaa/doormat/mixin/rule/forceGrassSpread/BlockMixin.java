@@ -14,11 +14,11 @@ public class BlockMixin implements Fertilizable {
 
     public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
         if (DoormatSettings.forceGrassSpread && world.getBlockState(pos).isOf(Blocks.DIRT)) {
-            if (!world.getBlockState(pos.up()).isTransparent(world, pos)) return false;
-            for (BlockPos blockPos : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
-                if (!world.getBlockState(blockPos).isOf(Blocks.GRASS_BLOCK) && !world.getBlockState(blockPos).isOf(Blocks.MYCELIUM)) continue;
-                return true;
-            }
+            if (!world.getBlockState(pos.up()).isTransparent(world, pos))
+                return false;
+            for (BlockPos blockPos : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1)))
+                if (world.getBlockState(blockPos).isOf(Blocks.GRASS_BLOCK) || world.getBlockState(blockPos).isOf(Blocks.MYCELIUM))
+                    return true;
         }
         return false;
     }
@@ -34,22 +34,20 @@ public class BlockMixin implements Fertilizable {
         boolean isGrass = false;
         for (BlockPos blockPos : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
             BlockState blockState = world.getBlockState(blockPos);
-            if (blockState.isOf(Blocks.GRASS_BLOCK)) {
+            if (blockState.isOf(Blocks.GRASS_BLOCK))
                 isGrass = true;
-            }
-            if (blockState.isOf(Blocks.MYCELIUM)) {
+            if (blockState.isOf(Blocks.MYCELIUM))
                 isMycelium = true;
-            }
-            if (!SpreadableBlock.canSpread(state, world, pos) || !isGrass || !isMycelium) continue;
+            if (!SpreadableBlock.canSpread(state, world, pos) || !isGrass || !isMycelium)
+                continue;
             break;
         }
-        if (isGrass && isMycelium) {
+        if (isGrass && isMycelium)
             world.setBlockState(pos, random.nextBoolean() ? Blocks.GRASS_BLOCK.getDefaultState() : Blocks.MYCELIUM.getDefaultState(), Block.NOTIFY_ALL);
-        } else if (isGrass) {
+        else if (isGrass)
             world.setBlockState(pos, Blocks.GRASS_BLOCK.getDefaultState(), Block.NOTIFY_ALL);
-        } else if (isMycelium) {
+        else if (isMycelium)
             world.setBlockState(pos, Blocks.MYCELIUM.getDefaultState(), Block.NOTIFY_ALL);
-        }
     }
 
 }

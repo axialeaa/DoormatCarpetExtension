@@ -23,7 +23,8 @@ public class PropaguleBlockMixin implements LandingBlock {
 
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/PropaguleBlock;isFullyGrown(Lnet/minecraft/block/BlockState;)Z"))
     private void dropOnFullyGrown(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (DoormatSettings.propagulePropagation && state.get(AGE) == 4) spawnFallingBlock(state, world, pos);
+        if (DoormatSettings.propagulePropagation && state.get(AGE) == 4)
+            spawnFallingBlock(state, world, pos);
     }
 
     @Unique
