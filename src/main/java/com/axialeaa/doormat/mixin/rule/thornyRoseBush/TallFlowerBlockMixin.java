@@ -20,12 +20,12 @@ public class TallFlowerBlockMixin extends AbstractBlockMixin {
     @Override
     public void injectedOnEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (DoormatSettings.thornyRoseBush && state.getBlock() == Blocks.ROSE_BUSH && entity instanceof LivingEntity && entity.getType() != EntityType.BEE)
-            // if thornyRoseBush is "true", the block in question is a rose bush and the entity is living and not a bee, damage will be dealt on motion
-            if (!world.isClient && (entity.lastRenderX != entity.getX() || entity.lastRenderZ != entity.getZ())) {
-                double velocityX = Math.abs(entity.getX() - entity.lastRenderX);
+            // if the rule is enabled, the block in question is a rose bush and the entity is living and not a bee...
+            if (!world.isClient && (entity.lastRenderX != entity.getX() || entity.lastRenderZ != entity.getZ())) { // if this method is called on the server side and the entity is moving...
+                double velocityX = Math.abs(entity.getX() - entity.lastRenderX); // get the absolute velocity of the entity in both x and z
                 double velocityZ = Math.abs(entity.getZ() - entity.lastRenderZ);
-                if (velocityX >= 0.003 || velocityZ >= 0.003)
-                    entity.damage(world.getDamageSources().create(DoormatDamageTypes.ROSE_BUSH), 1.0F);
+                if (velocityX >= 0.003 || velocityZ >= 0.003) // if the velocity is greater than or equal to 0.003 in either x or z...
+                    entity.damage(world.getDamageSources().create(DoormatDamageTypes.ROSE_BUSH), 1.0F); // deal rose bush damage
             }
     }
 

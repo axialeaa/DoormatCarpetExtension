@@ -20,8 +20,8 @@ public class PillarBlockMixin implements BlockPistonBehaviourInterface {
     @Override
     public boolean isStickyToNeighbor(World level, BlockPos pos, BlockState state, BlockPos neighborPos, BlockState neighborState, Direction dir, Direction moveDir) {
         return switch (DoormatSettings.stickyPillarBlocks) {
-            case TRUE -> neighborState.getBlock() instanceof PillarBlock && dir.getAxis() == neighborState.get(PillarBlock.AXIS);
-            case STICK_TO_ALL -> neighborState.getBlock() instanceof PillarBlock;
+            case TRUE -> neighborState == state && dir.getAxis() == neighborState.get(PillarBlock.AXIS);
+            case STICK_TO_ALL -> neighborState == state;
             default -> false;
         };
     }

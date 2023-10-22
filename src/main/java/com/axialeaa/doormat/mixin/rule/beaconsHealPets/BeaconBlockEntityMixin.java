@@ -22,9 +22,11 @@ public class BeaconBlockEntityMixin {
     @Inject(method = "applyPlayerEffects", at = @At(value = "HEAD"))
     private static void regenNearbyPets(World world, BlockPos pos, int beaconLevel, StatusEffect primaryEffect, StatusEffect secondaryEffect, CallbackInfo ci) {
         if (DoormatSettings.beaconsHealPets && secondaryEffect == StatusEffects.REGENERATION) {
+            // if the rule is enabled and the beacon is set to regeneration...
             Box box = (new Box(pos)).expand(50).stretch(0.0, world.getHeight(), 0.0);
+            // create a box around the beacon, and make a list of all the tamed entities inside
             List<TameableEntity> list = world.getEntitiesByClass(TameableEntity.class, box, TameableEntity::isTamed);
-            for (TameableEntity tameableEntity : list)
+            for (TameableEntity tameableEntity : list) // give each of these entities regeneration for 340 ticks
                 tameableEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 340, 0, true, true));
         }
     }

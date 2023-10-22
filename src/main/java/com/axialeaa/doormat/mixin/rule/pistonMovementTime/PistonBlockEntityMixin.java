@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(PistonBlockEntity.class)
 public class PistonBlockEntityMixin {
 
-    @ModifyConstant(method = "tick", constant = @Constant(floatValue = 0.5f))
+    @ModifyConstant(method = "tick", constant = @Constant(floatValue = 0.5F))
     private static float adjustTiming(float constant) {
-        return 1.0f / DoormatSettings.pistonMovementTime; // this number is the amount of blocks moved per tick
+        return 1.0F / DoormatSettings.pistonMovementTime; // the amount of blocks moved per tick
     }
 
 }

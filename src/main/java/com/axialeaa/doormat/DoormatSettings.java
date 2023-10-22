@@ -209,6 +209,9 @@ public class DoormatSettings {
 
     /* COMMANDS */
 
+    @Rule( categories = { COMMAND, DOORMAT } )
+    public static String commandRandomTick = "true";
+
 /*
     @Rule( categories = { COMMAND, DOORMAT } )
     public static String commandPronoun = "true";

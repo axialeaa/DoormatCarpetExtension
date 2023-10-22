@@ -24,8 +24,9 @@ public class SaplingBlockMixin {
     @Redirect(method = "generate", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/sapling/SaplingGenerator;generate(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/gen/chunk/ChunkGenerator;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/random/Random;)Z"))
     protected boolean swampGenerate(SaplingGenerator generator, ServerWorld world, ChunkGenerator chunkGenerator, BlockPos pos, BlockState state, Random random) {
         return DoormatSettings.growSwampOakTrees && state.isOf(Blocks.OAK_SAPLING) && world.getBiome(pos).isIn(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS) ?
+            // if the rule is enabled, the sapling is oak and the biome is a type of swamp, generate a swamp oak
             SWAMP_OAK_GENERATOR.generate(world, chunkGenerator, pos, state, random) :
-            generator.generate(world, chunkGenerator, pos, state, random);
+            generator.generate(world, chunkGenerator, pos, state, random); // otherwise, create a normal tree
     }
 
 }

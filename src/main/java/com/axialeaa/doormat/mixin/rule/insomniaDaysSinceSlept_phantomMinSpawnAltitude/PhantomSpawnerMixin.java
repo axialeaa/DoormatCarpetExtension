@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.*;
 public class PhantomSpawnerMixin {
 
     @ModifyConstant(method = "spawn", constant = @Constant(intValue = 72000))
-    private int spawn(int constant) {
+    private int modifySpawnTime(int constant) {
         return DoormatSettings.insomniaDaysSinceSlept * 24000; // number of ticks in a day
     }
 

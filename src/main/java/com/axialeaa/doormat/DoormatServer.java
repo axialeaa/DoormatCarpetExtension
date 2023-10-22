@@ -5,6 +5,7 @@ import carpet.CarpetServer;
 import carpet.api.settings.SettingsManager;
 import carpet.utils.Translations;
 // import com.axialeaa.doormat.command.DoormatCommands;
+import com.axialeaa.doormat.command.DoormatCommands;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	@Override
 	public void onInitialize() {
 		CarpetServer.manageExtension(new DoormatServer());
-		// DoormatCommands.register();
+		DoormatCommands.register();
 		LOGGER.info(MODNAME + " initialized. Wipe your feet!");
 	}
 

@@ -47,6 +47,8 @@
   "carpet.rule.parityPortalTicking.desc": "Nether portal blocks randomTick when lit, like they do on Bedrock Edition",
   "carpet.rule.parityFireAspectLighting.desc": "Fire aspect can be used to light campfires, candles and TNT, like it can on Bedrock Edition",
 
+  "carpet.rule.commandRandomTick.desc": "Enables a command to forcibly send randomTicks to the specified block position",
+
 
 
   "carpet.rule.consistentItemExplosionDamage.extra.0": "The IDs of the blocks this affects are defined in doormat/tags/items/explosion_immune_items.json.",
@@ -66,6 +68,11 @@
   "carpet.rule.stickyPillarBlocks.extra.0": "\"stick_to_all\" causes them to connect to each other regardless of axis direction.",
 
   "carpet.rule.thornyRoseBush.extra.0": "This even has a unique death message!",
+
+
+
+  "carpet.command.randomTick.failed": "Could not random tick the block",
+  "carpet.command.randomTick.success": "Sent %s random tick(s) to the block at %s, %s, %s",
 
 
 

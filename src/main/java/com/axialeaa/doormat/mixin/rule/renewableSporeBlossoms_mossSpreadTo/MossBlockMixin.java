@@ -24,10 +24,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MossBlockMixin {
 
     @Unique
-    private void generateAboveOnCondition(boolean condition, RegistryKey<ConfiguredFeature<?, ?>> key, ServerWorld world, Random random, BlockPos pos) {
+    private void generateAboveOnCondition(boolean condition, RegistryKey<ConfiguredFeature<?, ?>> feature, ServerWorld world, Random random, BlockPos pos) {
         if (condition && world.getBlockState(pos.up()).isAir())
             world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap(registry ->
-                registry.getEntry(key)).ifPresent(reference ->
+                registry.getEntry(feature)).ifPresent(reference ->
                 reference.value().generate(world, world.getChunkManager().getChunkGenerator(), random, pos));
     }
 

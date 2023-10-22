@@ -25,10 +25,13 @@ public class AzaleaBlockMixin {
     @Redirect(method = "grow", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/sapling/AzaleaSaplingGenerator;generate(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/gen/chunk/ChunkGenerator;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/random/Random;)Z"))
     public boolean grow(AzaleaSaplingGenerator generator, ServerWorld world, ChunkGenerator chunkGenerator, BlockPos pos, BlockState state, Random random) {
         return DoormatSettings.accurateAzaleaLeafDistribution ?
+            // if the rule is enabled...
             state.getBlock() == Blocks.FLOWERING_AZALEA ?
+                // if the fertilized block is a flowering azalea...
                 MANY_FLOWERS_GENERATOR.generate(world, chunkGenerator, pos, state, random) :
+                // create a tree with many flowers, otherwise a tree with no flowers
                 NO_FLOWERS_GENERATOR.generate(world, chunkGenerator, pos, state, random) :
-            generator.generate(world, chunkGenerator, pos, state, random);
+            generator.generate(world, chunkGenerator, pos, state, random); // otherwise generate a vanilla azalea tree
     }
 
 }

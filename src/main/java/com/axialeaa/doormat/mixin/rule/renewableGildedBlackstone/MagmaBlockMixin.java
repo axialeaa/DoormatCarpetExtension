@@ -22,11 +22,15 @@ public class MagmaBlockMixin extends AbstractBlockMixin {
     @Override
     public void injectedRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         if (DoormatSettings.renewableGildedBlackstone && world.getFluidState(pos.up()).isOf(Fluids.WATER))
+            // if the rule is enabled and the block above is water...
             for (Direction direction : Direction.values()) {
+                // iterate through a list of directions around the magma block
                 BlockPos blockPos = pos.offset(direction);
                 if (world.getBlockState(blockPos).isOf(Blocks.BLACKSTONE) && random.nextFloat() < 0.001) {
-                    world.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(world.getBlockState(blockPos)));
+                    // if the block directly adjacent in this direction is blackstone and a random number between 0 and 1 is less than 0.001...
                     world.setBlockState(blockPos, Blocks.GILDED_BLACKSTONE.getDefaultState());
+                    world.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(world.getBlockState(blockPos)));
+                    // set the blackstone to gilded blackstone and emit a block change event
                 }
             }
     }
