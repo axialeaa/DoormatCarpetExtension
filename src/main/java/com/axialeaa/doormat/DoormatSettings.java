@@ -95,10 +95,10 @@ public class DoormatSettings {
     public static double maxMinecartSpeed = 8.0;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
-    public static boolean disableNetherPortals = false;
+    public static boolean disableNether = false;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
-    public static boolean disableEndPortals = false;
+    public static boolean disableEnd = false;
 
     /* FARMING */
 

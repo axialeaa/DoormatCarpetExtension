@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.disableNetherPortals;
+package com.axialeaa.doormat.mixin.rule.disableNether;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.AbstractFireBlock;
@@ -20,12 +20,12 @@ public class AbstractFireBlockMixin {
 
     @Redirect(method = "onBlockAdded", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/dimension/NetherPortal;getNewPortal(Lnet/minecraft/world/WorldAccess;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction$Axis;)Ljava/util/Optional;"))
     private Optional<NetherPortal> disablePortalCreation(WorldAccess world, BlockPos pos, Direction.Axis axis) {
-        return DoormatSettings.disableNetherPortals ? Optional.empty() : NetherPortal.getNewPortal(world, pos, Direction.Axis.X);
+        return world.getDimension().bedWorks() && DoormatSettings.disableNether ? Optional.empty() : NetherPortal.getNewPortal(world, pos, Direction.Axis.X);
     }
 
     @Inject(method = "shouldLightPortalAt", at = @At("RETURN"), cancellable = true)
     private static void disableLightingBehavior(World world, BlockPos pos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
-        if (DoormatSettings.disableNetherPortals)
+        if (world.getDimension().bedWorks() && DoormatSettings.disableNether)
             cir.setReturnValue(false);
     }
 

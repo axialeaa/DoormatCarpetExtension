@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.disableEndPortals;
+package com.axialeaa.doormat.mixin.rule.disableEnd;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.EndPortalFrameBlock;
@@ -15,7 +15,7 @@ public class EnderEyeItemMixin {
 
     @Redirect(method = "useOnBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/pattern/BlockPattern;searchAround(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/pattern/BlockPattern$Result;"))
     private BlockPattern.Result test(BlockPattern pattern, WorldView world, BlockPos pos) {
-        return DoormatSettings.disableEndPortals ? null : EndPortalFrameBlock.getCompletedFramePattern().searchAround(world, pos);
+        return DoormatSettings.disableEnd ? null : EndPortalFrameBlock.getCompletedFramePattern().searchAround(world, pos);
     }
 
 }
