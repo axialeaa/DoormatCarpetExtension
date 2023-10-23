@@ -10,6 +10,7 @@
     "rule._updateTypes_quasiConnecting.FenceGateBlock",
     "rule._updateTypes_quasiConnecting.HopperBlockMixin",
     "rule._updateTypes_quasiConnecting.NoteBlockMixin",
+    "rule._updateTypes_quasiConnecting.PistonBlockMixin",
     "rule._updateTypes_quasiConnecting.RedstoneLampBlockMixin",
     "rule._updateTypes_quasiConnecting.TntBlockMixin",
     "rule._updateTypes_quasiConnecting.TrapdoorBlockMixin",
@@ -28,8 +29,11 @@
     "rule.insomniaDaysSinceSlept_phantomMinSpawnAltitude.PhantomSpawnerMixin",
     "rule.leavesNoCollision.LeavesBlockMixin",
     "rule.maxMinecartSpeed.AbstractMinecartEntityMixin",
+    "rule.parityComparatorsReadThrough.ComparatorBlockMixin",
+    "rule.parityComparatorsReadThrough.WorldMixin",
     "rule.parityFireAspectLighting.ItemMixin",
     "rule.parityPortalTicking.NetherPortalBlockMixin",
+    "rule.parityRavagersStompPlants.PlantBlockMixin",
     "rule.pistonMovementTime.PistonBlockEntityMixin",
     "rule.playerDropAllXp.PlayerEntityMixin",
     "rule.propagulePropagation.FallingBlockEntity",
@@ -41,7 +45,8 @@
     "rule.renewableSporeBlossoms_mossSpreadTo.SporeBlossomBlockMixin",
     "rule.stickyPillarBlocks.PillarBlockMixin",
     "rule.stickyStickyPistons.PistonBlockMixin",
-    "rule.thornyRoseBush.TallFlowerBlockMixin"
+    "rule.thornyRoseBush.TallFlowerBlockMixin",
+    "rule.zoglinsSpawnInPortals.NetherPortalBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

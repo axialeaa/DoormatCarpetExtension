@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NetherPortalBlock.class)
-public abstract class NetherPortalBlockMixin extends AbstractBlockMixin {
+public class NetherPortalBlockMixin extends AbstractBlockMixin {
 
     @Override
     public void injectedOnBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {

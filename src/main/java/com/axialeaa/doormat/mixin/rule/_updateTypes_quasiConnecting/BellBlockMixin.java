@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule._updateTypes_quasiConnecting;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.RedstoneBehavior;
+import com.axialeaa.doormat.helpers.ConditionalRedstoneBehavior;
 import net.minecraft.block.BellBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -20,7 +20,7 @@ public class BellBlockMixin {
 
     @Redirect(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting(World world, BlockPos pos) {
-        return RedstoneBehavior.quasiConnectOnCondition(DoormatSettings.bellQuasiConnecting, world, pos);
+        return ConditionalRedstoneBehavior.quasiConnectOnCondition(DoormatSettings.bellQuasiConnecting, world, pos);
     }
 
 }

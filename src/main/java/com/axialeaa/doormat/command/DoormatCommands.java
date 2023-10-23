@@ -44,14 +44,12 @@ public class DoormatCommands {
             ServerWorld world = source.getWorld(); // get the world
             BlockState state = world.getBlockState(pos); // get the block state at the entered position
             Random random = world.getRandom();
-            if (state.hasRandomTicks()) {
-                // if the block can be randomTicked...
+            if (state.hasRandomTicks()) { // if the block can be randomTicked...
                 for (int i = 0; i < count; i++)
-                    state.randomTick(world, pos, random); // forcibly randomTick this block a number of times specified by the count value
+                    state.randomTick(world, pos, random); // send x number of randomTicks to this position where x is the entered count value
                 source.sendFeedback(() -> Text.translatable("carpet.command.randomTick.success", count, pos.getX(), pos.getY(), pos.getZ()), true);
                 return 1; // output this success message, substituting each %s for these args, and return 1 to tell the game this was successful
-            }
-            else throw new SimpleCommandExceptionType(Text.translatable("carpet.command.randomTick.failed")).create();
+            } else throw new SimpleCommandExceptionType(Text.translatable("carpet.command.randomTick.failed")).create();
             // if all else fails, throw an exception in the form of this error message
         }
 

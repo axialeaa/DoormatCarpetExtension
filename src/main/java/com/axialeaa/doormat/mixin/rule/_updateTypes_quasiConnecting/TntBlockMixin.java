@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule._updateTypes_quasiConnecting;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.RedstoneBehavior;
+import com.axialeaa.doormat.helpers.ConditionalRedstoneBehavior;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.TntBlock;
@@ -37,7 +37,7 @@ public class TntBlockMixin {
 
     @Redirect(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting(World world, BlockPos pos) {
-        return RedstoneBehavior.quasiConnectOnCondition(DoormatSettings.tntQuasiConnecting, world, pos);
+        return ConditionalRedstoneBehavior.quasiConnectOnCondition(DoormatSettings.tntQuasiConnecting, world, pos);
     }
 
 

@@ -135,6 +135,9 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean propagulePropagation = false;
 
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean zoglinsSpawnInPortals = false;
+
     /* FUN */
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
@@ -164,6 +167,9 @@ public class DoormatSettings {
     public static NeighbourUpdateMode fenceGateUpdateType = NeighbourUpdateMode.SHAPE;
 
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static NeighbourUpdateMode pistonUpdateType = NeighbourUpdateMode.BOTH;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
     public static NeighbourUpdateMode noteBlockUpdateType = NeighbourUpdateMode.BOTH;
 
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
@@ -188,10 +194,16 @@ public class DoormatSettings {
     public static boolean fenceGateQuasiConnecting = false;
 
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static boolean pistonQuasiConnecting = true;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
     public static boolean noteBlockQuasiConnecting = false;
 
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
     public static boolean hopperQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    public static boolean dispenserQuasiConnecting = true;
 
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
     public static boolean bellQuasiConnecting = false;
@@ -207,14 +219,18 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT, PARITY } )
     public static boolean parityFireAspectLighting = false;
 
+    @Rule( categories = { FEATURE, DOORMAT, PARITY } )
+    public static boolean parityRavagersStompPlants = false;
+
+    @Rule( categories = { FEATURE, DOORMAT, PARITY } )
+    public static boolean parityComparatorsReadThroughChains = false;
+
+    @Rule( categories = { FEATURE, DOORMAT, PARITY } )
+    public static boolean parityComparatorsReadThroughPaths = false;
+
     /* COMMANDS */
 
     @Rule( categories = { COMMAND, DOORMAT } )
     public static String commandRandomTick = "true";
-
-/*
-    @Rule( categories = { COMMAND, DOORMAT } )
-    public static String commandPronoun = "true";
-*/
 
 }
