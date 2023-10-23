@@ -1,7 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.parityComparatorsReadThrough;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChainBlock;
