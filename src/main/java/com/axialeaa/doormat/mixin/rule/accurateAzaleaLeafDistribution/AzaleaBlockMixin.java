@@ -23,7 +23,7 @@ public class AzaleaBlockMixin {
     @Unique private static final AzaleaSaplingNoFlowersGenerator NO_FLOWERS_GENERATOR = new AzaleaSaplingNoFlowersGenerator();
 
     @Redirect(method = "grow", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/sapling/AzaleaSaplingGenerator;generate(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/gen/chunk/ChunkGenerator;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/random/Random;)Z"))
-    public boolean grow(AzaleaSaplingGenerator generator, ServerWorld world, ChunkGenerator chunkGenerator, BlockPos pos, BlockState state, Random random) {
+    public boolean separateTrees(AzaleaSaplingGenerator generator, ServerWorld world, ChunkGenerator chunkGenerator, BlockPos pos, BlockState state, Random random) {
         return DoormatSettings.accurateAzaleaLeafDistribution ?
             // if the rule is enabled...
             state.getBlock() == Blocks.FLOWERING_AZALEA ?

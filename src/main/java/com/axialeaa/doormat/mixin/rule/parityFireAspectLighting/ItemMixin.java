@@ -30,13 +30,13 @@ public class ItemMixin {
 
     @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)
     public void fireAspectLight(ItemUsageContext ctx, CallbackInfoReturnable<ActionResult> cir) {
-        PlayerEntity player = ctx.getPlayer(); // get the player that uses the item
-        ItemStack stack = ctx.getStack(); // get the item stack
-        World world = ctx.getWorld(); // get the world
-        BlockPos pos = ctx.getBlockPos(); // get the position of the block the item is used on
+        PlayerEntity player = ctx.getPlayer();
+        ItemStack stack = ctx.getStack();
+        World world = ctx.getWorld();
+        BlockPos pos = ctx.getBlockPos();
         BlockState state = world.getBlockState(pos); // get the block state at this position
         if (DoormatSettings.parityFireAspectLighting && EnchantmentHelper.getLevel(Enchantments.FIRE_ASPECT, stack) > 0 && (state.getBlock() instanceof TntBlock || canBeLit(state))) {
-            // if the rule is enabled, the item stack is enchanted with fire aspect and the block is either TNT or an ignitable campfire, candle or candle cake...
+            // if the rule is enabled, the held item is enchanted with fire aspect and the block is either TNT or an ignitable campfire, candle or candle cake...
             if (state.getBlock() instanceof TntBlock) { // if it's TNT, light it
                 TntBlock.primeTnt(world, pos);
                 world.setBlockState(pos, Blocks.AIR.getDefaultState(), DoormatSettings.tntUpdateType.getFlags() | Block.REDRAW_ON_MAIN_THREAD);
@@ -45,8 +45,10 @@ public class ItemMixin {
                 world.setBlockState(pos, state.with(Properties.LIT, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                 world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             }
-            stack.damage(1, (LivingEntity)player, (p) -> p.sendToolBreakStatus(ctx.getHand())); // decrement the durability of the item stack
-            cir.setReturnValue(ActionResult.success(world.isClient())); // and swing the player's hand to indicate an action was just performed
+            if (stack.isDamageable()) // if this item can be damaged, decrement the durability
+                stack.damage(1, (LivingEntity)player, (p) -> p.sendToolBreakStatus(ctx.getHand()));
+            cir.setReturnValue(ActionResult.success(world.isClient()));
+            // and swing the player's hand to indicate an action was just performed
         }
     }
 

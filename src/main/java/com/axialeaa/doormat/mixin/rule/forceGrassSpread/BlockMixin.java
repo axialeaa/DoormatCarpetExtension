@@ -8,12 +8,19 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(Block.class)
 public class BlockMixin implements Fertilizable {
 
+    @Unique
+    private boolean isRuleIsDirt(WorldView world, BlockPos pos) {
+        return DoormatSettings.forceGrassSpread && world.getBlockState(pos).isOf(Blocks.DIRT);
+    }
+
+    @Override
     public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
-        if (DoormatSettings.forceGrassSpread && world.getBlockState(pos).isOf(Blocks.DIRT)) {
+        if (isRuleIsDirt(world, pos)) {
             // if the rule is enabled and the block in question is dirt...
             if (!world.getBlockState(pos.up()).isTransparent(world, pos))
                 return false; // if the block above the block in question is not transparent, return false immediately
@@ -27,7 +34,7 @@ public class BlockMixin implements Fertilizable {
 
     @Override
     public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return DoormatSettings.forceGrassSpread && state.isOf(Blocks.DIRT);
+        return isRuleIsDirt(world, pos);
     }
 
     @Override
@@ -43,8 +50,8 @@ public class BlockMixin implements Fertilizable {
                 isMycelium = true; // if the block is mycelium, reassign isMycelium
             if (!SpreadableBlock.canSpread(state, world, blockPos) || !isGrass || !isMycelium)
                 // if the block position is not valid for spreading, or if either grass or mycelium have not been found yet...
-                continue; // continue the loop
-            break; // otherwise stop it
+                continue; // skip this iteration
+            break; // otherwise stop the loop entirely
         }
         if (isGrass && isMycelium) // if both grass and mycelium have been found, choose randomly between grass and mycelium and set the dirt to this
             world.setBlockState(pos, random.nextBoolean() ? Blocks.GRASS_BLOCK.getDefaultState() : Blocks.MYCELIUM.getDefaultState(), Block.NOTIFY_ALL);

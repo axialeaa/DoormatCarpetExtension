@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.disableNether;
+package com.axialeaa.doormat.mixin.rule.disableNetherTeleporting;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.BlockState;
@@ -16,7 +16,7 @@ public class NetherPortalBlockMixin {
 
     @Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
     private void disableTeleportation(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
-        if (world.getDimension().bedWorks() && DoormatSettings.disableNether)
+        if (world.getDimension().bedWorks() && DoormatSettings.disableNetherTeleporting)
             ci.cancel();
     }
 

@@ -95,10 +95,10 @@ public class DoormatSettings {
     public static double maxMinecartSpeed = 8.0;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
-    public static boolean disableNether = false;
+    public static boolean disableNetherTeleporting = false;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
-    public static boolean disableEnd = false;
+    public static boolean disableEndTeleporting = false;
 
     /* FARMING */
 
@@ -193,8 +193,8 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
     public static boolean fenceGateQuasiConnecting = false;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
-    public static boolean pistonQuasiConnecting = true;
+//    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+//    public static boolean pistonQuasiConnecting = true;
 
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
     public static boolean noteBlockQuasiConnecting = false;
@@ -202,8 +202,8 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
     public static boolean hopperQuasiConnecting = false;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
-    public static boolean dispenserQuasiConnecting = true;
+//    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+//    public static boolean dispenserQuasiConnecting = true;
 
     @Rule( categories = { FEATURE, DOORMAT, FUN } )
     public static boolean bellQuasiConnecting = false;

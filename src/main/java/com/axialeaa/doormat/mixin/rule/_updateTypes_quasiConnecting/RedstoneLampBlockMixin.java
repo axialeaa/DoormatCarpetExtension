@@ -22,10 +22,11 @@ public class RedstoneLampBlockMixin {
     private int changeScheduledTickUpdate(int flags) {
         return DoormatSettings.lampUpdateType.getFlags();
     }
+    // we need 2 separate ones here between one is ServerWorld.setBlockState and the other is World.setBlockState (cringe)
 
     @Redirect(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting(World world, BlockPos pos) {
-        return ConditionalRedstoneBehavior.quasiConnectOnCondition(DoormatSettings.lampQuasiConnecting, world, pos);
+        return ConditionalRedstoneBehavior.quasiConnectOn(DoormatSettings.lampQuasiConnecting, world, pos);
     }
 
 }

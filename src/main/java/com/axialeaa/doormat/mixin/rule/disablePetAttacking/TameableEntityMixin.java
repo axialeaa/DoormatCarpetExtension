@@ -19,11 +19,11 @@ import java.util.UUID;
 @Mixin(TameableEntity.class)
 public abstract class TameableEntityMixin extends AnimalEntity {
 
+    @Shadow @Nullable public abstract UUID getOwnerUuid();
+
     protected TameableEntityMixin(EntityType<? extends AnimalEntity> entityType, World world) {
         super(entityType, world);
     }
-
-    @Shadow @Nullable public abstract UUID getOwnerUuid();
 
     @Unique
     public boolean damage(DamageSource source, float amount) {

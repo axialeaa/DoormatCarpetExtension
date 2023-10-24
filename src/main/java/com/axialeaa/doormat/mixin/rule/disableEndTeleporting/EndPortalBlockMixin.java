@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.disableEnd;
+package com.axialeaa.doormat.mixin.rule.disableEndTeleporting;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.BlockState;
@@ -16,7 +16,7 @@ public class EndPortalBlockMixin {
 
     @Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
     private void disableTeleportation(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
-        if (world.getDimension().bedWorks() && DoormatSettings.disableEnd)
+        if (world.getDimension().bedWorks() && DoormatSettings.disableEndTeleporting)
             ci.cancel();
     }
 

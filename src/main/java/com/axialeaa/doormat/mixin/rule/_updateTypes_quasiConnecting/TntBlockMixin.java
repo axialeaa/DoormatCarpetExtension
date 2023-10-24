@@ -15,13 +15,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(TntBlock.class)
 public class TntBlockMixin {
 
-    @Redirect(method = "onBlockAdded", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
+    @Redirect(method = {"onBlockAdded", "neighborUpdate", "onProjectileHit"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
     private boolean changeOnBlockAdded(World world, BlockPos pos, boolean move) {
-        return world.setBlockState(pos, Blocks.AIR.getDefaultState(), DoormatSettings.tntUpdateType.getFlags());
-    }
-
-    @Redirect(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
-    private boolean changeNeighborUpdate(World world, BlockPos pos, boolean move) {
         return world.setBlockState(pos, Blocks.AIR.getDefaultState(), DoormatSettings.tntUpdateType.getFlags());
     }
 
@@ -30,14 +25,9 @@ public class TntBlockMixin {
         return DoormatSettings.tntUpdateType.getFlags() | Block.REDRAW_ON_MAIN_THREAD;
     }
 
-    @Redirect(method = "onProjectileHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
-    private boolean changeOnUse(World world, BlockPos pos, boolean move) {
-        return world.setBlockState(pos, Blocks.AIR.getDefaultState(), DoormatSettings.tntUpdateType.getFlags());
-    }
-
     @Redirect(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting(World world, BlockPos pos) {
-        return ConditionalRedstoneBehavior.quasiConnectOnCondition(DoormatSettings.tntQuasiConnecting, world, pos);
+        return ConditionalRedstoneBehavior.quasiConnectOn(DoormatSettings.tntQuasiConnecting, world, pos);
     }
 
 

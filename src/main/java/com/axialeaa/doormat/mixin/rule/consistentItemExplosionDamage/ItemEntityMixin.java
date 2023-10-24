@@ -18,7 +18,7 @@ public abstract class ItemEntityMixin {
     @Shadow public abstract ItemStack getStack();
 
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
-    public void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    public void disableExplosionDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (DoormatSettings.consistentItemExplosionDamage && this.getStack().isIn(DoormatTags.EXPLOSION_IMMUNE_ITEMS) && source.isIn(DamageTypeTags.IS_EXPLOSION))
             cir.setReturnValue(false);
     }

@@ -18,7 +18,7 @@ public class FallingBlockEntity {
     @Inject(method = "tick", at = @At(value = "HEAD"))
     private void modifyMangrovePropagule(CallbackInfo ci) {
         if (DoormatSettings.propagulePropagation && this.block.isOf(Blocks.MANGROVE_PROPAGULE) && this.block.get(PropaguleBlock.HANGING) && this.block.get(PropaguleBlock.AGE) == 4)
-            // if the rule is enabled, the falling block entity is a hanging mangrove propagule with age 4, set it to the default mangrove propagule state
+            // if the rule is enabled and the falling block entity is a fully grown hanging mangrove propagule, set it to the default mangrove propagule state (standing)
             // this allows it to plant itself on landing
             this.block = Blocks.MANGROVE_PROPAGULE.getDefaultState();
     }

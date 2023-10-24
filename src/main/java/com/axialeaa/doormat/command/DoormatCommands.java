@@ -44,7 +44,8 @@ public class DoormatCommands {
             ServerWorld world = source.getWorld(); // get the world
             BlockState state = world.getBlockState(pos); // get the block state at the entered position
             Random random = world.getRandom();
-            if (state.hasRandomTicks()) { // if the block can be randomTicked...
+            // if the block can be randomTicked...
+            if (state.hasRandomTicks()) {
                 for (int i = 0; i < count; i++)
                     state.randomTick(world, pos, random); // send x number of randomTicks to this position where x is the entered count value
                 source.sendFeedback(() -> Text.translatable("carpet.command.randomTick.success", count, pos.getX(), pos.getY(), pos.getZ()), true);

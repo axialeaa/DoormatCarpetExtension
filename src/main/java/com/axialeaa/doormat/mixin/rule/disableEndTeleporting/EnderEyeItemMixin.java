@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.disableEnd;
+package com.axialeaa.doormat.mixin.rule.disableEndTeleporting;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.EndPortalFrameBlock;
@@ -14,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class EnderEyeItemMixin {
 
     @Redirect(method = "useOnBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/pattern/BlockPattern;searchAround(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/pattern/BlockPattern$Result;"))
-    private BlockPattern.Result test(BlockPattern pattern, WorldView world, BlockPos pos) {
-        return DoormatSettings.disableEnd ? null : EndPortalFrameBlock.getCompletedFramePattern().searchAround(world, pos);
+    private BlockPattern.Result disableOpeningBehavior(BlockPattern pattern, WorldView world, BlockPos pos) {
+        return DoormatSettings.disableEndTeleporting ? null : EndPortalFrameBlock.getCompletedFramePattern().searchAround(world, pos);
     }
 
 }

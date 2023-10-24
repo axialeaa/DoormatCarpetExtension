@@ -20,7 +20,7 @@ public class HopperBlockMixin {
 
     @Redirect(method = "updateEnabled", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting(World world, BlockPos pos) {
-        return ConditionalRedstoneBehavior.quasiConnectOnCondition(DoormatSettings.hopperQuasiConnecting, world, pos);
+        return ConditionalRedstoneBehavior.quasiConnectOn(DoormatSettings.hopperQuasiConnecting, world, pos);
     }
 
 }

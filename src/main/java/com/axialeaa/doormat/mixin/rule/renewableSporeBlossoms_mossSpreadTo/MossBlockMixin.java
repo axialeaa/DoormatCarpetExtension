@@ -5,6 +5,7 @@ import com.axialeaa.doormat.world.DoormatConfiguredFeatures;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.Fertilizable;
 import net.minecraft.block.MossBlock;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MossBlock.class)
-public class MossBlockMixin {
+public abstract class MossBlockMixin implements Fertilizable {
 
     @Unique
     private void generateAboveOnCondition(boolean condition, RegistryKey<ConfiguredFeature<?, ?>> feature, ServerWorld world, Random random, BlockPos pos) {
@@ -32,12 +33,14 @@ public class MossBlockMixin {
     }
 
     @ModifyReturnValue(method = "isFertilizable", at = @At("RETURN"))
-    public boolean test(boolean original, WorldView world, BlockPos pos) {
+    public boolean accommodateBlossoms(boolean original, WorldView world, BlockPos pos) {
         return original || world.getBlockState(pos.down()).isAir();
+        // this just allows us to check for air independently above and below in the grow class
+        // no vanilla behaviour changed here
     }
 
     @Inject(method = "grow", at = @At("HEAD"), cancellable = true)
-    public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state, CallbackInfo ci) {
+    public void overwriteWithCustom(ServerWorld world, Random random, BlockPos pos, BlockState state, CallbackInfo ci) {
         ci.cancel();
         generateAboveOnCondition(true, UndergroundConfiguredFeatures.MOSS_PATCH_BONEMEAL, world, random, pos);
         generateAboveOnCondition(DoormatSettings.mossSpreadToCobblestone, DoormatConfiguredFeatures.MOSSY_COBBLESTONE_PATCH, world, random, pos);

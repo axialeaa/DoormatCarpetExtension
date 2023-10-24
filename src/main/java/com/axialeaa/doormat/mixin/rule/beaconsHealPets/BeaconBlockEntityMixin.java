@@ -26,7 +26,7 @@ public class BeaconBlockEntityMixin {
             Box box = (new Box(pos)).expand(50).stretch(0.0, world.getHeight(), 0.0);
             // create a box around the beacon, and make a list of all the tamed entities inside
             List<TameableEntity> list = world.getEntitiesByClass(TameableEntity.class, box, TameableEntity::isTamed);
-            for (TameableEntity tameableEntity : list) // give each of these entities regeneration for 340 ticks
+            for (TameableEntity tameableEntity : list) // give each of these entities regeneration for 340 ticks (17 seconds)
                 tameableEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 340, 0, true, true));
         }
     }

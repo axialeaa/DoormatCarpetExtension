@@ -13,6 +13,8 @@ public class BlocksMixin {
     @ModifyArg(method = "<clinit>", at = @At(value = "INVOKE", target = "net/minecraft/block/MagmaBlock.<init>(Lnet/minecraft/block/AbstractBlock$Settings;)V", ordinal = 0), slice = @Slice(from = @At(value = "CONSTANT", args = "stringValue=magma_block")))
     private static AbstractBlock.Settings magmaRandomTick(AbstractBlock.Settings settings) {
         return settings.ticksRandomly();
+        // this is unfortunately necessary as settings assigned to the block when registered cannot be dynamically changed with a rule
+        // it doesn't practically change anything though, because the randomTick method in the magma block class checks for the rule right away
     }
 
 }
