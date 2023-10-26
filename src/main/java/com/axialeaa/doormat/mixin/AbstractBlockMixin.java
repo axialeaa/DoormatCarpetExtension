@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractBlock.class)
 public abstract class AbstractBlockMixin {
 
-    @Inject(method = "getCollisionShape", at = @At("HEAD"))
+    @Inject(method = "getCollisionShape", at = @At("HEAD"), cancellable = true)
     protected void injectedGetCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {}
 
     @Inject(method = "onBlockAdded", at = @At("HEAD"))

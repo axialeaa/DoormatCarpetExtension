@@ -29,8 +29,8 @@ public class AzaleaBlockMixin {
             state.getBlock() == Blocks.FLOWERING_AZALEA ?
                 // if the fertilized block is a flowering azalea...
                 MANY_FLOWERS_GENERATOR.generate(world, chunkGenerator, pos, state, random) :
-                // create a tree with many flowers, otherwise a tree with no flowers
                 NO_FLOWERS_GENERATOR.generate(world, chunkGenerator, pos, state, random) :
+                // create a tree with many flowers, otherwise a tree with no flowers
             generator.generate(world, chunkGenerator, pos, state, random); // otherwise generate a vanilla azalea tree
     }
 
