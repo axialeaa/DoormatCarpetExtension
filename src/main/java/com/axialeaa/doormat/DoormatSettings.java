@@ -39,7 +39,7 @@ public class DoormatSettings {
      * -------- ENUMS --------
      */
 
-    public enum PetHurtMode { FALSE, TRUE, IF_OWNER; public boolean isEnabled() {
+    public enum PetHurtMode { FALSE, TRUE, OWNED; public boolean isEnabled() {
             return this != FALSE;
         } }
     public enum RenewableSporeBlossomsMode { FALSE, MOSS, SELF }
@@ -47,6 +47,7 @@ public class DoormatSettings {
             return this != FALSE;
         } }
     public enum NeighbourUpdateMode {
+
         NONE(0),
         BLOCK(1),
         SHAPE(2),
@@ -88,7 +89,7 @@ public class DoormatSettings {
     @Rule( options = "3", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int insomniaDaysSinceSlept = 3;
 
-    @Rule( options = { "63", "127" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
+    @Rule( options = { "63", "127", "255" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int phantomMinSpawnAltitude = 63;
 
     @Rule( options = "8.0", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { FEATURE, DOORMAT } )

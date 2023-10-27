@@ -60,7 +60,7 @@
 
 
 
-  "carpet.rule.disablePetAttacking.extra.0": "\"if_owner\" disallows players to hit pets that aren't their own.",
+  "carpet.rule.disablePetAttacking.extra.0": "\"owned\" allows players to hit pets that aren't their own.",
 
   "carpet.rule.maxMinecartSpeed.extra.0": "Underwater max speed will always be half of this number.",
   "carpet.rule.disableNether.extra.0": "You can still create and travel through portals in the nether, to save getting stranded there.",

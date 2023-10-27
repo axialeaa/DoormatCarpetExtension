@@ -1,5 +1,6 @@
 package com.axialeaa.doormat.helpers;
 
+import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
@@ -7,8 +8,8 @@ import net.minecraft.item.Item;
 
 public class ConsistentItemExplosionDamage {
 
-    public static boolean disableDamageIfResistant(boolean rule, Entity entity, float power) {
-        if (rule && entity instanceof ItemEntity itemEntity) {
+    public static boolean disableDamageIfResistant(Entity entity, float power) {
+        if (DoormatSettings.consistentItemExplosionDamage && entity instanceof ItemEntity itemEntity) {
             Item item = itemEntity.getStack().getItem();
             if (item instanceof BlockItem blockItem) {
                 float blastRes = blockItem.getBlock().getBlastResistance();

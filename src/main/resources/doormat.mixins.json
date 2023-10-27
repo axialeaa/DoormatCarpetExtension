@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AbstractBlockMixin",
+    "LivingEntityMixin",
     "rule._updateTypes_quasiConnecting.BellBlockMixin",
     "rule._updateTypes_quasiConnecting.DispenserBlockMixin",
     "rule._updateTypes_quasiConnecting.DoorBlockMixin",

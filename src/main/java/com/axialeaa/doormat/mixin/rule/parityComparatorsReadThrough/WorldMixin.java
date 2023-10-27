@@ -1,10 +1,8 @@
 package com.axialeaa.doormat.mixin.rule.parityComparatorsReadThrough;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.helpers.ConditionalRedstoneBehavior;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ChainBlock;
-import net.minecraft.block.DirtPathBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
@@ -16,14 +14,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class WorldMixin {
 
     @Redirect(method = "updateComparators", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean addChainsToCheck(BlockState blockState, BlockView world, BlockPos blockPos) {
-        boolean bl = false;
-        Block block = blockState.getBlock();
-        if (DoormatSettings.parityComparatorsReadThroughChains)
-            bl = block instanceof ChainBlock;
-        if (DoormatSettings.parityComparatorsReadThroughPaths)
-            bl = block instanceof DirtPathBlock;
-        return bl || blockState.isSolidBlock(world, blockPos);
+    private boolean addChainsToCheck(BlockState state, BlockView world, BlockPos pos) {
+        Block block = state.getBlock();
+        return ConditionalRedstoneBehavior.canReadThroughBlock(block) || state.isSolidBlock(world, pos);
     }
 
 }

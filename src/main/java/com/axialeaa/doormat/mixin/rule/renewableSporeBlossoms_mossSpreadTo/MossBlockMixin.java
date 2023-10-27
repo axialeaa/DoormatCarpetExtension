@@ -5,7 +5,6 @@ import com.axialeaa.doormat.world.DoormatConfiguredFeatures;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Fertilizable;
 import net.minecraft.block.MossBlock;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -22,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MossBlock.class)
-public abstract class MossBlockMixin implements Fertilizable {
+public class MossBlockMixin {
 
     @Unique
     private void generateAboveOnCondition(boolean condition, RegistryKey<ConfiguredFeature<?, ?>> feature, ServerWorld world, Random random, BlockPos pos) {
