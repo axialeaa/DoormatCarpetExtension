@@ -18,7 +18,7 @@ public class PistonBlockMixin implements BlockPistonBehaviourInterface {
 
     @Override
     public boolean isSticky(BlockState state) {
-        return DoormatSettings.stickyStickyPistons.isEnabled() && this.sticky;
+        return DoormatSettings.stickyStickyPistons.enabled() && this.sticky;
     }
 
     @Override

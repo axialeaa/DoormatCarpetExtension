@@ -16,7 +16,7 @@ public class SporeBlossomBlockMixin extends Block implements Fertilizable {
 
     @Unique
     private boolean isRule() {
-        return DoormatSettings.renewableSporeBlossoms == DoormatSettings.RenewableSporeBlossomsMode.SELF;
+        return DoormatSettings.renewableSporeBlossoms == DoormatSettings.SporeBlossomsMode.SELF;
     }
 
     public SporeBlossomBlockMixin(Settings settings) {

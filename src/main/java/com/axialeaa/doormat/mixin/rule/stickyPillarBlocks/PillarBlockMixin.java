@@ -14,7 +14,7 @@ public class PillarBlockMixin implements BlockPistonBehaviourInterface {
 
     @Override
     public boolean isSticky(BlockState state) {
-        return DoormatSettings.stickyPillarBlocks.isEnabled();
+        return DoormatSettings.stickyPillarBlocks.enabled();
     }
 
     @Override

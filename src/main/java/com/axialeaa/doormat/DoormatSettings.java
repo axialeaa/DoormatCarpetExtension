@@ -1,5 +1,6 @@
 package com.axialeaa.doormat;
 
+import carpet.CarpetSettings;
 import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Rule;
 import carpet.api.settings.Validator;
@@ -8,7 +9,6 @@ import net.minecraft.server.command.ServerCommandSource;
 
 import static carpet.api.settings.RuleCategory.*;
 
-@SuppressWarnings("unused")
 public class DoormatSettings {
 
     /*
@@ -17,8 +17,8 @@ public class DoormatSettings {
 
     public static final String DOORMAT = "doormat";
     public static final String PARITY = "parity";
-    public static final String PISTON = "piston";
-    public static final String FUN = "fun";
+    public static final String UPDATE = "update";
+    public static final String QC = "qc";
 
     /*
      * -------- VALIDATORS --------
@@ -39,16 +39,13 @@ public class DoormatSettings {
      * -------- ENUMS --------
      */
 
-    public enum PetHurtMode { FALSE, TRUE, OWNED; public boolean isEnabled() {
-            return this != FALSE;
-        } }
-    public enum RenewableSporeBlossomsMode { FALSE, MOSS, SELF }
-    public enum StickyBlockMode { FALSE, TRUE, STICK_TO_ALL; public boolean isEnabled() {
-            return this != FALSE;
-        } }
+    public enum PetHurtMode { FALSE, TRUE, OWNED; public boolean isEnabled() { return this != FALSE; } }
+    public enum SporeBlossomsMode { FALSE, MOSS, SELF }
+
+    @SuppressWarnings("unused")
     public enum NeighbourUpdateMode {
 
-        NONE(0),
+        NEITHER(0),
         BLOCK(1),
         SHAPE(2),
         BOTH(3);
@@ -77,7 +74,7 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean consistentItemExplosionDamage = false;
 
-    @Rule( categories = { FEATURE, DOORMAT } )
+    @Rule( categories = { SURVIVAL, DOORMAT } )
     public static boolean playerDropAllXp = false;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
@@ -92,7 +89,10 @@ public class DoormatSettings {
     @Rule( options = { "63", "127", "255" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int phantomMinSpawnAltitude = 63;
 
-    @Rule( options = "8.0", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { FEATURE, DOORMAT } )
+    @Rule( categories = { CREATIVE, SURVIVAL, DOORMAT } )
+    public static boolean disableShulkerReproduction = false;
+
+    @Rule( options = "8.0", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { CREATIVE, DOORMAT } )
     public static double maxMinecartSpeed = 8.0;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
@@ -110,10 +110,10 @@ public class DoormatSettings {
     public static boolean renewableCobwebs = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
-    public static RenewableSporeBlossomsMode renewableSporeBlossoms = RenewableSporeBlossomsMode.FALSE;
+    public static SporeBlossomsMode renewableSporeBlossoms = SporeBlossomsMode.FALSE;
 
     @Rule( categories = { FEATURE, DOORMAT } )
-    public static boolean huskWashing = false; // technically renewable sand, renamed to avoid conflict with other carpet mods
+    public static boolean huskWashing = false; // technically renewable sand; renamed to avoid conflict with other carpet mods
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean mossSpreadToCobblestone = false;
@@ -131,7 +131,7 @@ public class DoormatSettings {
     public static boolean accurateAzaleaLeafDistribution = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
-    public static boolean growSwampOakTrees = false;
+    public static boolean growableSwampOakTrees = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean propagulePropagation = false;
@@ -146,87 +146,87 @@ public class DoormatSettings {
 
     /* REDSTONE TINKERING */
 
-    @Rule( categories = { FEATURE, DOORMAT, PISTON, FUN } )
-    public static StickyBlockMode stickyStickyPistons = StickyBlockMode.FALSE;
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static CarpetSettings.ChainStoneMode stickyStickyPistons = CarpetSettings.ChainStoneMode.FALSE;
 
-    @Rule( categories = { FEATURE, DOORMAT, PISTON, FUN } )
-    public static StickyBlockMode stickyPillarBlocks = StickyBlockMode.FALSE;
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static CarpetSettings.ChainStoneMode stickyPillarBlocks = CarpetSettings.ChainStoneMode.FALSE;
 
-    @Rule( options = "2", validators = { PistonMovementTimeValidator.class }, strict = false, categories = { FEATURE, DOORMAT, PISTON, FUN } )
+    @Rule( options = "2", validators = { PistonMovementTimeValidator.class }, strict = false, categories = { FEATURE, DOORMAT } )
     public static int pistonMovementTime = 2;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode lampUpdateType = NeighbourUpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode doorUpdateType = NeighbourUpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode trapdoorUpdateType = NeighbourUpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode fenceGateUpdateType = NeighbourUpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode pistonUpdateType = NeighbourUpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode noteBlockUpdateType = NeighbourUpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode hopperUpdateType = NeighbourUpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode dispenserUpdateType = NeighbourUpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode bellUpdateType = NeighbourUpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode tntUpdateType = NeighbourUpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean lampQuasiConnecting = false;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean trapdoorQuasiConnecting = false;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean fenceGateQuasiConnecting = false;
 
-//    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+//    @Rule( categories = { FEATURE, QC, DOORMAT } )
 //    public static boolean pistonQuasiConnecting = true;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean noteBlockQuasiConnecting = false;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean hopperQuasiConnecting = false;
 
-//    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+//    @Rule( categories = { FEATURE, DOORMAT } )
 //    public static boolean dispenserQuasiConnecting = true;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean bellQuasiConnecting = false;
 
-    @Rule( categories = { FEATURE, DOORMAT, FUN } )
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean tntQuasiConnecting = false;
 
     /* PARITY */
 
-    @Rule( categories = { FEATURE, DOORMAT, PARITY } )
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean parityPortalTicking = false;
 
-    @Rule( categories = { FEATURE, DOORMAT, PARITY } )
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean parityFireAspectLighting = false;
 
-    @Rule( categories = { FEATURE, DOORMAT, PARITY } )
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean parityRavagersStompPlants = false;
 
-    @Rule( categories = { FEATURE, DOORMAT, PARITY } )
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean parityComparatorsReadThroughChains = false;
 
-    @Rule( categories = { FEATURE, DOORMAT, PARITY } )
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean parityComparatorsReadThroughPaths = false;
 
     /* COMMANDS */
