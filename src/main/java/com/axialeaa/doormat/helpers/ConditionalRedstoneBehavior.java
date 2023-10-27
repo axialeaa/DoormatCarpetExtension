@@ -7,9 +7,9 @@ import net.minecraft.world.World;
 
 public interface ConditionalRedstoneBehavior {
 
-    static boolean quasiConnectOn(boolean condition, World world, BlockPos pos) {
+    static boolean quasiConnectOn(boolean rule, World world, BlockPos pos) {
         boolean isPowered = world.isReceivingRedstonePower(pos);
-        return condition && CarpetSettings.quasiConnectivity != 0 ?
+        return rule && CarpetSettings.quasiConnectivity != 0 ?
             QuasiConnectivity.hasQuasiSignal(world, pos) || isPowered :
             isPowered;
     }
