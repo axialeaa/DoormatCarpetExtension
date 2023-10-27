@@ -45,7 +45,7 @@ public class ItemMixin {
                 world.setBlockState(pos, state.with(Properties.LIT, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                 world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             }
-            if (stack.isDamageable()) // if this item can be damaged, decrement the durability
+            if (stack.isDamageable() && player != null) // if this item can be damaged, decrement the durability
                 stack.damage(1, (LivingEntity)player, (p) -> p.sendToolBreakStatus(ctx.getHand()));
             cir.setReturnValue(ActionResult.success(world.isClient()));
             // and swing the player's hand to indicate an action was just performed
