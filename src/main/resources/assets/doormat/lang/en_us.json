@@ -1,6 +1,6 @@
 {
   "carpet.rule.leavesNoCollision.desc": "Disables the tangibility of leaves, making it easier to traverse areas with lots of trees",
-  "carpet.rule.consistentItemExplosionDamage.desc": "Blocks that are immune to certain kinds of damage also apply this property to their item variants",
+  "carpet.rule.consistentItemExplosionDamage.desc": "Explosion-immune blocks also apply this property to their dropped item counterparts",
   "carpet.rule.playerDropAllXp.desc": "Players drop all of their XP on death instead of a capped amount",
   "carpet.rule.beaconsHealPets.desc": "Beacons with their secondary effect set to regeneration can heal nearby tamed mobs",
   "carpet.rule.disablePetAttacking.desc": "Disables players harming tamed mobs",
@@ -60,7 +60,6 @@
 
 
 
-  "carpet.rule.consistentItemExplosionDamage.extra.0": "The IDs of the blocks this affects are defined in doormat/tags/items/explosion_immune_items.json.",
   "carpet.rule.disablePetAttacking.extra.0": "\"if_owner\" disallows players to hit pets that aren't their own.",
 
   "carpet.rule.maxMinecartSpeed.extra.0": "Underwater max speed will always be half of this number.",

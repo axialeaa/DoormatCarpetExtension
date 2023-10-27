@@ -1,9 +1,13 @@
 package com.axialeaa.doormat.mixin.rule.consistentItemExplosionDamage;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.util.DoormatTags;
+import net.minecraft.block.Block;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.projectile.FireballEntity;
+import net.minecraft.entity.projectile.WitherSkullEntity;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.DamageTypeTags;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,8 +23,14 @@ public abstract class ItemEntityMixin {
 
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void disableExplosionDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (DoormatSettings.consistentItemExplosionDamage && this.getStack().isIn(DoormatTags.EXPLOSION_IMMUNE_ITEMS) && source.isIn(DamageTypeTags.IS_EXPLOSION))
-            cir.setReturnValue(false);
+        Item item = this.getStack().getItem();
+        Block block = ((BlockItem)item).getBlock();
+        float blastResistance = block.getBlastResistance();
+        if (DoormatSettings.consistentItemExplosionDamage && source.isIn(DamageTypeTags.IS_EXPLOSION)) {
+            if ((source.getSource() instanceof FireballEntity || source.getSource() instanceof WitherSkullEntity) && blastResistance > 3)
+                cir.setReturnValue(false);
+            cir.setReturnValue(blastResistance > 9);
+        }
     }
 
 }
