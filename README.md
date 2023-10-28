@@ -307,6 +307,13 @@ Mangrove propagules actually propagate, falling from trees and planting themselv
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `DOORMAT`
 
+## railUpdateType
+The type(s) of update powered and activator rails emit when changing state.
+* Type: `NeighbourUpdateMode`
+* Default value: `both`
+* Allowed options: `neither`, `block`, `shape`, `both`
+* Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+
 ## renewableCobwebs
 Cave spider spawners generate cobwebs between nearby solid faces each spawn cycle.
 Cobwebs generate within a 9x9x9 cube centred on the spawner, forming only in block positions that have two or more supporting faces.

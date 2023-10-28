@@ -1,7 +1,6 @@
 {
   "carpet.command.randomTick.failed": "Could not random tick the block",
   "carpet.command.randomTick.success": "Sent %s random tick(s) to the block at %s, %s, %s",
-
   "carpet.rule.accurateAzaleaLeafDistribution.desc": "The distribution of azalea leaf types matches the azalea bush the tree is grown from",
   "carpet.rule.accurateAzaleaLeafDistribution.extra.0": "This feature is controlled through doormat/worldgen/configured_feature/azalea_tree_<many/no>_flowers.json.",
   "carpet.rule.azaleaLeavesGrowFlowers.desc": "Azalea leaves grow flowers when fertilized",
@@ -48,6 +47,7 @@
   "carpet.rule.pistonUpdateType.desc": "The type(s) of update pistons emit when changing state",
   "carpet.rule.playerDropAllXp.desc": "Players drop all of their XP on death instead of a capped amount",
   "carpet.rule.propagulePropagation.desc": "Mangrove propagules actually propagate, falling from trees and planting themselves automatically",
+  "carpet.rule.railUpdateType.desc": "The type(s) of update rails emit when changing state",
   "carpet.rule.renewableCobwebs.desc": "Cave spider spawners generate cobwebs between nearby solid faces each spawn cycle",
   "carpet.rule.renewableCobwebs.extra.0": "Cobwebs generate within a 9x9x9 cube centred on the spawner, forming only in block positions that have two or more supporting faces.",
   "carpet.rule.renewableCobwebs.extra.1": "The more supporting faces, the more likely the cobweb is to generate.",
@@ -61,11 +61,11 @@
   "carpet.rule.thornyRoseBush.desc": "Similarly to sweet berry bushes, rose bushes deal damage when you walk inside them",
   "carpet.rule.thornyRoseBush.extra.0": "This even has a unique death message!",
   "carpet.rule.tntQuasiConnecting.desc": "Whether TNT can be quasi-powered",
+  "carpet.rule.railQuasiConnecting.desc": "Whether rails can be quasi-powered",
   "carpet.rule.tntUpdateType.desc": "The type(s) of update TNT emits when changing state",
   "carpet.rule.trapdoorQuasiConnecting.desc": "Whether trapdoors can be quasi-powered",
   "carpet.rule.trapdoorUpdateType.desc": "The type(s) of update trapdoors emit when changing state",
   "carpet.rule.zoglinsSpawnInPortals.desc": "Zoglins have a chance of spawning inside overworld nether portals",
-
   "death.attack.roseBush": "%1$s smelled the roses too much",
   "death.attack.roseBush.player": "%1$s smelled the roses too much whilst trying to escape %2$s"
 }

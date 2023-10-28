@@ -27,4 +27,8 @@ public interface ConditionalRedstoneBehavior {
         return bl;
     }
 
+    static boolean neighborUpdateOn(DoormatSettings.NeighbourUpdateMode rule) {
+        return rule.getFlags() == 1 || rule.getFlags() == 3;
+    }
+
 }

@@ -180,6 +180,9 @@ public class DoormatSettings {
     public static NeighbourUpdateMode dispenserUpdateType = NeighbourUpdateMode.SHAPE;
 
     @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
+    public static NeighbourUpdateMode railUpdateType = NeighbourUpdateMode.BOTH;
+
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode bellUpdateType = NeighbourUpdateMode.BOTH;
 
     @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
@@ -194,17 +197,14 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean fenceGateQuasiConnecting = false;
 
-//    @Rule( categories = { FEATURE, QC, DOORMAT } )
-//    public static boolean pistonQuasiConnecting = true;
-
     @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean noteBlockQuasiConnecting = false;
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean hopperQuasiConnecting = false;
 
-//    @Rule( categories = { FEATURE, QC, DOORMAT } )
-//    public static boolean dispenserQuasiConnecting = true;
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
+    public static boolean railQuasiConnecting = false;
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean bellQuasiConnecting = false;
