@@ -39,7 +39,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// MixinExtras
-	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.2.0-rc.2")))
+	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.2.0")))
 
 
 	//carpet mod!

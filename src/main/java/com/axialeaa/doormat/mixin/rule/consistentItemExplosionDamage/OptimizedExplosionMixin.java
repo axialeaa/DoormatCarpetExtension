@@ -10,10 +10,10 @@ import net.minecraft.entity.damage.DamageSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@SuppressWarnings("unused")
 @Mixin(OptimizedExplosion.class)
 public class OptimizedExplosionMixin {
 
+    @SuppressWarnings("unused") // otherwise it will throw an error at "source" and "amount"
     @WrapWithCondition(method = "doExplosionA", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private static boolean disableDamage(Entity entity, DamageSource source, float amount, @Local ExplosionAccessor eAccess) {
         return ConsistentItemExplosionDamage.disableDamageIfResistant(entity, eAccess.getRadius());

@@ -66,23 +66,21 @@ Explosion-immune blocks also apply this property to their dropped item counterpa
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
-* Categories: `FEATURE`, `DOORMAT`
+* Categories: `FEATURE`, `EXPERIMENTAL`, `DOORMAT`
 
-## disableEndTeleporting
-Disables opening and travelling through end portals in the overworld.
-You can still create and travel through the portal in the end, to save you getting stranded there.
+## disableEndPortalCrossing
+Disables travelling through end portals.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
-* Categories: `CREATIVE`, `SURVIVAL`, `DOORMAT`
+* Categories: `CREATIVE`, `DOORMAT`
 
-## disableNetherTeleporting
-Disables opening and travelling through nether portals in the overworld.
-You can still create and travel through portals in the nether, to save you getting stranded there.
+## disableNetherPortalCrossing
+Disables travelling through nether portals.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
-* Categories: `CREATIVE`, `SURVIVAL`, `DOORMAT`
+* Categories: `CREATIVE`, `DOORMAT`
 
 ## disablePetAttacking
 Disables players harming tamed mobs.

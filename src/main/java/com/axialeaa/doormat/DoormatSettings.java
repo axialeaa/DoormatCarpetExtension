@@ -71,7 +71,7 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean leavesNoCollision = false;
 
-    @Rule( categories = { FEATURE, DOORMAT } )
+    @Rule( categories = { FEATURE, EXPERIMENTAL, DOORMAT } )
     public static boolean consistentItemExplosionDamage = false;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
@@ -95,11 +95,11 @@ public class DoormatSettings {
     @Rule( options = "8.0", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { CREATIVE, DOORMAT } )
     public static double maxMinecartSpeed = 8.0;
 
-    @Rule( categories = { SURVIVAL, DOORMAT } )
-    public static boolean disableNetherTeleporting = false;
+    @Rule( categories = { CREATIVE, DOORMAT } )
+    public static boolean disableNetherPortalCrossing = false;
 
-    @Rule( categories = { SURVIVAL, DOORMAT } )
-    public static boolean disableEndTeleporting = false;
+    @Rule( categories = { CREATIVE, DOORMAT } )
+    public static boolean disableEndPortalCrossing = false;
 
     /* FARMING */
 
