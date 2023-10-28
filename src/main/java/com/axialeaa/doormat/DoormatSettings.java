@@ -83,7 +83,7 @@ public class DoormatSettings {
     @Rule( categories = { SURVIVAL, DOORMAT } )
     public static PetHurtMode disablePetAttacking = PetHurtMode.FALSE;
 
-    @Rule( options = "3", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
+    @Rule( options = { "3", "7" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int insomniaDaysSinceSlept = 3;
 
     @Rule( options = { "63", "127", "255" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
@@ -92,7 +92,7 @@ public class DoormatSettings {
     @Rule( categories = { CREATIVE, SURVIVAL, DOORMAT } )
     public static boolean disableShulkerReproduction = false;
 
-    @Rule( options = "8.0", validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { CREATIVE, DOORMAT } )
+    @Rule( options = { "8.0", "16.0" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { CREATIVE, DOORMAT } )
     public static double maxMinecartSpeed = 8.0;
 
     @Rule( categories = { CREATIVE, DOORMAT } )
@@ -203,7 +203,7 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean hopperQuasiConnecting = false;
 
-//    @Rule( categories = { FEATURE, DOORMAT } )
+//    @Rule( categories = { FEATURE, QC, DOORMAT } )
 //    public static boolean dispenserQuasiConnecting = true;
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )

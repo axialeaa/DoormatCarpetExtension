@@ -168,6 +168,7 @@ Adult husks drop 1-3 sand when converting into zombies.
 The number of sleepless nights after which phantoms can spawn.
 * Type: `Integer`
 * Default value: `3`
+* Suggested options: `3`, `7`
 * Categories: `SURVIVAL`, `DOORMAT`
 * Additional notes:
     * Must be a non-negative number
@@ -198,6 +199,7 @@ The maximum speed minecarts can travel at in blocks per second.
 Underwater max speed will always be half of this number.
 * Type: `Double`
 * Default value: `8.0`
+* Suggested options: `8.0`, `16.0`
 * Categories: `CREATIVE`, `DOORMAT`
 * Additional notes:
     * Must be a non-negative number
