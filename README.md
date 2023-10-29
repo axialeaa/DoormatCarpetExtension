@@ -114,6 +114,8 @@ The type(s) of update doors emit when changing state.
 * Default value: `shape`
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+* Additional notes:
+  * Disabling shape updates affects the connection between the two halves of the door
 
 ## fenceGateQuasiConnecting
 Whether fence gates can be quasi-powered.
