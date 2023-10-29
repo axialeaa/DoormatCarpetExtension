@@ -6,6 +6,7 @@ import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.ChainBlock;
 import net.minecraft.block.DirtPathBlock;
+import net.minecraft.block.PistonBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -20,9 +21,11 @@ public interface ConditionalRedstoneBehavior {
 
     static boolean canReadThroughBlock(Block block) {
         boolean bl = false;
-        if (DoormatSettings.parityComparatorsReadThroughChains && block instanceof ChainBlock)
+        if (DoormatSettings.comparatorsReadThroughChains && block instanceof ChainBlock)
             bl = true;
-        if (DoormatSettings.parityComparatorsReadThroughPaths && block instanceof DirtPathBlock)
+        if (DoormatSettings.comparatorsReadThroughPaths && block instanceof DirtPathBlock)
+            bl = true;
+        if (DoormatSettings.comparatorsReadThroughPistons && block instanceof PistonBlock)
             bl = true;
         return bl;
     }

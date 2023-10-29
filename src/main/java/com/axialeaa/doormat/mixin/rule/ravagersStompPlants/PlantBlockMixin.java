@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.parityRavagersStompPlants;
+package com.axialeaa.doormat.mixin.rule.ravagersStompPlants;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.mixin.AbstractBlockMixin;
@@ -17,7 +17,7 @@ public class PlantBlockMixin extends AbstractBlockMixin {
 
     @Override
     public void injectedOnEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
-        if (DoormatSettings.parityRavagersStompPlants && entity instanceof RavagerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
+        if (DoormatSettings.ravagersStompPlants && entity instanceof RavagerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
             world.breakBlock(pos, true, entity);
     }
 

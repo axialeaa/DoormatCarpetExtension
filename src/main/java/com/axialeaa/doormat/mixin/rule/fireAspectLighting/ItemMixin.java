@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.parityFireAspectLighting;
+package com.axialeaa.doormat.mixin.rule.fireAspectLighting;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.*;
@@ -35,7 +35,7 @@ public class ItemMixin {
         World world = ctx.getWorld();
         BlockPos pos = ctx.getBlockPos();
         BlockState state = world.getBlockState(pos); // get the block state at this position
-        if (DoormatSettings.parityFireAspectLighting && EnchantmentHelper.getLevel(Enchantments.FIRE_ASPECT, stack) > 0 && (state.getBlock() instanceof TntBlock || canBeLit(state))) {
+        if (DoormatSettings.fireAspectLighting && EnchantmentHelper.getLevel(Enchantments.FIRE_ASPECT, stack) > 0 && (state.getBlock() instanceof TntBlock || canBeLit(state))) {
             // if the rule is enabled, the held item is enchanted with fire aspect and the block is either TNT or an ignitable campfire, candle or candle cake...
             if (state.getBlock() instanceof TntBlock) { // if it's TNT, light it
                 TntBlock.primeTnt(world, pos);

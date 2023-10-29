@@ -62,6 +62,27 @@ Enables /randomtick command to forcibly send randomTicks to the specified block 
   * Can be limited to 'ops' only, true/false for everyone/no one, or a custom permission level
   * Currently has an issue with generating multiple features for one plant
 
+## comparatorsReadThroughChains
+Comparators can read through chains, like they can on Bedrock Edition.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `PARITY`, `DOORMAT`
+
+## comparatorsReadThroughPaths
+Comparators can read through dirt paths, like they can on Bedrock Edition.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `PARITY`, `DOORMAT`
+
+## comparatorsReadThroughPistons
+Comparators can read through pistons, like they can on Bedrock Edition.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `PARITY`, `DOORMAT`
+
 ## consistentItemExplosionDamage
 Explosion-immune blocks also apply this property to their dropped item counterparts.
 * Type: `Boolean`
@@ -130,6 +151,13 @@ The type(s) of update fence gates emit when changing state.
 * Default value: `shape`
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+
+## fireAspectLighting
+Items enchanted with fire aspect can be used to light campfires, candles and TNT, like they can on Bedrock Edition.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `PARITY`, `DOORMAT`
 
 ## forceGrassSpread
 Grass and mycelium can instantly spread to adjacent fertilized dirt.
@@ -239,41 +267,6 @@ The type(s) of update note blocks emit when changing state.
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
 
-## parityComparatorsReadThroughChains
-Comparators can read through chains, like they can on Bedrock Edition.
-* Type: `Boolean`
-* Default value: `false`
-* Allowed options: `true`, `false`
-* Categories: `FEATURE`, `PARITY`, `DOORMAT`
-
-## parityComparatorsReadThroughPaths
-Comparators can read through dirt paths, like they can on Bedrock Edition.
-* Type: `Boolean`
-* Default value: `false`
-* Allowed options: `true`, `false`
-* Categories: `FEATURE`, `PARITY`, `DOORMAT`
-
-## parityFireAspectLighting
-Fire aspect can be used to light campfires, candles and TNT, like it can on Bedrock Edition.
-* Type: `Boolean`
-* Default value: `false`
-* Allowed options: `true`, `false`
-* Categories: `FEATURE`, `PARITY`, `DOORMAT`
-
-## parityPortalTicking
-Nether portal blocks randomTick when lit, like they do on Bedrock Edition.
-* Type: `Boolean`
-* Default value: `false`
-* Allowed options: `true`, `false`
-* Categories: `FEATURE`, `PARITY`, `DOORMAT`
-
-## parityRavagersStompPlants
-Ravagers can break plants, like they can on Bedrock Edition.
-* Type: `Boolean`
-* Default value: `false`
-* Allowed options: `true`, `false`
-* Categories: `FEATURE`, `PARITY`, `DOORMAT`
-
 ## phantomMinSpawnAltitude
 The minimum y height the player needs to be standing at in order to spawn phantoms.
 * Type: `Integer`
@@ -309,6 +302,13 @@ Players drop all of their XP on death instead of a capped amount.
 * Allowed options: `true`, `false`
 * Categories: `SURVIVAL`, `DOORMAT`
 
+## portalForceTicking
+Nether portal blocks randomTick when lit, like they do on Bedrock Edition.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `PARITY`, `DOORMAT`
+
 ## propagulePropagation
 Mangrove propagules actually propagate, falling from trees and planting themselves automatically.
 * Type: `Boolean`
@@ -329,6 +329,13 @@ The type(s) of update rails emit when changing state.
 * Default value: `both`
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+
+## ravagersStompPlants
+Ravagers can break plants, like they can on Bedrock Edition.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `PARITY`, `DOORMAT`
 
 ## renewableCobwebs
 Cave spider spawners generate cobwebs between nearby solid faces each spawn cycle.

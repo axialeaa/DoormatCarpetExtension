@@ -215,19 +215,22 @@ public class DoormatSettings {
     /* PARITY */
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
-    public static boolean parityPortalTicking = false;
+    public static boolean portalForceTicking = false;
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
-    public static boolean parityFireAspectLighting = false;
+    public static boolean fireAspectLighting = false;
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
-    public static boolean parityRavagersStompPlants = false;
+    public static boolean ravagersStompPlants = false;
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
-    public static boolean parityComparatorsReadThroughChains = false;
+    public static boolean comparatorsReadThroughChains = false;
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
-    public static boolean parityComparatorsReadThroughPaths = false;
+    public static boolean comparatorsReadThroughPaths = false;
+
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
+    public static boolean comparatorsReadThroughPistons = false;
 
     /* COMMANDS */
 

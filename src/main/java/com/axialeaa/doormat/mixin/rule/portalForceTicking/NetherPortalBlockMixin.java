@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.parityPortalTicking;
+package com.axialeaa.doormat.mixin.rule.portalForceTicking;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.mixin.AbstractBlockMixin;
@@ -17,7 +17,7 @@ public class NetherPortalBlockMixin extends AbstractBlockMixin {
     @Override
     public void injectedOnBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
         Random random = world.getRandom();
-        if (DoormatSettings.parityPortalTicking)
+        if (DoormatSettings.portalForceTicking)
             state.randomTick((ServerWorld)world, pos, random);
     }
 
