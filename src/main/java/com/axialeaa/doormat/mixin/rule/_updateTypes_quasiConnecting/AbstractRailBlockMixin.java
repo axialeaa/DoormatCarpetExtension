@@ -17,13 +17,13 @@ public class AbstractRailBlockMixin {
 
     @SuppressWarnings("unused") // otherwise it throws an error for each unused parameter
     @WrapWithCondition(method = "updateCurves", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbor(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;Lnet/minecraft/util/math/BlockPos;Z)V"))
-    private boolean disableNeighborUpdates(World world, BlockState state, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+    private boolean disableNeighborUpdates_updateCurves(World world, BlockState state, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
         return ConditionalRedstoneBehavior.neighborUpdateOn(DoormatSettings.railUpdateType);
     }
 
     @SuppressWarnings("unused") // otherwise it throws an error for each unused parameter
     @WrapWithCondition(method = "onStateReplaced", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
-    private boolean disableNeighborUpdatesAlways(World world, BlockPos pos, Block sourceBlock) {
+    private boolean disableNeighborUpdates_onStateReplaced(World world, BlockPos pos, Block sourceBlock) {
         return ConditionalRedstoneBehavior.neighborUpdateOn(DoormatSettings.railUpdateType);
     }
 

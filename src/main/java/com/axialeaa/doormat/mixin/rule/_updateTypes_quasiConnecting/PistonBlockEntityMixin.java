@@ -15,24 +15,24 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class PistonBlockEntityMixin {
 
     @ModifyArg(method = "finish", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
-    private int changeNeighborUpdate(int flags) {
+    private int changeUpdateType_finish(int flags) {
         return DoormatSettings.pistonUpdateType.getFlags();
     }
 
     @ModifyArg(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 1))
-    private static int changeTickUpdate(int flags) {
+    private static int changeUpdateType_tick(int flags) {
         return DoormatSettings.pistonUpdateType.getFlags() | Block.MOVED;
     }
 
     @SuppressWarnings("unused") // otherwise it throws an error for every unused parameter
     @WrapWithCondition(method = "finish", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbor(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;Lnet/minecraft/util/math/BlockPos;)V", ordinal = 0))
-    private boolean changeNeighborUpdate(World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos) {
+    private boolean disableNeighborUpdates_finish(World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos) {
         return ConditionalRedstoneBehavior.neighborUpdateOn(DoormatSettings.pistonUpdateType);
     }
 
     @SuppressWarnings("unused") // otherwise it throws an error for every unused parameter
     @WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbor(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;Lnet/minecraft/util/math/BlockPos;)V", ordinal = 0))
-    private static boolean test(World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos) {
+    private static boolean disableNeighborUpdates_tick(World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos) {
         return ConditionalRedstoneBehavior.neighborUpdateOn(DoormatSettings.pistonUpdateType);
     }
 

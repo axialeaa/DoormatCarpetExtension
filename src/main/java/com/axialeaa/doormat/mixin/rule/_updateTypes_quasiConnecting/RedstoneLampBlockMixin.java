@@ -14,12 +14,12 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class RedstoneLampBlockMixin {
 
     @ModifyArg(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
-    private int changeNeighborUpdate(int flags) {
+    private int changeUpdateType_neighborUpdate(int flags) {
         return DoormatSettings.lampUpdateType.getFlags();
     }
 
     @ModifyArg(method = "scheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
-    private int changeScheduledTickUpdate(int flags) {
+    private int changeUpdateType_scheduledTick(int flags) {
         return DoormatSettings.lampUpdateType.getFlags();
     }
     // we need 2 separate ones here between one is ServerWorld.setBlockState and the other is World.setBlockState (cringe)

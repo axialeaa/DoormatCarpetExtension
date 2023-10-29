@@ -15,7 +15,7 @@ public class PistonHeadBlockMixin {
 
     @SuppressWarnings("unused") // otherwise it throws an error for every unused parameter
     @ModifyExpressionValue(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;canPlaceAt(Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean test(boolean original, BlockState state, World world, BlockPos pos) {
+    private boolean disableNeighborUpdates(boolean original, BlockState state, World world, BlockPos pos) {
         return original && ConditionalRedstoneBehavior.neighborUpdateOn(DoormatSettings.pistonUpdateType);
     }
 

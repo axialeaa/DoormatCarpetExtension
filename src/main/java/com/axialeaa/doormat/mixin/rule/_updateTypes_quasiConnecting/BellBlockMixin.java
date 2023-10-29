@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class BellBlockMixin {
 
     @ModifyArg(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
-    private int changeNeighborUpdate(int flags) {
+    private int changeUpdateType(int flags) {
         return DoormatSettings.bellUpdateType.getFlags();
     }
 
