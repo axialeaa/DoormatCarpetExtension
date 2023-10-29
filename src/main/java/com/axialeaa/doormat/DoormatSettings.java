@@ -75,7 +75,7 @@ public class DoormatSettings {
     public static boolean consistentItemExplosionDamage = false;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
-    public static boolean playerDropAllXp = false;
+    public static boolean playersDropAllXp = false;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
     public static boolean beaconsHealPets = false;

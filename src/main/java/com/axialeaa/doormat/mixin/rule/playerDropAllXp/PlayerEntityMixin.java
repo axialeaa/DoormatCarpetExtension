@@ -15,7 +15,7 @@ public abstract class PlayerEntityMixin {
 
     @Inject(method = "getXpToDrop", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;isSpectator()Z"), cancellable = true)
     private void modifyXpDropped(CallbackInfoReturnable<Integer> cir) {
-        if (DoormatSettings.playerDropAllXp)
+        if (DoormatSettings.playersDropAllXp)
             cir.setReturnValue(this.totalExperience);
     }
 

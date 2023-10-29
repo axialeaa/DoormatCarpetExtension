@@ -1,6 +1,6 @@
 <img src="./src/main/resources/assets/doormat/icon.png" align="right" width="128px"/>
 
-# Hi there! Thanks for checking out Doormat
+# Hi there! Thanks for checking out Doormat!
 
 [![GitHub downloads](https://img.shields.io/github/downloads/axialeaa/DoormatCarpetExtension/total?label=Github%20downloads&logo=github)](https://github.com/axialeaa/DoormatCarpetExtension/releases)
 
@@ -60,6 +60,7 @@ Enables /randomtick command to forcibly send randomTicks to the specified block 
 * Additional notes:
   * It has an accompanying command
   * Can be limited to 'ops' only, true/false for everyone/no one, or a custom permission level
+  * Currently has an issue with generating multiple features for one plant
 
 ## consistentItemExplosionDamage
 Explosion-immune blocks also apply this property to their dropped item counterparts.
@@ -67,6 +68,8 @@ Explosion-immune blocks also apply this property to their dropped item counterpa
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `EXPERIMENTAL`, `DOORMAT`
+* Additional notes:
+  * Thanks to my friend [intricate](https://github.com/lntricate1) for critiquing my code and providing a formula to calculate explosion immunity on the fly <3
 
 ## disableEndPortalCrossing
 Disables travelling through end portals.
@@ -292,8 +295,12 @@ The type(s) of update pistons emit when changing state.
 * Default value: `both`
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+* Additional notes: 
+  * Expect many issues to arise from removing shape updates from pistons
+    * "neither" has the capability of deleting blocks on motion
+  * Piston heads currently emit an elusive block update when they start to retract, regardless of this setting
 
-## playerDropAllXp
+## playersDropAllXp
 Players drop all of their XP on death instead of a capped amount.
 * Type: `Boolean`
 * Default value: `false`
@@ -307,8 +314,15 @@ Mangrove propagules actually propagate, falling from trees and planting themselv
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `DOORMAT`
 
+## railQuasiConnecting
+Whether rails can be quasi-powered.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `QC`, `DOORMAT`
+
 ## railUpdateType
-The type(s) of update powered and activator rails emit when changing state.
+The type(s) of update rails emit when changing state.
 * Type: `NeighbourUpdateMode`
 * Default value: `both`
 * Allowed options: `neither`, `block`, `shape`, `both`
