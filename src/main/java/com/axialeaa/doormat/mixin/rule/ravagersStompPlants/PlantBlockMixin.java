@@ -18,6 +18,7 @@ public class PlantBlockMixin extends AbstractBlockMixin {
     @Override
     public void injectedOnEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (DoormatSettings.ravagersStompPlants && entity instanceof RavagerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
+            // if the rule and mob griefing are enabled and the entity colliding with the block is a ravager, break the block
             world.breakBlock(pos, true, entity);
     }
 

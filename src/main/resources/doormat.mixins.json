@@ -30,6 +30,7 @@
     "rule.disableNetherPortalCrossing.NetherPortalBlockMixin",
     "rule.disablePetAttacking.TameableEntityMixin",
     "rule.disableShulkerReproduction.ShulkerEntityMixin",
+    "rule.fireAspectLighting.BlockItemMixin",
     "rule.fireAspectLighting.ItemMixin",
     "rule.forceGrassSpread.BlockMixin",
     "rule.growableSwampOakTrees.SaplingBlockMixin",

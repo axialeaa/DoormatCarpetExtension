@@ -15,9 +15,10 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(TntBlock.class)
 public class TntBlockMixin {
 
-    @Redirect(method = {"onBlockAdded", "neighborUpdate", "onProjectileHit"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
+    @Redirect(method = { "onBlockAdded", "neighborUpdate", "onProjectileHit" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
     private boolean changeUpdateType(World world, BlockPos pos, boolean move) {
         return world.setBlockState(pos, Blocks.AIR.getDefaultState(), DoormatSettings.tntUpdateType.getFlags());
+        // reconstructing the function of removeBlock() is necessary here, because neighbor updates are intrinsic to that method
     }
 
     @ModifyArg(method = "onUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))

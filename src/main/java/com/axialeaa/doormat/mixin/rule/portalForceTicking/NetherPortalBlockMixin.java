@@ -18,6 +18,7 @@ public class NetherPortalBlockMixin extends AbstractBlockMixin {
     public void injectedOnBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
         Random random = world.getRandom();
         if (DoormatSettings.portalForceTicking)
+            // if the rule is enabled, randomTick the block when it's added into the world
             state.randomTick((ServerWorld)world, pos, random);
     }
 

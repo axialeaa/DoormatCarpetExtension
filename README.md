@@ -83,12 +83,13 @@ Comparators can read through pistons, like they can on Bedrock Edition.
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `PARITY`, `DOORMAT`
 
-## consistentItemExplosionDamage
+## consistentExplosionImmunity
 Explosion-immune blocks also apply this property to their dropped item counterparts.
+Though marked as "Works As Intended", this rule technically fixes this bug: https://bugs.mojang.com/browse/MC-212764
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
-* Categories: `FEATURE`, `EXPERIMENTAL`, `DOORMAT`
+* Categories: `FEATURE`, `EXPERIMENTAL`, `BUGFIX`, `DOORMAT`
 * Additional notes:
   * Thanks to my friend [intricate](https://github.com/lntricate1) for critiquing my code and providing a formula to calculate explosion immunity on the fly <3
 
@@ -329,6 +330,8 @@ The type(s) of update rails emit when changing state.
 * Default value: `both`
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+* Additional notes:
+  * Disabling either kind of update affects the redstone connections between rails
 
 ## ravagersStompPlants
 Ravagers can break plants, like they can on Bedrock Edition.
@@ -345,6 +348,8 @@ The more supporting faces, the more likely the cobweb is to generate.
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `DOORMAT`
+* Additional notes:
+  * This makes me super happy to show you. This feature had a lot of planning and testing put behind it, and it measured my expertise in a really fascinating way. I hope you enjoy <3
 
 ## renewableGildedBlackstone
 Blackstone adjacent to underwater magma blocks slowly becomes gilded over time.

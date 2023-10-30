@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.consistentItemExplosionDamage;
 
-import com.axialeaa.doormat.helpers.ConsistentItemExplosionDamage;
+import com.axialeaa.doormat.helpers.ConsistentExplosionImmunity;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -18,7 +18,7 @@ public class ExplosionMixin {
     @SuppressWarnings("unused") // otherwise it will throw an error at "source" and "amount"
     @WrapWithCondition(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private boolean disableDamage(Entity entity, DamageSource source, float amount) {
-        return ConsistentItemExplosionDamage.disableDamageIfResistant(entity, power);
+        return ConsistentExplosionImmunity.disableDamageIfResistant(entity, power);
     }
 
 }

@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(LeavesBlock.class)
 public abstract class LeavesBlockMixin implements Fertilizable {
 
-    @Unique private boolean isRuleIsLeaves(BlockState state) {
+    @Unique
+    private boolean isRuleIsLeaves(BlockState state) {
         return DoormatSettings.azaleaLeavesGrowFlowers && state.isOf(Blocks.AZALEA_LEAVES);
     }
 

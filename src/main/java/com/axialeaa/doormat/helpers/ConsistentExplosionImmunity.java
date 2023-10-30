@@ -6,10 +6,10 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 
-public class ConsistentItemExplosionDamage {
+public class ConsistentExplosionImmunity {
 
     public static boolean disableDamageIfResistant(Entity entity, float power) {
-        if (DoormatSettings.consistentItemExplosionDamage && entity instanceof ItemEntity itemEntity) {
+        if (DoormatSettings.consistentExplosionImmunity && entity instanceof ItemEntity itemEntity) {
             Item item = itemEntity.getStack().getItem();
             if (item instanceof BlockItem blockItem) {
                 float blastRes = blockItem.getBlock().getBlastResistance();

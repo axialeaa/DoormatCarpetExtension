@@ -71,8 +71,8 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean leavesNoCollision = false;
 
-    @Rule( categories = { FEATURE, EXPERIMENTAL, DOORMAT } )
-    public static boolean consistentItemExplosionDamage = false;
+    @Rule( categories = { FEATURE, EXPERIMENTAL, BUGFIX, DOORMAT } )
+    public static boolean consistentExplosionImmunity = false;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
     public static boolean playersDropAllXp = false;

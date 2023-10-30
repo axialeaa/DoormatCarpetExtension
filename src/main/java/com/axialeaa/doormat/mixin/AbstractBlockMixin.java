@@ -19,8 +19,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractBlock.class)
 public abstract class AbstractBlockMixin {
 
+    // the purpose behind this mixin is avoiding extending + overriding of the base methods which would be incompatible
+    //      with any mod that wants to modify the same things
+    // instead, create an empty injection for each method, and extend + override the handler methods from this mixin
+    // that way, method calls are instantiated without clunky instanceof checks and without incompatibility
+
     @Inject(method = "getCollisionShape", at = @At("HEAD"), cancellable = true)
-    protected void injectedGetCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {}
+    public void injectedGetCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {}
 
     @Inject(method = "onBlockAdded", at = @At("HEAD"))
     public void injectedOnBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {}

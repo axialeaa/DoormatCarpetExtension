@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(net.minecraft.block.FenceGateBlock.class)
 public class FenceGateBlock {
 
-    @ModifyArg(method = {"neighborUpdate", "onUse"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
+    @ModifyArg(method = { "neighborUpdate", "onUse" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int changeUpdateType(int flags) {
         return DoormatSettings.fenceGateUpdateType.getFlags() | Block.REDRAW_ON_MAIN_THREAD;
     }
