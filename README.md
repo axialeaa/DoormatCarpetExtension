@@ -4,17 +4,18 @@
 
 [![GitHub downloads](https://img.shields.io/github/downloads/axialeaa/DoormatCarpetExtension/total?label=Github%20downloads&logo=github)](https://github.com/axialeaa/DoormatCarpetExtension/releases)
 
-Doormat is a [Fabric Carpet] extension, focusing on simply adding features I want to have fun with, and hopefully you will too! Aside from new ways to farm mostly non-renewable resources, this mod prides itself on its "redstone tinkering" features, allowing you to have control over block updates and quasi connectivity in your worlds.
+Doormat is a [Carpet] extension, focusing on simply adding features I want to have fun with, and hopefully you will too! Aside from new ways to farm mostly non-renewable resources, this mod prides itself on its "redstone tinkering" features, allowing you to have control over block updates and quasi connectivity in your worlds.
 
-[Fabric Carpet]: https://github.com/gnembon/fabric-carpet
+[Carpet]: https://github.com/gnembon/fabric-carpet
 
-## More extensions
+![2023-10-31_20 03 07](https://github.com/axialeaa/DoormatCarpetExtension/assets/116074698/89617f79-c926-4006-b061-84463dbf6555)
 
+## More Extensions
 There are also lots of other carpet extensions out there, adding countless new rules and functionality! You can find a list of them [in the Carpet wiki][extension list].
 
 [extension list]: https://github.com/gnembon/fabric-carpet/wiki/List-of-Carpet-extensions
 
-# Doormat Settings
+# Settings
 ## accurateAzaleaLeafDistribution
 The distribution of azalea leaf types matches the azalea bush the tree is grown from.
 This feature is controlled through `doormat/worldgen/configured_feature/azalea_tree_<many/no>_flowers.json`.
