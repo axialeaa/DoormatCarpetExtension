@@ -28,7 +28,7 @@ public class MossBlockMixin {
         if (condition && world.getBlockState(pos.up()).isAir())
             world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap(registry ->
                 registry.getEntry(feature)).ifPresent(reference ->
-                reference.value().generate(world, world.getChunkManager().getChunkGenerator(), random, pos));
+                reference.value().generate(world, world.getChunkManager().getChunkGenerator(), random, pos.up()));
     }
 
     @ModifyReturnValue(method = "isFertilizable", at = @At("RETURN"))
