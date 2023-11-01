@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class WorldMixin {
 
     @Redirect(method = "updateComparators", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean addChainsToCheck(BlockState state, BlockView world, BlockPos pos) {
+    private boolean modifyBlockCheck(BlockState state, BlockView world, BlockPos pos) {
         Block block = state.getBlock();
         return ConditionalRedstoneBehavior.canReadThroughBlock(block) || state.isSolidBlock(world, pos);
     }
