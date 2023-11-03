@@ -18,7 +18,7 @@ There are also lots of other carpet extensions out there, adding countless new r
 # Settings
 ## accurateAzaleaLeafDistribution
 The distribution of azalea leaf types matches the azalea bush the tree is grown from.
-This feature is controlled through `doormat/worldgen/configured_feature/azalea_tree_<many/no>_flowers.json`.
+This feature is controlled through `doormat/worldgen/configured_feature/azalea_tree_many/no_flowers.json`.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
