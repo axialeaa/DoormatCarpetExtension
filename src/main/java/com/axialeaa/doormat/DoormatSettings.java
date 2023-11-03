@@ -152,6 +152,9 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static CarpetSettings.ChainStoneMode stickyPillarBlocks = CarpetSettings.ChainStoneMode.FALSE;
 
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean stairDiodes = false;
+
     @Rule( options = "2", validators = { PistonMovementTimeValidator.class }, strict = false, categories = { FEATURE, DOORMAT } )
     public static int pistonMovementTime = 2;
 
@@ -222,6 +225,9 @@ public class DoormatSettings {
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean ravagersStompPlants = false;
+
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
+    public static boolean dustTravelDownGlass = false;
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean comparatorsReadThroughChains = false;

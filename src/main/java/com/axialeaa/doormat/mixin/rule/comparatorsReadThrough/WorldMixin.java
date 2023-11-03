@@ -1,22 +1,29 @@
 package com.axialeaa.doormat.mixin.rule.comparatorsReadThrough;
 
 import com.axialeaa.doormat.helpers.ConditionalRedstoneBehavior;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(World.class)
-public class WorldMixin {
+public abstract class WorldMixin {
 
-    @Redirect(method = "updateComparators", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean modifyBlockCheck(BlockState state, BlockView world, BlockPos pos) {
-        Block block = state.getBlock();
-        return ConditionalRedstoneBehavior.canReadThroughBlock(block) || state.isSolidBlock(world, pos);
+    @Shadow public abstract BlockState getBlockState(BlockPos pos);
+
+    @SuppressWarnings("unused")
+    @ModifyExpressionValue(method = "updateComparators", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"))
+    private boolean modifyBlockCheck(boolean original, BlockPos pos, Block block, @Local(ordinal = 0) Direction direction) {
+        Block block1 = this.getBlockState(pos.offset(direction)).getBlock();
+        if (block1 instanceof ConditionalRedstoneBehavior redstoneBehavior)
+            return redstoneBehavior.canReadThroughBlock(block1) || original;
+        return original;
     }
 
 }

@@ -18,7 +18,7 @@ There are also lots of other carpet extensions out there, adding countless new r
 # Settings
 ## accurateAzaleaLeafDistribution
 The distribution of azalea leaf types matches the azalea bush the tree is grown from.
-This feature is controlled through `doormat/worldgen/configured_feature/azalea_tree_<many/no>_flowers.json`.
+This feature is controlled through `doormat/worldgen/configured_feature/azalea_tree_many_flowers.json` or `azalea_tree_no_flowers.json`.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
@@ -139,6 +139,13 @@ The type(s) of update doors emit when changing state.
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
 * Additional notes:
   * Disabling shape updates affects the connection between the two halves of the door
+
+## dustTravelDownGlass `(UPCOMING)`
+Redstone dust can travel down glass blocks, like it can in Bedrock Edition.
+* Type: `boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `PARITY`, `DOORMAT`
 
 ## fenceGateQuasiConnecting
 Whether fence gates can be quasi-powered.
@@ -366,6 +373,13 @@ Whether spore blossoms should generate when this block is fertilized.
 * Default value: `false`
 * Allowed options: `false`, `moss`, `self`
 * Categories: `FEATURE`, `DOORMAT`
+
+## stairDiodes `(UPCOMING)`
+Redstone dust can travel both up and down the full-square side of stairs, but only up the other sides.
+* Type: `boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `PARITY`, `DOORMAT`
 
 ## stickyPillarBlocks
 Pillar blocks like logs and bone blocks stick to each other based on the axis direction when moved.
