@@ -14,13 +14,13 @@ import org.spongepowered.asm.mixin.Unique;
 public class BlockMixin implements Fertilizable {
 
     @Unique
-    private boolean isRuleIsDirt(WorldView world, BlockPos pos) {
+    private boolean isRuleEnabledAndDirt(WorldView world, BlockPos pos) {
         return DoormatSettings.forceGrassSpread && world.getBlockState(pos).isOf(Blocks.DIRT);
     }
 
     @Override
     public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
-        if (isRuleIsDirt(world, pos)) {
+        if (isRuleEnabledAndDirt(world, pos)) {
             // if the rule is enabled and the block in question is dirt...
             if (!world.getBlockState(pos.up()).isTransparent(world, pos))
                 return false; // if the block above the block in question is not transparent, return false immediately
@@ -34,7 +34,7 @@ public class BlockMixin implements Fertilizable {
 
     @Override
     public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return isRuleIsDirt(world, pos);
+        return isRuleEnabledAndDirt(world, pos);
     }
 
     @Override

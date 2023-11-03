@@ -1,7 +1,7 @@
-package com.axialeaa.doormat.mixin.rule.redstoneTravelDownGlass;
+package com.axialeaa.doormat.mixin.rule._dustTravelBehavior;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.ConditionalRedstoneBehavior;
+import com.axialeaa.doormat.fakes.BlockDustBehaviorInterface;
 import net.minecraft.block.AbstractGlassBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -10,10 +10,10 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(AbstractGlassBlock.class)
-public abstract class AbstractGlassBlockMixin implements ConditionalRedstoneBehavior {
+public class AbstractGlassBlockMixin implements BlockDustBehaviorInterface {
 
     @Override
-    public boolean canConnectToWire(World world, BlockPos pos, BlockState state, Direction direction) {
+    public boolean dustCanDescend(World world, BlockPos pos, BlockState state, Direction direction) {
         return DoormatSettings.dustTravelDownGlass;
     }
 

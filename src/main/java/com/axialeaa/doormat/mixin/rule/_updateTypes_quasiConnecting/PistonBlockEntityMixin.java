@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule._updateTypes_quasiConnecting;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.ConditionalRedstoneBehavior;
+import com.axialeaa.doormat.helpers.UpdateBehaviorHelper;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.PistonBlockEntity;
@@ -27,13 +27,13 @@ public class PistonBlockEntityMixin {
     @SuppressWarnings("unused") // otherwise it throws an error for every unused parameter
     @WrapWithCondition(method = "finish", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbor(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;Lnet/minecraft/util/math/BlockPos;)V", ordinal = 0))
     private boolean disableNeighborUpdates_finish(World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos) {
-        return ConditionalRedstoneBehavior.neighborUpdateOn(DoormatSettings.pistonUpdateType);
+        return UpdateBehaviorHelper.neighborUpdateOn(DoormatSettings.pistonUpdateType);
     }
 
     @SuppressWarnings("unused") // otherwise it throws an error for every unused parameter
     @WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbor(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;Lnet/minecraft/util/math/BlockPos;)V", ordinal = 0))
     private static boolean disableNeighborUpdates_tick(World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos) {
-        return ConditionalRedstoneBehavior.neighborUpdateOn(DoormatSettings.pistonUpdateType);
+        return UpdateBehaviorHelper.neighborUpdateOn(DoormatSettings.pistonUpdateType);
     }
 
 }

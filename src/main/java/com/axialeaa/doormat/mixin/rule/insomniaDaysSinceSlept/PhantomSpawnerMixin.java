@@ -1,10 +1,10 @@
-package com.axialeaa.doormat.mixin.rule.insomniaDaysSinceSlept_phantomMinSpawnAltitude;
+package com.axialeaa.doormat.mixin.rule.insomniaDaysSinceSlept;
 
 import com.axialeaa.doormat.DoormatSettings;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.spawner.PhantomSpawner;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(PhantomSpawner.class)
 public class PhantomSpawnerMixin {
@@ -12,11 +12,6 @@ public class PhantomSpawnerMixin {
     @ModifyConstant(method = "spawn", constant = @Constant(intValue = 72000))
     private int modifySpawnTime(int constant) {
         return DoormatSettings.insomniaDaysSinceSlept * 24000; // number of ticks in a day
-    }
-
-    @Redirect(method = "spawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getSeaLevel()I"))
-    private int modifyAltitude(ServerWorld world) {
-        return DoormatSettings.phantomMinSpawnAltitude;
     }
 
 }

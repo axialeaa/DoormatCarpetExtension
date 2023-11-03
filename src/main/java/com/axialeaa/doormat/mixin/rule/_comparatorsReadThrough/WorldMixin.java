@@ -1,6 +1,6 @@
-package com.axialeaa.doormat.mixin.rule.comparatorsReadThrough;
+package com.axialeaa.doormat.mixin.rule._comparatorsReadThrough;
 
-import com.axialeaa.doormat.helpers.ConditionalRedstoneBehavior;
+import com.axialeaa.doormat.fakes.BlockComparatorBehaviorInterface;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
@@ -21,8 +21,8 @@ public abstract class WorldMixin {
     @ModifyExpressionValue(method = "updateComparators", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean modifyBlockCheck(boolean original, BlockPos pos, Block block, @Local(ordinal = 0) Direction direction) {
         Block block1 = this.getBlockState(pos.offset(direction)).getBlock();
-        if (block1 instanceof ConditionalRedstoneBehavior redstoneBehavior)
-            return redstoneBehavior.canReadThroughBlock(block1) || original;
+        if (block1 instanceof BlockComparatorBehaviorInterface comparatorBehaviorInterface)
+            return comparatorBehaviorInterface.canReadThrough(block1) || original;
         return original;
     }
 

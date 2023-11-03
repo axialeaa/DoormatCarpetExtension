@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Unique;
 public class SporeBlossomBlockMixin extends Block implements Fertilizable {
 
     @Unique
-    private boolean isRule() {
+    private boolean isRuleEnabled() {
         return DoormatSettings.renewableSporeBlossoms == DoormatSettings.SporeBlossomsMode.SELF;
     }
 
@@ -25,12 +25,12 @@ public class SporeBlossomBlockMixin extends Block implements Fertilizable {
 
     @Override
     public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
-        return isRule();
+        return isRuleEnabled();
     }
 
     @Override
     public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-        return isRule();
+        return isRuleEnabled();
     }
 
     @Override
