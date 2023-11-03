@@ -2,7 +2,7 @@
   "carpet.command.randomTick.failed": "Could not random tick the block",
   "carpet.command.randomTick.success": "Sent %s random tick(s) to the block at %s, %s, %s",
   "carpet.rule.accurateAzaleaLeafDistribution.desc": "The distribution of azalea leaf types matches the azalea bush the tree is grown from",
-  "carpet.rule.accurateAzaleaLeafDistribution.extra.0": "This feature is controlled through doormat/worldgen/configured_feature/azalea_tree_many_flowers.json or azalea_tree_no_flowers.json.",
+  "carpet.rule.accurateAzaleaLeafDistribution.extra.0": "These features are controlled through doormat/worldgen/configured_feature/azalea_tree_many_flowers.json and azalea_tree_no_flowers.json respectively.",
   "carpet.rule.azaleaLeavesGrowFlowers.desc": "Azalea leaves grow flowers when fertilized",
   "carpet.rule.beaconsHealPets.desc": "Beacons with their secondary effect set to regeneration can heal nearby tamed mobs",
   "carpet.rule.bellQuasiConnecting.desc": "Whether bells can be quasi-powered",
