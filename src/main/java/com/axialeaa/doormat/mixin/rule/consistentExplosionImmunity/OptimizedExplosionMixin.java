@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.consistentItemExplosionDamage;
+package com.axialeaa.doormat.mixin.rule.consistentExplosionImmunity;
 
 import carpet.helpers.OptimizedExplosion;
 import carpet.mixins.ExplosionAccessor;

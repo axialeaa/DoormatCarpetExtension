@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.consistentItemExplosionDamage;
+package com.axialeaa.doormat.mixin.rule.consistentExplosionImmunity;
 
 import com.axialeaa.doormat.helpers.ConsistentExplosionImmunity;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
