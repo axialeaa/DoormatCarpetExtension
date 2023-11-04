@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule._updateTypes_quasiConnecting;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.UpdateBehaviorHelper;
+import com.axialeaa.doormat.helpers.RedstoneUpdateBehaviour;
 import net.minecraft.block.RedstoneLampBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,7 +26,7 @@ public class RedstoneLampBlockMixin {
 
     @Redirect(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting(World world, BlockPos pos) {
-        return UpdateBehaviorHelper.quasiConnectOn(DoormatSettings.lampQuasiConnecting, world, pos);
+        return RedstoneUpdateBehaviour.quasiConnectOn(DoormatSettings.lampQuasiConnecting, world, pos);
     }
 
 }

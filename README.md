@@ -64,21 +64,21 @@ Enables /randomtick command to forcibly send randomTicks to the specified block 
   * Currently has an issue with generating multiple features for one plant
 
 ## comparatorsReadThroughChains
-Comparators can read through chains, like they can on Bedrock Edition.
+Comparators can read through chains, like in Bedrock Edition.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `PARITY`, `DOORMAT`
 
 ## comparatorsReadThroughPaths
-Comparators can read through dirt paths, like they can on Bedrock Edition.
+Comparators can read through dirt paths, like in Bedrock Edition.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `PARITY`, `DOORMAT`
 
 ## comparatorsReadThroughPistons
-Comparators can read through pistons, like they can on Bedrock Edition.
+Comparators can read through pistons, like in Bedrock Edition.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
@@ -140,6 +140,13 @@ The type(s) of update doors emit when changing state.
 * Additional notes:
   * Disabling shape updates affects the connection between the two halves of the door
 
+## dustTravelDownGlass
+Redstone dust can travel down glass blocks, like in Bedrock Edition.
+* Type: `boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `PARITY`, `DOORMAT`
+
 ## fenceGateQuasiConnecting
 Whether fence gates can be quasi-powered.
 * Type: `Boolean`
@@ -155,7 +162,7 @@ The type(s) of update fence gates emit when changing state.
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
 
 ## fireAspectLighting
-Items enchanted with fire aspect can be used to light campfires, candles and TNT, like they can on Bedrock Edition.
+Items enchanted with fire aspect can be used to light campfires, candles and TNT, like in Bedrock Edition.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
@@ -206,7 +213,7 @@ The number of sleepless nights after which phantoms can spawn.
 * Suggested options: `3`, `7`
 * Categories: `SURVIVAL`, `DOORMAT`
 * Additional notes:
-    * Must be a non-negative number
+  * Must be a non-negative number
 
 ## lampQuasiConnecting
 Whether redstone lamps can be quasi-powered.
@@ -237,7 +244,7 @@ Underwater max speed will always be half of this number.
 * Suggested options: `8.0`, `16.0`
 * Categories: `CREATIVE`, `DOORMAT`
 * Additional notes:
-    * Must be a non-negative number
+  * Must be a non-negative number
 
 ## mossSpreadToCobblestone
 Moss can convert nearby cobblestone to mossy cobblestone when fertilized.
@@ -279,12 +286,12 @@ The minimum y height the player needs to be standing at in order to spawn phanto
   * Must be a non-negative number
 
 ## pistonMovementTime
-The number of ticks it takes for a piston to extend or retract.
+The length of time in ticks it takes for a piston to fully extend or retract.
 * Type: `Integer`
 * Default value: `2`
 * Categories: `FEATURE`, `DOORMAT`
 * Additional notes:
-  * Must be from 1 to 1200
+  * Must be a number from 1 to 1200
 
 ## pistonUpdateType
 The type(s) of update pistons emit when changing state.
@@ -305,7 +312,7 @@ Players drop all of their XP on death instead of a capped amount.
 * Categories: `SURVIVAL`, `DOORMAT`
 
 ## portalForceTicking
-Nether portal blocks randomTick when lit, like they do on Bedrock Edition.
+Nether portal blocks randomTick when lit, like in Bedrock Edition.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
@@ -335,7 +342,7 @@ The type(s) of update rails emit when changing state.
   * Disabling either kind of update affects the redstone connections between rails
 
 ## ravagersStompPlants
-Ravagers can break plants, like they can on Bedrock Edition.
+Ravagers can break plants, like in Bedrock Edition.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
@@ -365,6 +372,20 @@ Whether spore blossoms should generate when this block is fertilized.
 * Type: `SporeBlossomsMode`
 * Default value: `false`
 * Allowed options: `false`, `moss`, `self`
+* Categories: `FEATURE`, `DOORMAT`
+
+## softInversion
+Redstone torches placed on the sides of pistons deactivate when the piston extends, like in Bedrock Edition.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `PARITY`, `DOORMAT`
+
+## stairDiodes
+Redstone dust can travel both up and down the full-square side(s) of stairs, but only up the other sides.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
 * Categories: `FEATURE`, `DOORMAT`
 
 ## stickyPillarBlocks
@@ -404,6 +425,32 @@ The type(s) of update TNT emits when changing state.
 * Default value: `both`
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+
+## torchBurnoutCooldownTime
+The length of time in ticks a burned-out redstone torch waits before it accepts reactivation.
+* Type: `Integer`
+* Default value: `160`
+* Categories: `FEATURE`, `DOORMAT`
+* Additional notes:
+  * Must be a non-negative number
+
+## torchBurnoutFlickerAmount
+The number of times a redstone torch can flicker in the designated timespan before burning out.
+* Type: `Integer`
+* Default value: `8`
+* Categories: `FEATURE`, `DOORMAT`
+* Additional notes:
+  * Must be a non-negative number
+
+## torchBurnoutTime
+If a redstone torch exceeds the maximum number of flickers during this timespan, it will burn out.
+40 is the value that matches Bedrock Edition's behavior.
+* Type: `Integer`
+* Default value: `60`
+* Suggested values: `60`, `40`
+* Categories: `FEATURE`, `DOORMAT`
+* Additional notes:
+  * Must be a non-negative number
 
 ## trapdoorQuasiConnecting
 Whether trapdoors can be quasi-powered.

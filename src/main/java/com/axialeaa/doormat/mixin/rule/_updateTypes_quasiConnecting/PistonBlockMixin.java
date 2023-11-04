@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule._updateTypes_quasiConnecting;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.UpdateBehaviorHelper;
+import com.axialeaa.doormat.helpers.RedstoneUpdateBehaviour;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.block.Block;
 import net.minecraft.block.PistonBlock;
@@ -22,13 +22,13 @@ public class PistonBlockMixin {
     @SuppressWarnings("unused") // otherwise it throws an error for every unused parameter
     @WrapWithCondition(method = "onSyncedBlockEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbors(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V", ordinal = 0))
     private boolean disableNeighborUpdates_onSyncedBlockEvent(World world, BlockPos pos, Block block) {
-        return UpdateBehaviorHelper.neighborUpdateOn(DoormatSettings.pistonUpdateType);
+        return RedstoneUpdateBehaviour.neighborUpdateOn(DoormatSettings.pistonUpdateType);
     }
 
     @SuppressWarnings("unused") // otherwise it throws an error for every unused parameter
     @WrapWithCondition(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
     private boolean disableNeighborUpdates_move(World world, BlockPos pos, Block block) {
-        return UpdateBehaviorHelper.neighborUpdateOn(DoormatSettings.pistonUpdateType);
+        return RedstoneUpdateBehaviour.neighborUpdateOn(DoormatSettings.pistonUpdateType);
     }
 
 }

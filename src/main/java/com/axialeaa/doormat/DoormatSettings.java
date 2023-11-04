@@ -155,8 +155,17 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean stairDiodes = false;
 
-    @Rule( options = "2", validators = { PistonMovementTimeValidator.class }, strict = false, categories = { FEATURE, DOORMAT } )
+    @Rule( options = "2", validators = PistonMovementTimeValidator.class, strict = false, categories = { FEATURE, DOORMAT } )
     public static int pistonMovementTime = 2;
+
+    @Rule( options = { "60", "40" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { FEATURE, DOORMAT } )
+    public static int torchBurnoutTime = 60;
+
+    @Rule( options = "8", validators = Validators.NonNegativeNumber.class, strict = false, categories = { FEATURE, DOORMAT } )
+    public static int torchBurnoutFlickerAmount = 8;
+
+    @Rule( options = "160", validators = Validators.NonNegativeNumber.class, strict = false, categories = { FEATURE, DOORMAT } )
+    public static int torchBurnoutCooldownTime = 160;
 
     @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode lampUpdateType = NeighbourUpdateMode.SHAPE;
@@ -228,6 +237,9 @@ public class DoormatSettings {
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean dustTravelDownGlass = false;
+
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
+    public static boolean softInversion = false;
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean comparatorsReadThroughChains = false;

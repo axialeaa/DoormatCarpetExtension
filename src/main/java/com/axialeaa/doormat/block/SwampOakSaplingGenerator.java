@@ -8,8 +8,7 @@ import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
 
 public class SwampOakSaplingGenerator extends SaplingGenerator {
 
-    public SwampOakSaplingGenerator() {
-    }
+    public SwampOakSaplingGenerator() {}
 
     protected RegistryKey<ConfiguredFeature<?, ?>> getTreeFeature(Random random, boolean bees) {
         return TreeConfiguredFeatures.SWAMP_OAK;

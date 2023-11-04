@@ -8,8 +8,7 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
 
 public class AzaleaSaplingManyFlowersGenerator extends SaplingGenerator {
 
-    public AzaleaSaplingManyFlowersGenerator() {
-    }
+    public AzaleaSaplingManyFlowersGenerator() {}
 
     protected RegistryKey<ConfiguredFeature<?, ?>> getTreeFeature(Random random, boolean bees) {
         return DoormatConfiguredFeatures.AZALEA_TREE_MANY_FLOWERS;

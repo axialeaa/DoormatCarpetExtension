@@ -1,6 +1,6 @@
-package com.axialeaa.doormat.mixin.rule._comparatorsReadThrough;
+package com.axialeaa.doormat.mixin.rule.comparatorsReadThrough;
 
-import com.axialeaa.doormat.fakes.BlockComparatorBehaviorInterface;
+import com.axialeaa.doormat.fakes.BlockComparatorBehaviourInterface;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
@@ -20,10 +20,12 @@ public abstract class WorldMixin {
     @SuppressWarnings("unused")
     @ModifyExpressionValue(method = "updateComparators", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean modifyBlockCheck(boolean original, BlockPos pos, Block block, @Local(ordinal = 0) Direction direction) {
-        Block block1 = this.getBlockState(pos.offset(direction)).getBlock();
-        if (block1 instanceof BlockComparatorBehaviorInterface comparatorBehaviorInterface)
-            return comparatorBehaviorInterface.canReadThrough(block1) || original;
-        return original;
+        Block blockBehind = this.getBlockState(pos.offset(direction)).getBlock();
+        if (blockBehind instanceof BlockComparatorBehaviourInterface comparatorBehaviourInterface)
+            // if the block behind the comparator has the BlockComparatorBehaviourInterface implemented,
+            //      return true if the interface method is true or the block is a solid block
+            return comparatorBehaviourInterface.canReadThrough(blockBehind) || original;
+        return original; // otherwise return the output of the solid block check
     }
 
 }
