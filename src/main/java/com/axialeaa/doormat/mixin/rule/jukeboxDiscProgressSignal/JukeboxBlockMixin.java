@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.jukeboxTimeProgressSignal;
+package com.axialeaa.doormat.mixin.rule.jukeboxDiscProgressSignal;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
