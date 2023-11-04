@@ -380,6 +380,10 @@ Redstone torches placed on the sides of pistons deactivate when the piston exten
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `PARITY`, `DOORMAT`
+* Additional notes:
+  * This hasn't reached total parity yet. For example, Bedrock Edition's implementation treats pistons as solid blocks in this instance, powering the torch when the piston is powered, not when it extends.
+  * Due to the differences in Java Edition's neighbor update system, such an implementation would cause the torches to become budded if the piston was powered and couldn't extend (the thing that gives neighbor updates).
+  * I opted for this method, which should stay true to Java's quirks as the real soft inversion does to Bedrock's :)
 
 ## stairDiodes
 Redstone dust can travel both up and down the full-square side(s) of stairs, but only up the other sides.
