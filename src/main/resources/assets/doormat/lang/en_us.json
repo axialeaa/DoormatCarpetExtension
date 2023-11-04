@@ -68,7 +68,6 @@
   "carpet.rule.thornyRoseBush.extra.0": "This even has a unique death message!",
   "carpet.rule.tntQuasiConnecting.desc": "Whether TNT can be quasi-powered",
   "carpet.rule.tntUpdateType.desc": "The type(s) of update TNT emits when changing state",
-  "carpet.rule.torchBurnoutCooldownTime.desc": "The length of time in ticks a burned-out redstone torch waits before it accepts reactivation",
   "carpet.rule.torchBurnoutFlickerAmount.desc": "The number of times a redstone torch can flicker in the designated timespan before burning out",
   "carpet.rule.torchBurnoutTime.desc": "If a redstone torch exceeds the maximum number of flickers during this timespan, it will burn out",
   "carpet.rule.torchBurnoutTime.extra.0": "40 is the value that matches Bedrock Edition's behavior",

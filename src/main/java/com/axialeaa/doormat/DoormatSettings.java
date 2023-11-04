@@ -164,9 +164,6 @@ public class DoormatSettings {
     @Rule( options = "8", validators = Validators.NonNegativeNumber.class, strict = false, categories = { FEATURE, DOORMAT } )
     public static int torchBurnoutFlickerAmount = 8;
 
-    @Rule( options = "160", validators = Validators.NonNegativeNumber.class, strict = false, categories = { FEATURE, DOORMAT } )
-    public static int torchBurnoutCooldownTime = 160;
-
     @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode lampUpdateType = NeighbourUpdateMode.SHAPE;
 

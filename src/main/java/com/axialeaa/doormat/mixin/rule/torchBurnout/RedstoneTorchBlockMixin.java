@@ -19,9 +19,4 @@ public class RedstoneTorchBlockMixin {
         return DoormatSettings.torchBurnoutFlickerAmount;
     }
 
-    @ModifyConstant(method = "scheduledTick", constant = @Constant(intValue = 160))
-    private int modifyCooldownTime(int constant) {
-        return DoormatSettings.torchBurnoutCooldownTime;
-    }
-
 }

@@ -430,14 +430,6 @@ The type(s) of update TNT emits when changing state.
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
 
-## torchBurnoutCooldownTime
-The length of time in ticks a burned-out redstone torch waits before it accepts reactivation.
-* Type: `Integer`
-* Default value: `160`
-* Categories: `FEATURE`, `DOORMAT`
-* Additional notes:
-  * Must be a non-negative number
-
 ## torchBurnoutFlickerAmount
 The number of times a redstone torch can flicker in the designated timespan before burning out.
 * Type: `Integer`
