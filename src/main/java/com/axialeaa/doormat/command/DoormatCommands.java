@@ -53,7 +53,6 @@ public class DoormatCommands {
             } else throw new SimpleCommandExceptionType(Text.translatable("carpet.command.randomTick.failed")).create();
             // if all else fails, throw an exception in the form of this error message
         }
-
     }
 
 }

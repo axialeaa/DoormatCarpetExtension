@@ -17,9 +17,9 @@ public class RedstoneWireBlockMixin {
     @SuppressWarnings("unused")
     @ModifyExpressionValue(method = "getReceivedRedstonePower", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z", ordinal = 0))
     private boolean modifyDescent(boolean original, World world, BlockPos pos, @Local Direction direction, @Local(ordinal = 0) BlockPos blockPos, @Local BlockState blockState) {
-        if (blockState.getBlock() instanceof BlockDustBehaviourInterface dustBehaviorInterface)
-            return original || dustBehaviorInterface.dustCanDescend(world, blockPos, blockState, direction);
-        return original;
+        return blockState.getBlock() instanceof BlockDustBehaviourInterface dustBehaviorInterface ?
+            original || dustBehaviorInterface.dustCanDescend(world, blockPos, blockState, direction) :
+            original;
     }
 
 }

@@ -14,7 +14,7 @@ public class StairBlockMixin implements BlockDustBehaviourInterface {
 
     @Override
     public boolean dustCanDescend(World world, BlockPos pos, BlockState state, Direction direction) {
-        return DoormatSettings.stairDiodes;
+        return DoormatSettings.stairDiodes && state.isSideSolidFullSquare(world, pos, direction.getOpposite());
     }
 
 }

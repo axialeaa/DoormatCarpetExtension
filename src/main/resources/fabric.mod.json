@@ -3,11 +3,12 @@
 	"id": "doormat",
 	"version": "${version}",
 	"name": "Axia's Doormat",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Welcome to the entrance of my ideas! Wipe your feet please...",
 	"authors": [
 		"axialeaa"
 	],
 	"contact": {
+		"homepage": "https://modrinth.com/mod/doormat",
 		"sources": "https://github.com/axialeaa/DoormatCarpetExtension",
 		"issues": "https://github.com/axialeaa/DoormatCarpetExtension/issues"
 	},

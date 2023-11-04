@@ -19,11 +19,11 @@ public class ComparatorBlockMixin {
     @ModifyExpressionValue(method = "getPower", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean modifyBlockCheck(boolean original, World world, BlockPos pos, BlockState state, @Local(ordinal = 0) Direction direction) {
         Block blockBehind = world.getBlockState(pos.offset(direction)).getBlock();
-        if (blockBehind instanceof BlockComparatorBehaviourInterface comparatorBehaviourInterface)
-            // if the block behind the comparator has the BlockComparatorBehaviourInterface implemented,
-            //      return true if the interface method is true or the block is a solid block
-            return comparatorBehaviourInterface.canReadThrough(blockBehind) || original;
-        return original; // otherwise return the output of the solid block check
+        return blockBehind instanceof BlockComparatorBehaviourInterface comparatorBehaviourInterface ?
+            // if the block behind the comparator has the BlockComparatorBehaviourInterface implemented...
+            original || comparatorBehaviourInterface.canReadThrough(blockBehind) :
+            // return true if the interface method is true or the block is a solid block
+            original; // otherwise return the output of the solid block check
     }
 
 }

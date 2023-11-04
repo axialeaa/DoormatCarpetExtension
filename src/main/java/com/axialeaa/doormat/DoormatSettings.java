@@ -39,9 +39,18 @@ public class DoormatSettings {
      * -------- ENUMS --------
      */
 
-    public enum PetHurtMode { FALSE, TRUE, OWNED; public boolean isEnabled() { return this != FALSE; } }
-    public enum SporeBlossomsMode { FALSE, MOSS, SELF }
-
+    public enum PetHurtMode {
+        FALSE, TRUE, OWNED;
+        public boolean isEnabled() {
+            return this != FALSE;
+        }
+    }
+    public enum SporeBlossomsMode {
+        FALSE, MOSS, SELF
+    }
+    public enum ChiseledBookshelfSignalMode {
+        INTERACTION, FULLNESS, FULLNESS_LERPED
+    }
     @SuppressWarnings("unused")
     public enum NeighbourUpdateMode {
 
@@ -154,6 +163,15 @@ public class DoormatSettings {
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean stairDiodes = false;
+
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean composterSideInputs = false;
+
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static ChiseledBookshelfSignalMode chiseledBookshelfSignal = ChiseledBookshelfSignalMode.INTERACTION;
+
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean jukeboxDiscProgressSignal = false;
 
     @Rule( options = "2", validators = PistonMovementTimeValidator.class, strict = false, categories = { FEATURE, DOORMAT } )
     public static int pistonMovementTime = 2;

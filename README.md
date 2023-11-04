@@ -3,6 +3,7 @@
 # Hi there! Thanks for checking out Doormat!
 
 [![GitHub downloads](https://img.shields.io/github/downloads/axialeaa/DoormatCarpetExtension/total?label=Github%20downloads&logo=github)](https://github.com/axialeaa/DoormatCarpetExtension/releases)
+[![Modrinth downloads](https://img.shields.io/modrinth/dt/doormat?label=Modrinth%20downloads&logo=modrinth)](https://modrinth.com/mod/doormat)
 
 Doormat is a [Carpet] extension, focusing on simply adding features I want to have fun with, and hopefully you will too! Aside from new ways to farm mostly non-renewable resources, this mod prides itself on its "redstone tinkering" features, allowing you to have control over block updates and quasi connectivity in your worlds.
 
@@ -52,6 +53,16 @@ The type(s) of update bells emit when changing state.
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
 
+## chiseledBookshelfSignal
+How comparators measure the signal strength output of chiseled bookshelves.
+"interaction" is vanilla behavior, and is equal to the last slot interacted with.
+"fullness" is equal to the number of books in the bookshelf.
+Lerped interpolates from 1 to 15, instead of outputting the exact integer.
+* Type: `ChiseledBookshelfSignalMode`
+* Default value: `interaction`
+* Allowed options: `interaction`, `fullness`, `fullness_lerped`
+* Categories: `FEATURE`, `DOORMAT`
+
 ## commandRandomTick
 Enables /randomtick command to forcibly send randomTicks to the specified block position.
 * Type: `String`
@@ -83,6 +94,13 @@ Comparators can read through pistons, like in Bedrock Edition.
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `PARITY`, `DOORMAT`
+
+## composterSideInputs
+Sideways-pointing hoppers and droppers can insert items into composters.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `DOORMAT`
 
 ## consistentExplosionImmunity
 Explosion-immune blocks also apply this property to their dropped item counterparts.
@@ -214,6 +232,13 @@ The number of sleepless nights after which phantoms can spawn.
 * Categories: `SURVIVAL`, `DOORMAT`
 * Additional notes:
   * Must be a non-negative number
+
+## jukeboxDiscProgressSignal
+Comparators measure how much of the music disc has been played by the jukebox, instead of the exact disc type.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `DOORMAT`
 
 ## lampQuasiConnecting
 Whether redstone lamps can be quasi-powered.
