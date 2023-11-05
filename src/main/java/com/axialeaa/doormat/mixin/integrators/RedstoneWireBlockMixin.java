@@ -11,6 +11,9 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+/**
+ * This mixin causes the behaviour that implementing {@link BlockDustBehaviourInterface} on a class creates.
+ */
 @Mixin(RedstoneWireBlock.class)
 public class RedstoneWireBlockMixin {
 

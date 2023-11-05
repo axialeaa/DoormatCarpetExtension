@@ -7,7 +7,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 /**
- * opt-in interface for easily configurable redstone dust behaviour via {@link RedstoneWireBlockMixin}
+ * Opt-in interface for easily configurable redstone dust behaviour via {@link RedstoneWireBlockMixin}.
  */
 public interface BlockDustBehaviourInterface {
 

@@ -16,9 +16,10 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 
 	public static final String MODID = "doormat";
 	public static final String MODNAME = "Axia's Doormat";
+	public static final String MODVERSION = "1.0.2";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
 
-	private static final SettingsManager doormatSettingsManager = new SettingsManager("1.0.0", MODID,"Axia's Doormat");
+	private static final SettingsManager doormatSettingsManager = new SettingsManager(MODVERSION, MODID, MODNAME);
 
 	@Override
 	public void onInitialize() {
@@ -39,7 +40,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 
 	@Override
 	public Map<String, String> canHasTranslations(String lang) {
-		return Translations.getTranslationFromResourcePath("assets/doormat/lang/%s.json".formatted(lang));
+		return Translations.getTranslationFromResourcePath("assets/" + MODID + "/lang/%s.json".formatted(lang));
 	}
 
 }

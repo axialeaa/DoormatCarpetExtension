@@ -21,7 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * Instead, create an empty injection for each method, and extend + override the handler methods from this mixin.
  * That way, method calls are instantiated without clunky instanceof checks and without incompatibility.
  */
-
 @Mixin(AbstractBlock.class)
 public abstract class AbstractBlockMixin {
 

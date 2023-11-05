@@ -6,6 +6,9 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 
+/**
+ * Simple helper class for consistentExplosionImmunity logic, with help from <a href="https://github.com/lntricate1">intricate</a>.
+ */
 public class ConsistentExplosionImmunity {
 
     /**
@@ -17,7 +20,6 @@ public class ConsistentExplosionImmunity {
             if (item instanceof BlockItem blockItem) {
                 float blastRes = blockItem.getBlock().getBlastResistance();
                 return power * 1.3 > (blastRes + 0.3) * 0.3;
-                // thanks to intricate for showing me this formula <3
             }
         }
         return true;

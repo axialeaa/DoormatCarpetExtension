@@ -16,6 +16,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 
+/**
+ * This class contains the code for all registered commands in Doormat. This syntax was provided in <a href="https://gist.github.com/falkreon/f58bb91e45ba558bc7fd827e81c6cb45">falkreon's gist</a> on the topic of Brigadier.
+ */
 public class DoormatCommands {
 
     public static void register() {

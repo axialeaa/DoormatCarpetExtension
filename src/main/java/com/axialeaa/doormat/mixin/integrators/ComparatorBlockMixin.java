@@ -11,6 +11,9 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+/**
+ * This mixin (alongside {@link WorldMixin}) causes the behaviour that implementing {@link BlockComparatorBehaviourInterface} on a class creates.
+ */
 @Mixin(ComparatorBlock.class)
 public class ComparatorBlockMixin {
 

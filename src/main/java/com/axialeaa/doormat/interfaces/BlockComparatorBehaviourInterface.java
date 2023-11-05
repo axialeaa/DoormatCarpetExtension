@@ -5,7 +5,7 @@ import com.axialeaa.doormat.mixin.integrators.WorldMixin;
 import net.minecraft.block.Block;
 
 /**
- * opt-in interface for easily configurable comparator behaviour via {@link ComparatorBlockMixin} and {@link WorldMixin}
+ * Opt-in interface for easily configurable comparator behaviour via {@link ComparatorBlockMixin} and {@link WorldMixin}.
  */
 public interface BlockComparatorBehaviourInterface {
 

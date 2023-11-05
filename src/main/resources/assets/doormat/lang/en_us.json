@@ -23,7 +23,7 @@
   "carpet.rule.disablePetAttacking.desc": "Disables players harming tamed mobs",
   "carpet.rule.disablePetAttacking.extra.0": "\"owned\" allows players to hit pets that aren't their own.",
   "carpet.rule.disableShulkerReproduction.desc": "Disables shulkers duplicating when hit by bullets",
-  "carpet.rule.disableShulkerReproduction.extra.0": "Intended to be used alongside shulkerSpawningInEndCities.",
+  "carpet.rule.disableShulkerReproduction.extra.0": "Intended to be used in tandem with carpet's shulkerSpawningInEndCities.",
   "carpet.rule.dispenserUpdateType.desc": "The type(s) of update dispensers and droppers emit when changing state",
   "carpet.rule.doorUpdateType.desc": "The type(s) of update doors emit when changing state",
   "carpet.rule.dustTravelDownGlass.desc": "Redstone dust can travel down glass blocks, like in Bedrock Edition",
