@@ -136,7 +136,7 @@ Disables players harming tamed mobs.
 
 ## disableShulkerReproduction
 Disables shulkers duplicating when hit by bullets.
-Intended to be used alongside shulkerSpawningInEndCities.
+Intended to be used in tandem with carpet's shulkerSpawningInEndCities.
 * Type: `boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
