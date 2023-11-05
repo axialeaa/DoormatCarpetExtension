@@ -28,7 +28,7 @@ public class FireAspectLighting {
         BlockPos pos = ctx.getBlockPos();
         BlockState state = world.getBlockState(pos); // get the block state at this position
         if (DoormatSettings.fireAspectLighting && EnchantmentHelper.getLevel(Enchantments.FIRE_ASPECT, stack) > 0 && (state.getBlock() instanceof TntBlock || canBeLit(state))) {
-            // if the rule is enabled, the held item is enchanted with fire aspect and the block is either TNT or an ignitable campfire, candle or candle cake...
+            // if the rules is enabled, the held item is enchanted with fire aspect and the block is either TNT or an ignitable campfire, candle or candle cake...
             if (state.getBlock() instanceof TntBlock) { // if it's TNT, light it
                 TntBlock.primeTnt(world, pos);
                 world.setBlockState(pos, Blocks.AIR.getDefaultState(), DoormatSettings.tntUpdateType.getFlags() | Block.REDRAW_ON_MAIN_THREAD);
