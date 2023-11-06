@@ -1,0 +1,36 @@
+package com.axialeaa.doormat.helpers;
+
+import com.axialeaa.doormat.DoormatSettings;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.WorldAccess;
+
+public class MonstersSpawnInPeaceful {
+
+    /**
+     * This works because we replace the invocation of world.getDifficulty() with the easy difficulty.
+     * As a result, the check performed is Difficulty.EASY != Difficulty.PEACEFUL which always returns true.
+     */
+    public static Difficulty bypassPeacefulCheck(WorldAccess world, Operation<Difficulty> original) {
+        return DoormatSettings.monstersSpawnInPeaceful.isEnabled() ? Difficulty.EASY : original.call(world);
+    }
+    public static Difficulty bypassPeacefulCheck(Difficulty original) {
+        return DoormatSettings.monstersSpawnInPeaceful.isEnabled() ? Difficulty.EASY : original;
+    }
+
+    /**
+     * Establishes conditions based on the selected rule.
+     */
+    public static boolean addPeacefulSpawnCondition(WorldAccess world, SpawnReason spawnReason, BlockPos pos, boolean original) {
+        return original && switch (DoormatSettings.monstersSpawnInPeaceful) {
+            case FALSE -> false;
+            case TRUE -> true;
+            case BELOW_HEIGHTMAP -> pos.getY() < world.getTopPosition(Heightmap.Type.WORLD_SURFACE, pos).getY();
+            case UNNATURAL -> spawnReason != SpawnReason.NATURAL && spawnReason != SpawnReason.CHUNK_GENERATION;
+        };
+    }
+
+}

@@ -21,7 +21,7 @@ public class JukeboxBlockMixin {
         return DoormatSettings.jukeboxDiscProgressSignal ?
             // if the rule is enabled...
             MathHelper.lerpPositive(timePlaying / (float)disc.getSongLengthInTicks(), 0, 15) :
-            // interpolate through 0 and 15 based on the fraction of the disc played
+            // interpolate through 1 and 15 based on the fraction of the disc played
             original; // otherwise return the value of the music disc index, as normal
     }
 

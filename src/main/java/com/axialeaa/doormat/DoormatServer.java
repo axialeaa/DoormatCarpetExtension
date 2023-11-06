@@ -24,7 +24,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	@Override
 	public void onInitialize() {
 		CarpetServer.manageExtension(new DoormatServer());
-		DoormatCommands.register();
+		DoormatCommands.registerCommands();
 		LOGGER.info(MODNAME + " initialized. Wipe your feet!");
 	}
 

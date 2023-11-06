@@ -15,11 +15,11 @@ public class ChiseledBookshelfBlockMixin {
     @ModifyReturnValue(method = "getComparatorOutput", at = @At(value = "RETURN", ordinal = 1))
     private int modifyComparatorOutput(int original, @Local ChiseledBookshelfBlockEntity chiseledBookshelfBlockEntity) {
         int bookCount = chiseledBookshelfBlockEntity.getOpenSlotCount();
-        return switch (DoormatSettings.chiseledBookshelfSignal) {
+        return switch (DoormatSettings.chiseledBookshelfSignalBasis) {
             case INTERACTION -> original; // if the rule is set to interaction, return vanilla behaviour
             case FULLNESS -> bookCount; // if the rule is set to fullness, return the number of books
             case FULLNESS_LERPED -> MathHelper.lerpPositive(bookCount / (float)chiseledBookshelfBlockEntity.size(), 0, 15);
-            // if the rule is set to fullness_lerped, return the number of books interpolated through 0 and 15
+            // if the rule is set to fullness_lerped, return the number of books interpolated through 1 and 15
         };
     }
 

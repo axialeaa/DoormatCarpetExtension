@@ -21,7 +21,8 @@ import net.minecraft.util.math.random.Random;
  */
 public class DoormatCommands {
 
-    public static void register() {
+    public static void registerCommands() {
+        // RANDOMTICK
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             LiteralCommandNode<ServerCommandSource> randomTickNode = CommandManager
                 .literal("randomtick")

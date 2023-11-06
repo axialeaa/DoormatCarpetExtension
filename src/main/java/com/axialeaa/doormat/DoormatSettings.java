@@ -45,6 +45,12 @@ public class DoormatSettings {
     public enum SporeBlossomsMode {
         FALSE, MOSS, SELF
     }
+    public enum PeacefulMonstersMode {
+        FALSE, TRUE, BELOW_HEIGHTMAP, UNNATURAL;
+        public boolean isEnabled() {
+            return this != FALSE;
+        }
+    }
     public enum ChiseledBookshelfSignalMode {
         INTERACTION, FULLNESS, FULLNESS_LERPED
     }
@@ -88,7 +94,7 @@ public class DoormatSettings {
     public static boolean comparatorsReadThroughPistons = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
-    public static ChiseledBookshelfSignalMode chiseledBookshelfSignal = ChiseledBookshelfSignalMode.INTERACTION;
+    public static ChiseledBookshelfSignalMode chiseledBookshelfSignalBasis = ChiseledBookshelfSignalMode.INTERACTION;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean composterSideInputs = false;
@@ -134,6 +140,9 @@ public class DoormatSettings {
 
     @Rule( options = { "8.0", "16.0" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { CREATIVE, DOORMAT } )
     public static double maxMinecartSpeed = 8.0;
+
+    @Rule( categories = { SURVIVAL, EXPERIMENTAL, DOORMAT } )
+    public static PeacefulMonstersMode monstersSpawnInPeaceful = PeacefulMonstersMode.FALSE;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean mossSpreadToCobblestone = false;
