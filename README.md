@@ -277,7 +277,7 @@ Hostile mobs can passively spawn in peaceful mode.
 * Suggested options: `false`, `true`, `below_surface`, `unnatural`
 * Categories: `SURVIVAL`, `EXPERIMENTAL`, `DOORMAT`
 * Additional notes:
-  * This modifies a <b>LOT</b> of classes, so there's a high likelihood I've missed something. If so, report it to me via the Github issues page.
+  * This modifies a <strong>LOT</strong> of classes, so there's a high likelihood I've missed something. If so, report it to me via the Github issues page.
 
 ## mossSpreadToCobblestone
 Moss can convert nearby cobblestone to mossy cobblestone when fertilized.
