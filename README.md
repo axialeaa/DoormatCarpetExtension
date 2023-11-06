@@ -267,6 +267,18 @@ Underwater max speed will always be half of this number.
 * Additional notes:
   * Must be a non-negative number
 
+## monstersSpawnInPeaceful
+Hostile mobs can passively spawn in peaceful mode.
+"true" entirely matches easy mode behavior.
+"below_heightmap" ensures that there is always a roof above the spawning location of a mob.
+"unnatural" removes the capability for natural and chunk generation spawns.
+* Type: `PeacefulMonstersMode`
+* Default value: `false`
+* Suggested options: `false`, `true`, `below_surface`, `unnatural`
+* Categories: `SURVIVAL`, `EXPERIMENTAL`, `DOORMAT`
+* Additional notes:
+  * This modifies a <b>LOT</b> of classes, so there's a high likelihood I've missed something. If so, report it to me via the Github issues page.
+
 ## mossSpreadToCobblestone
 Moss can convert nearby cobblestone to mossy cobblestone when fertilized.
 This feature is controlled through `doormat/worldgen/configured_feature/mossy_cobblestone_patch.json`.
