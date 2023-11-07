@@ -230,7 +230,7 @@ The number of sleepless nights after which phantoms can spawn.
   * Must be a non-negative number
 
 ## jukeboxDiscProgressSignal
-Comparators measure how much of the music disc has been played by the jukebox, instead of the exact disc type.
+Comparators measure how much of the music disc has been played by the jukebox, instead of the disc index.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
@@ -270,14 +270,16 @@ Underwater max speed will always be half of this number.
 ## monstersSpawnInPeaceful
 Hostile mobs can passively spawn in peaceful mode.
 "true" entirely matches easy mode behavior.
-"below_heightmap" ensures that there is always a roof above the spawning location of a mob.
+"below_surface" ensures that there is always a roof above the spawning location of a mob.
+"below_sea" ensures that the spawning location of the mob is below y = 63.
 "unnatural" removes the capability for natural and chunk generation spawns.
 * Type: `PeacefulMonstersMode`
 * Default value: `false`
-* Suggested options: `false`, `true`, `below_surface`, `unnatural`
+* Suggested options: `false`, `true`, `below_surface`, `below_sea`, `unnatural`
 * Categories: `SURVIVAL`, `EXPERIMENTAL`, `DOORMAT`
 * Additional notes:
-  * This modifies a <strong>LOT</strong> of classes, so there's a high likelihood I've missed something. If so, report it to me via the Github issues page.
+  * below_surface utilises the `MOTION_BLOCKING_NO_LEAVES` heightmap algorithm.
+  * Due to how baked-in the peaceful mob system is, this rule modifies a <strong>LOT</strong> of classes. If I've missed something, report it to me via the Github issues page.
 
 ## mossSpreadToCobblestone
 Moss can convert nearby cobblestone to mossy cobblestone when fertilized.

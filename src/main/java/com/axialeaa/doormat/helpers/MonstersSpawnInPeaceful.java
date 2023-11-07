@@ -28,7 +28,8 @@ public class MonstersSpawnInPeaceful {
         return original && switch (DoormatSettings.monstersSpawnInPeaceful) {
             case FALSE -> false;
             case TRUE -> true;
-            case BELOW_SURFACE -> pos.getY() < world.getTopPosition(Heightmap.Type.WORLD_SURFACE, pos).getY();
+            case BELOW_SURFACE -> pos.getY() < world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos).getY();
+            case BELOW_SEA -> pos.getY() < world.getSeaLevel();
             case UNNATURAL -> spawnReason != SpawnReason.NATURAL && spawnReason != SpawnReason.CHUNK_GENERATION;
         };
     }

@@ -46,7 +46,7 @@ public class DoormatSettings {
         FALSE, MOSS, SELF
     }
     public enum PeacefulMonstersMode {
-        FALSE, TRUE, BELOW_SURFACE, UNNATURAL;
+        FALSE, TRUE, BELOW_SURFACE, BELOW_SEA, UNNATURAL;
         public boolean isEnabled() {
             return this != FALSE;
         }
