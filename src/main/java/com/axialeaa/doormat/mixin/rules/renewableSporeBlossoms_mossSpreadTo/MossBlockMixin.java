@@ -46,7 +46,7 @@ public class MossBlockMixin {
         generateAboveOnCondition(DoormatSettings.mossSpreadToCobblestone, DoormatConfiguredFeatures.MOSSY_COBBLESTONE_PATCH, world, random, pos);
         generateAboveOnCondition(DoormatSettings.mossSpreadToStoneBricks, DoormatConfiguredFeatures.MOSSY_STONE_BRICKS_PATCH, world, random, pos);
 
-        if (DoormatSettings.renewableSporeBlossoms == DoormatSettings.SporeBlossomsMode.MOSS && world.getBlockState(pos.down()).isAir())
+        if (DoormatSettings.renewableSporeBlossoms && world.getBlockState(pos.down()).isAir())
             // if the rules is enabled and the block underneath is air, place a spore blossom underneath the moss block
             world.setBlockState(pos.down(), Blocks.SPORE_BLOSSOM.getDefaultState());
     }

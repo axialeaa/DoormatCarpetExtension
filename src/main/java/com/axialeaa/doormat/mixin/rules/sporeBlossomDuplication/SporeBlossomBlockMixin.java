@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rules.renewableSporeBlossoms_mossSpreadTo;
+package com.axialeaa.doormat.mixin.rules.sporeBlossomDuplication;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.*;
@@ -16,7 +16,7 @@ public class SporeBlossomBlockMixin extends Block implements Fertilizable {
 
     @Unique
     private boolean isRuleEnabled() {
-        return DoormatSettings.renewableSporeBlossoms == DoormatSettings.SporeBlossomsMode.SELF;
+        return DoormatSettings.sporeBlossomDuplication;
     }
 
     public SporeBlossomBlockMixin(Settings settings) {

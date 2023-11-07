@@ -404,11 +404,10 @@ Blackstone adjacent to underwater magma blocks slowly becomes gilded over time.
 * Categories: `FEATURE`, `DOORMAT`
 
 ## renewableSporeBlossoms
-Whether spore blossoms should generate when this block is fertilized.
-"self" drops an item the same way tall flowers do.
-* Type: `SporeBlossomsMode`
+Spore blossoms generate underneath fertilized moss blocks.
+* Type: `Boolean`
 * Default value: `false`
-* Allowed options: `false`, `moss`, `self`
+* Allowed options: `false`, `true`
 * Categories: `FEATURE`, `DOORMAT`
 
 ## softInversion
@@ -422,6 +421,13 @@ Redstone torches placed on the sides of pistons deactivate when the piston exten
   * Due to the differences in Java Edition's neighbor update system, such an implementation would cause the torches to become budded if the piston was powered and couldn't extend (the thing that gives neighbor updates).
   * I opted for this method, which should stay true to Java's quirks as the real soft inversion does to Bedrock's. :)
 
+## sporeBlossomDuplication
+Spore blossoms drop themselves when fertilized, the same way tall flowers do.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `false`, `true`
+* Categories: `FEATURE`, `DOORMAT`
+* 
 ## stairDiodes
 Redstone dust can travel both up and down the full-square side(s) of stairs, but only up the other sides.
 * Type: `Boolean`

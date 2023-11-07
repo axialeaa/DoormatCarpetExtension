@@ -25,8 +25,8 @@ public abstract class TameableEntityMixin extends LivingEntityMixin {
         if (attacker instanceof PlayerEntity playerEntity) {
             Optional<UUID> optional = Optional.ofNullable(this.getOwnerUuid());
             // if the attacker is a player, get the uuid of the owner of the mob
-            if (DoormatSettings.disablePetAttacking == DoormatSettings.PetHurtMode.TRUE ||
-                (DoormatSettings.disablePetAttacking == DoormatSettings.PetHurtMode.OWNED && optional.isPresent() && playerEntity.getUuid().equals(optional.get())))
+            if (DoormatSettings.disablePetAttacking == DoormatSettings.PetAttackMode.TRUE ||
+                (DoormatSettings.disablePetAttacking == DoormatSettings.PetAttackMode.OWNED && optional.isPresent() && playerEntity.getUuid().equals(optional.get())))
                 // if disablePetAttacking is "true" or "owned" and the attacking player is the owner, return false
                 // if the owner uuid exists (optional.isPresent()), that means the mob is tamed
                 cir.setReturnValue(false);

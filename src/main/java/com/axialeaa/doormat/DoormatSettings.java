@@ -36,14 +36,11 @@ public class DoormatSettings {
 
     /**<h1>ENUMS</h1>*/
 
-    public enum PetHurtMode {
+    public enum PetAttackMode {
         FALSE, TRUE, OWNED;
         public boolean isEnabled() {
             return this != FALSE;
         }
-    }
-    public enum SporeBlossomsMode {
-        FALSE, MOSS, SELF
     }
     public enum PeacefulMonstersMode {
         FALSE, TRUE, BELOW_SURFACE, BELOW_SEA, UNNATURAL;
@@ -109,7 +106,7 @@ public class DoormatSettings {
     public static boolean disableNetherPortalCrossing = false;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
-    public static PetHurtMode disablePetAttacking = PetHurtMode.FALSE;
+    public static PetAttackMode disablePetAttacking = PetAttackMode.FALSE;
 
     @Rule( categories = { CREATIVE, SURVIVAL, DOORMAT } )
     public static boolean disableShulkerReproduction = false;
@@ -175,10 +172,13 @@ public class DoormatSettings {
     public static boolean renewableGildedBlackstone = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
-    public static SporeBlossomsMode renewableSporeBlossoms = SporeBlossomsMode.FALSE;
+    public static boolean renewableSporeBlossoms = false;
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean softInversion = false;
+
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean sporeBlossomDuplication = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean stairDiodes = false;

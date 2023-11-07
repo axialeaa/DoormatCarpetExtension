@@ -61,7 +61,7 @@
     "rules.renewableGildedBlackstone.BlocksMixin",
     "rules.renewableGildedBlackstone.MagmaBlockMixin",
     "rules.renewableSporeBlossoms_mossSpreadTo.MossBlockMixin",
-    "rules.renewableSporeBlossoms_mossSpreadTo.SporeBlossomBlockMixin",
+    "rules.sporeBlossomDuplication.SporeBlossomBlockMixin",
     "rules.softInversion.RedstoneTorchBlockMixin",
     "rules.softInversion.WallRedstoneTorchBlockMixin",
     "rules.stairDiodes.StairBlockMixin",
