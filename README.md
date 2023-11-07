@@ -7,6 +7,8 @@
 
 Doormat is a [Carpet](https://github.com/gnembon/fabric-carpet) extension, focusing on simply adding features I want to have fun with, and hopefully you will too! Aside from new ways to farm mostly non-renewable resources, this mod prides itself on its "redstone tinkering" features, allowing you to have control over block updates and quasi connectivity in your worlds.
 
+Powered by [MixinExtras](https://github.com/LlamaLad7/MixinExtras).
+
 ![A redstone lamp receiving quasi-power](https://github.com/axialeaa/DoormatCarpetExtension/assets/116074698/89617f79-c926-4006-b061-84463dbf6555)
 
 ## More Extensions
@@ -267,20 +269,6 @@ Underwater max speed will always be half of this number.
 * Additional notes:
   * Must be a non-negative number
 
-## monstersSpawnInPeaceful
-Hostile mobs can passively spawn in peaceful mode.
-"true" entirely matches easy mode behavior.
-"below_surface" ensures that there is always a roof above the spawning location of a mob.
-"below_sea" ensures that the spawning location of the mob is below y = 63.
-"unnatural" removes the capability for natural and chunk generation spawns.
-* Type: `PeacefulMonstersMode`
-* Default value: `false`
-* Suggested options: `false`, `true`, `below_surface`, `below_sea`, `unnatural`
-* Categories: `SURVIVAL`, `EXPERIMENTAL`, `DOORMAT`
-* Additional notes:
-  * `below_surface` utilises the `MOTION_BLOCKING_NO_LEAVES` heightmap algorithm.
-  * Due to how baked-in the peaceful mob system is, this rule modifies a <strong>LOT</strong> of classes. If I've missed something, report it to me via the Github issues page.
-
 ## mossSpreadToCobblestone
 Moss can convert nearby cobblestone to mossy cobblestone when fertilized.
 This feature is controlled through `doormat/worldgen/configured_feature/mossy_cobblestone_patch.json`.
@@ -310,6 +298,20 @@ The type(s) of update note blocks emit when changing state.
 * Default value: `both`
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+
+## peacefulMonsterSpawning
+Hostile mobs can passively spawn in peaceful mode.
+"true" entirely matches easy mode behavior.
+"below_surface" ensures that there is always a roof above the spawning location of a mob.
+"below_sea" ensures that the spawning location of the mob is below y = 63.
+"unnatural" removes the capability for natural and chunk generation spawns.
+* Type: `PeacefulMonstersMode`
+* Default value: `false`
+* Suggested options: `false`, `true`, `below_surface`, `below_sea`, `unnatural`
+* Categories: `SURVIVAL`, `EXPERIMENTAL`, `DOORMAT`
+* Additional notes:
+  * `below_surface` utilises the `MOTION_BLOCKING_NO_LEAVES` heightmap algorithm.
+  * Due to how baked-in the peaceful mob system is, this rule modifies a <strong>LOT</strong> of classes. If I've missed something, report it to me via the Github issues page.
 
 ## phantomMinSpawnAltitude
 The minimum y height the player needs to be standing at in order to spawn phantoms.

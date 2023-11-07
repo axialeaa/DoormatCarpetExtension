@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rules.monstersSpawnInPeaceful.entity;
+package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.entity;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -14,7 +14,7 @@ public class WitherEntityMixin {
      */
     @ModifyExpressionValue(method = "checkDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/boss/WitherEntity;isDisallowedInPeaceful()Z"))
     private boolean bypassPeacefulDespawnCheck(boolean original) {
-        return !DoormatSettings.monstersSpawnInPeaceful.isEnabled();
+        return !DoormatSettings.peacefulMonsterSpawning.isEnabled();
     }
 
 }

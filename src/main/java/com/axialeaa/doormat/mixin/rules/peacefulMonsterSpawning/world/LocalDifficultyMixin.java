@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rules.monstersSpawnInPeaceful.world;
+package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.world;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -21,7 +21,7 @@ public class LocalDifficultyMixin {
      */
     @ModifyExpressionValue(method = "setLocalDifficulty", at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC, ordinal = 0))
     private Difficulty test(Difficulty original) {
-        return DoormatSettings.monstersSpawnInPeaceful.isEnabled() ? null : original;
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original;
     }
 
     /**
@@ -29,7 +29,7 @@ public class LocalDifficultyMixin {
      */
     @Inject(method = "setLocalDifficulty", at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC, ordinal = 2, shift = At.Shift.BEFORE))
     private void test(Difficulty difficulty, long timeOfDay, long inhabitedTime, float moonSize, CallbackInfoReturnable<Float> cir, @Local(ordinal = 3) float h) {
-        if (DoormatSettings.monstersSpawnInPeaceful.isEnabled() && difficulty == Difficulty.PEACEFUL)
+        if (DoormatSettings.peacefulMonsterSpawning.isEnabled() && difficulty == Difficulty.PEACEFUL)
             h *= 0.5F;
     }
 
@@ -39,7 +39,7 @@ public class LocalDifficultyMixin {
      */
     @ModifyReturnValue(method = "setLocalDifficulty", at = @At(value = "RETURN", ordinal = 1))
     private float test(float original, Difficulty difficulty) {
-        return DoormatSettings.monstersSpawnInPeaceful.isEnabled() ? Math.max(difficulty.getId(), 1) : original;
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? Math.max(difficulty.getId(), 1) : original;
     }
 
 }

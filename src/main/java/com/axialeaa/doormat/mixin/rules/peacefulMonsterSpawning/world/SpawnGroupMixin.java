@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rules.monstersSpawnInPeaceful.world;
+package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.world;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
@@ -15,7 +15,7 @@ public class SpawnGroupMixin {
      */
     @ModifyReturnValue(method = "isPeaceful", at = @At("RETURN"))
     private boolean alwaysIsPeaceful(boolean original) {
-        return DoormatSettings.monstersSpawnInPeaceful.isEnabled() || original;
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() || original;
     }
 
 }

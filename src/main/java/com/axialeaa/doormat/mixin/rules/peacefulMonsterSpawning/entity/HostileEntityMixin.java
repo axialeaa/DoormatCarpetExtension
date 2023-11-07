@@ -1,7 +1,7 @@
-package com.axialeaa.doormat.mixin.rules.monstersSpawnInPeaceful.entity;
+package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.entity;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.MonstersSpawnInPeaceful;
+import com.axialeaa.doormat.helpers.PeacefulMonsterSpawning;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -26,11 +26,11 @@ public class HostileEntityMixin {
      */
     @ModifyReturnValue(method = "canSpawnInDark", at = @At("RETURN"))
     private static boolean addSpawnConditionInDark(boolean original, EntityType<? extends HostileEntity> type, ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return MonstersSpawnInPeaceful.addPeacefulSpawnCondition(world, spawnReason, pos, original);
+        return PeacefulMonsterSpawning.addPeacefulSpawnCondition(world, spawnReason, pos, original);
     }
     @ModifyReturnValue(method = "canSpawnIgnoreLightLevel", at = @At("RETURN"))
     private static boolean addSpawnConditionIgnoreLightLevel(boolean original, EntityType<? extends HostileEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return MonstersSpawnInPeaceful.addPeacefulSpawnCondition(world, spawnReason, pos, original);
+        return PeacefulMonsterSpawning.addPeacefulSpawnCondition(world, spawnReason, pos, original);
     }
 
     /**
@@ -39,11 +39,11 @@ public class HostileEntityMixin {
      */
     @WrapOperation(method = "canSpawnInDark", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/ServerWorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty allowPeacefulSpawnsInDark(ServerWorldAccess world, Operation<Difficulty> original) {
-        return MonstersSpawnInPeaceful.bypassPeacefulCheck(world, original);
+        return PeacefulMonsterSpawning.bypassPeacefulCheck(world, original);
     }
     @WrapOperation(method = "canSpawnIgnoreLightLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty allowPeacefulSpawnsIgnoreLightLevel(WorldAccess world, Operation<Difficulty> original) {
-        return MonstersSpawnInPeaceful.bypassPeacefulCheck(world, original);
+        return PeacefulMonsterSpawning.bypassPeacefulCheck(world, original);
     }
 
     /**
@@ -51,7 +51,7 @@ public class HostileEntityMixin {
      */
     @ModifyReturnValue(method = "isAngryAt", at = @At("RETURN"))
     private boolean test(boolean original, PlayerEntity player) {
-        return DoormatSettings.monstersSpawnInPeaceful.isEnabled() ? player.getWorld().getDifficulty() != Difficulty.PEACEFUL : original;
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? player.getWorld().getDifficulty() != Difficulty.PEACEFUL : original;
     }
 
 }

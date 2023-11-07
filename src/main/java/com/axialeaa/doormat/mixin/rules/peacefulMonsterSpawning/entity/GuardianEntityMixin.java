@@ -1,6 +1,6 @@
-package com.axialeaa.doormat.mixin.rules.monstersSpawnInPeaceful.entity;
+package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.entity;
 
-import com.axialeaa.doormat.helpers.MonstersSpawnInPeaceful;
+import com.axialeaa.doormat.helpers.PeacefulMonsterSpawning;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.mob.GuardianEntity;
@@ -14,7 +14,7 @@ public class GuardianEntityMixin {
 
     @WrapOperation(method = "canSpawn(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/WorldAccess;Lnet/minecraft/entity/SpawnReason;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/random/Random;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty allowPeacefulSpawns(WorldAccess world, Operation<Difficulty> original) {
-        return MonstersSpawnInPeaceful.bypassPeacefulCheck(world, original);
+        return PeacefulMonsterSpawning.bypassPeacefulCheck(world, original);
     }
 
 }

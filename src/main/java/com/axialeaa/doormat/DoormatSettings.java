@@ -142,7 +142,7 @@ public class DoormatSettings {
     public static double maxMinecartSpeed = 8.0;
 
     @Rule( categories = { SURVIVAL, EXPERIMENTAL, DOORMAT } )
-    public static PeacefulMonstersMode monstersSpawnInPeaceful = PeacefulMonstersMode.FALSE;
+    public static PeacefulMonstersMode peacefulMonsterSpawning = PeacefulMonstersMode.FALSE;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean mossSpreadToCobblestone = false;
