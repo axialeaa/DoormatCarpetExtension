@@ -278,7 +278,7 @@ Hostile mobs can passively spawn in peaceful mode.
 * Suggested options: `false`, `true`, `below_surface`, `below_sea`, `unnatural`
 * Categories: `SURVIVAL`, `EXPERIMENTAL`, `DOORMAT`
 * Additional notes:
-  * below_surface utilises the `MOTION_BLOCKING_NO_LEAVES` heightmap algorithm.
+  * `below_surface` utilises the `MOTION_BLOCKING_NO_LEAVES` heightmap algorithm.
   * Due to how baked-in the peaceful mob system is, this rule modifies a <strong>LOT</strong> of classes. If I've missed something, report it to me via the Github issues page.
 
 ## mossSpreadToCobblestone
