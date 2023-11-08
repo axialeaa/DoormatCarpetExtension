@@ -24,10 +24,8 @@ public abstract class WorldMixin {
     private boolean modifyBlockCheck(boolean original, BlockPos pos, @Local(ordinal = 0) Direction direction) {
         Block blockBehind = this.getBlockState(pos.offset(direction)).getBlock();
         return blockBehind instanceof BlockComparatorBehaviourInterface comparatorBehaviourInterface ?
-            // if the block behind the comparator has the BlockComparatorBehaviourInterface implemented...
             original || comparatorBehaviourInterface.canReadThrough(blockBehind) :
-            // return true if the block is a solid block or the interface method is true
-            original; // otherwise return the output of the solid block check
+            original;
     }
 
 }

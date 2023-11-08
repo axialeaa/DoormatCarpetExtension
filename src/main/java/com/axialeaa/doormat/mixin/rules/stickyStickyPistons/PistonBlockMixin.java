@@ -21,15 +21,15 @@ public class PistonBlockMixin implements BlockPistonBehaviourInterface {
         return DoormatSettings.stickyStickyPistons.enabled() && this.sticky;
     }
 
+    /**
+     * @return if set to true, true if the checked neighbour direction is the same as the piston facing direction. If stick_to_all, true otherwise false.
+     */
     @Override
     public boolean isStickyToNeighbor(World level, BlockPos pos, BlockState state, BlockPos neighborPos, BlockState neighborState, Direction dir, Direction moveDir) {
         return switch (DoormatSettings.stickyStickyPistons) {
             case TRUE -> dir == state.get(PistonBlock.FACING);
-            // if the rules is true, stick to the neighbour if the checked neighbour direction is the same as the piston facing direction
             case STICK_TO_ALL -> true;
-            // if the rules is stick_to_all, stick to the neighbour always
             default -> false;
-            // otherwise don't stick to the neighbour
         };
     }
 

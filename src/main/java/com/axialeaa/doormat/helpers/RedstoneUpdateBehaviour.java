@@ -11,27 +11,32 @@ import net.minecraft.world.World;
 
 public class RedstoneUpdateBehaviour {
 
+    /**
+     * @return true if the rule is enabled, carpet's quasiConnectivity is set to something above 0 and the block is powered directly or via QC, otherwise true if the block is directly powered.
+     */
     public static boolean quasiConnectOn(boolean rule, World world, BlockPos pos) {
         boolean isPowered = world.isReceivingRedstonePower(pos);
         return rule && CarpetSettings.quasiConnectivity != 0 ?
-            // if the rule is enabled and quasiConnectivity is set to a value above 0...
             isPowered || QuasiConnectivity.hasQuasiSignal(world, pos) :
-            // return true if the block is directly powered or receiving a quasi signal
-            isPowered; // otherwise return true if the block is directly powered
+            isPowered;
     }
 
+    /**
+     * @return true if the rule flag is 1 or 3.
+     * @implNote This is used for disabling certain instances of world.updateNeighbors().
+     */
     public static boolean neighborUpdateOn(DoormatSettings.NeighbourUpdateMode rule) {
         return rule.getFlags() == 1 || rule.getFlags() == 3;
-        // used for disabling certain instances of world.updateNeighbors()
     }
 
+    /**
+     * @return if the rule is enabled and the block the torch is resting on is a piston, a value that unpowers the redstone torch otherwise the output of the default redstone power check.
+     */
     public static boolean unpowerOnPistonExtended(boolean original, World world, BlockPos pos, Direction direction) {
         BlockPos blockPos = pos.offset(direction);
         BlockState blockState = world.getBlockState(blockPos);
         return DoormatSettings.softInversion && blockState.getBlock() instanceof PistonBlock ?
-            // if the rule is enabled and the block the torch is placed on is a piston...
-            blockState.get(PistonBlock.EXTENDED) : // unpower the torch if the piston extends
-            original; // otherwise return the value of the original redstone power check
+            blockState.get(PistonBlock.EXTENDED) : original;
     }
 
 }

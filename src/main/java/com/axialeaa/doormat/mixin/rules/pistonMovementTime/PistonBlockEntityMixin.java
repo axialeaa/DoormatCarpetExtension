@@ -9,9 +9,12 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(PistonBlockEntity.class)
 public class PistonBlockEntityMixin {
 
+    /**
+     * @return the distance moved per tick in blocks.
+     */
     @ModifyConstant(method = "tick", constant = @Constant(floatValue = 0.5F))
     private static float adjustTiming(float constant) {
-        return 1.0F / DoormatSettings.pistonMovementTime; // the distance moved per tick in blocks
+        return 1.0F / DoormatSettings.pistonMovementTime;
     }
 
 }

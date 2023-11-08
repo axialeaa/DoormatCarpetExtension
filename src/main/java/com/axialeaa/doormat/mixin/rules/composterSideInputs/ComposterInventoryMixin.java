@@ -15,13 +15,17 @@ public class ComposterInventoryMixin {
 
     @Shadow private boolean dirty;
 
+    /**
+     * @param original the default return value of canInsert()
+     * @param stack the item stack to insert into the composter
+     * @param dir the direction from where to insert
+     * @return the original return value without the direction check if the rule is enabled, otherwise the default return value.
+     */
     @ModifyReturnValue(method = "canInsert", at = @At("RETURN"))
     private boolean allowInsertionFromAllSides(boolean original, ItemStack stack, @Nullable Direction dir) {
         return DoormatSettings.composterSideInputs ?
-            // if the rule is enabled...
             !this.dirty && ComposterBlock.ITEM_TO_LEVEL_INCREASE_CHANCE.containsKey(stack.getItem()) :
-            // return true if the composter is not marked dirty and the item in question is valid for the composter
-            original; // otherwise return true based on the same condition + a direction check, basically
+            original;
     }
 
     @ModifyReturnValue(method = "getAvailableSlots", at = @At("RETURN"))

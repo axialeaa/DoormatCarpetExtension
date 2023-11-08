@@ -12,7 +12,9 @@ import net.minecraft.item.Item;
 public class ConsistentExplosionImmunity {
 
     /**
-     * @return whether an explosion created inside this block (if it were placed) would destroy it
+     * @param entity the entity to deal damage to
+     * @param power the power/blast radius of the explosion
+     * @return whether an explosion created inside this block (if it were placed) would destroy it.
      */
     public static boolean disableDamageIfResistant(Entity entity, float power) {
         if (DoormatSettings.consistentExplosionImmunity && entity instanceof ItemEntity itemEntity) {

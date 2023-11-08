@@ -28,6 +28,9 @@ public abstract class LeavesBlockMixin implements Fertilizable {
         return isRuleIsLeaves(state);
     }
 
+    /**
+     * Replaces the azalea leaves with flowering azalea leaves when fertilised, conserving the block properties.
+     */
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
         world.setBlockState(pos, Blocks.FLOWERING_AZALEA_LEAVES.getStateWithProperties(state));

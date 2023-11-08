@@ -21,26 +21,27 @@ public class FireAspectLighting {
         return CampfireBlock.canBeLit(state) || CandleBlock.canBeLit(state) || CandleCakeBlock.canBeLit(state);
     }
 
+    /**
+     * For as long as the rule is enabled, ignites TNT, campfires or candles when clicked with the item.
+     */
     public static void lightOnUse(ItemUsageContext ctx, CallbackInfoReturnable<ActionResult> cir) {
         PlayerEntity player = ctx.getPlayer();
         ItemStack stack = ctx.getStack();
         World world = ctx.getWorld();
         BlockPos pos = ctx.getBlockPos();
-        BlockState state = world.getBlockState(pos); // get the block state at this position
+        BlockState state = world.getBlockState(pos);
         if (DoormatSettings.fireAspectLighting && EnchantmentHelper.getLevel(Enchantments.FIRE_ASPECT, stack) > 0 && (state.getBlock() instanceof TntBlock || canBeLit(state))) {
-            // if the rules is enabled, the held item is enchanted with fire aspect and the block is either TNT or an ignitable campfire, candle or candle cake...
-            if (state.getBlock() instanceof TntBlock) { // if it's TNT, light it
+            if (state.getBlock() instanceof TntBlock) {
                 TntBlock.primeTnt(world, pos);
                 world.setBlockState(pos, Blocks.AIR.getDefaultState(), DoormatSettings.tntUpdateType.getFlags() | Block.REDRAW_ON_MAIN_THREAD);
             }
-            else if (canBeLit(state)) { // if it's an ignitable campfire, candle or candle cake, light it
+            else if (canBeLit(state)) {
                 world.setBlockState(pos, state.with(Properties.LIT, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                 world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             }
-            if (stack.isDamageable() && player != null) // if this item can be damaged, decrement the durability
+            if (stack.isDamageable() && player != null)
                 stack.damage(1, (LivingEntity)player, (p) -> p.sendToolBreakStatus(ctx.getHand()));
             cir.setReturnValue(ActionResult.success(world.isClient()));
-            // and swing the player's hand to indicate an action was just performed
         }
     }
 

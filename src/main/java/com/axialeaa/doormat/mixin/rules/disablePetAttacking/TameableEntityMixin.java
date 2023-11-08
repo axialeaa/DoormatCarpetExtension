@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
@@ -19,16 +20,28 @@ public abstract class TameableEntityMixin extends LivingEntityMixin {
 
     @Shadow @Nullable public abstract UUID getOwnerUuid();
 
+    @Unique
+    private boolean fitsCriteria(Optional<UUID> optional, PlayerEntity player) {
+        return switch (DoormatSettings.disablePetAttacking) {
+            case TRUE -> true;
+            case OWNED -> optional.isPresent() && player.getUuid().equals(optional.get());
+            // if the owner uuid exists (optional.isPresent()), that means the mob is tamed
+            default -> false;
+        };
+    }
+
+    /**
+     * Disables entity damage if the rule is enabled and the instigator fits the criteria for the rule setting.
+     * @param source the type of damage to be dealt to the entity
+     * @param amount the amount of damage to be dealt to the entity
+     * @param cir returnable callback info parameter, since this method is instantiated from the original handler method in {@link LivingEntityMixin}
+     */
     @Override
     public void injectedDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         Entity attacker = source.getAttacker();
-        if (attacker instanceof PlayerEntity playerEntity) {
+        if (attacker instanceof PlayerEntity player) {
             Optional<UUID> optional = Optional.ofNullable(this.getOwnerUuid());
-            // if the attacker is a player, get the uuid of the owner of the mob
-            if (DoormatSettings.disablePetAttacking == DoormatSettings.PetAttackMode.TRUE ||
-                (DoormatSettings.disablePetAttacking == DoormatSettings.PetAttackMode.OWNED && optional.isPresent() && playerEntity.getUuid().equals(optional.get())))
-                // if disablePetAttacking is "true" or "owned" and the attacking player is the owner, return false
-                // if the owner uuid exists (optional.isPresent()), that means the mob is tamed
+            if (fitsCriteria(optional, player))
                 cir.setReturnValue(false);
         }
     }

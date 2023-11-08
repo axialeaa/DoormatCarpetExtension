@@ -22,7 +22,7 @@ public class HostileEntityMixin {
 
     /**
      * <h2>SPAWN CONDITION ADDERS</h2>
-     * @return The normal return values of these methods with an additional check based on the rule
+     * @return the normal return values of these methods with an additional check based on the rule.
      */
     @ModifyReturnValue(method = "canSpawnInDark", at = @At("RETURN"))
     private static boolean addSpawnConditionInDark(boolean original, EntityType<? extends HostileEntity> type, ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
@@ -35,7 +35,7 @@ public class HostileEntityMixin {
 
     /**
      * <h2>CHECK BYPASSES</h2>
-     * @return The normal return values of these methods without the Difficulty.PEACEFUL check
+     * @return the normal return values of these methods without the Difficulty.PEACEFUL check.
      */
     @WrapOperation(method = "canSpawnInDark", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/ServerWorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty allowPeacefulSpawnsInDark(ServerWorldAccess world, Operation<Difficulty> original) {

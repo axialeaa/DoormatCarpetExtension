@@ -23,20 +23,20 @@ public abstract class MobSpawnerLogicMixin {
 
     // oh boy, this is quite insane
 
+    /**
+     * As long as the rule is enabled and the entity inside the spawner is a cave spider, check all positions in a 9x9x9 area centred on the spawner for adjacent faces, every spawn cycle. If there are at least 2 adjacent faces, create a cobweb in that position with a commonness that scales with the number of adjacent faces up to about a 4.7% chance.
+     */
     @Inject(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;spawnNewEntityAndPassengers(Lnet/minecraft/entity/Entity;)Z"))
-    private void generateCobwebs(ServerWorld world, BlockPos pos, CallbackInfo ci, @Local Entity storedEntity) {
+    private void generateCobwebsOnSpawnCycle(ServerWorld world, BlockPos pos, CallbackInfo ci, @Local Entity storedEntity) {
         Random random = world.getRandom();
-        if (DoormatSettings.renewableCobwebs && storedEntity instanceof CaveSpiderEntity) // if the rules is enabled and the stored entity is a cave spider...
+        if (DoormatSettings.renewableCobwebs && storedEntity instanceof CaveSpiderEntity)
             for (BlockPos blockPos : BlockPos.iterate(pos.add(-this.spawnRange, -this.spawnRange, -this.spawnRange), pos.add(this.spawnRange, this.spawnRange, this.spawnRange))) {
-                // for every block position in a box that extends out from the spawner by a number of blocks equal to the spawn range (compatible with mods that tweak the spawn range)...
-                int i = 0; // define a new integer
-                for (Direction direction : Direction.values()) // and check the blocks adjacent to the block position in every direction
+                int i = 0;
+                for (Direction direction : Direction.values())
                     if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, pos, direction.getOpposite()))
-                        i++; // if the block position is air and the block in the checked direction can feasibly "support" cobwebs, increment the integer by 1
+                        i++;
                 if (i >= 2 && random.nextInt(i + 128) > 128)
                     world.setBlockState(blockPos, Blocks.COBWEB.getDefaultState());
-                    // if the integer is greater than or equal to 2 (in essence, if there are 2 or more supporting blocks around the checked block position)
-                    // and a random integer between 0 inc. and the number of supporting sides + 128 exc. is greater than 128, place a cobweb here!
             }
     }
 

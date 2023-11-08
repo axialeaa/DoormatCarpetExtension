@@ -12,14 +12,18 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ChiseledBookshelfBlock.class)
 public class ChiseledBookshelfBlockMixin {
 
+    /**
+     * @param original the default behaviour
+     * @param chiseledBookshelf the chiselled bookshelf block entity in question
+     * @return the number of books in the bookshelf if the rule is set to fullness or the same number interpolated between 1 and 15 if set to fullness_lerped, otherwise vanilla behaviour.
+     */
     @ModifyReturnValue(method = "getComparatorOutput", at = @At(value = "RETURN", ordinal = 1))
-    private int modifyComparatorOutput(int original, @Local ChiseledBookshelfBlockEntity chiseledBookshelfBlockEntity) {
-        int bookCount = chiseledBookshelfBlockEntity.getOpenSlotCount();
+    private int modifyComparatorOutput(int original, @Local ChiseledBookshelfBlockEntity chiseledBookshelf) {
+        int bookCount = chiseledBookshelf.getOpenSlotCount();
         return switch (DoormatSettings.chiseledBookshelfSignalBasis) {
-            case INTERACTION -> original; // if the rule is set to interaction, return vanilla behaviour
-            case FULLNESS -> bookCount; // if the rule is set to fullness, return the number of books
-            case FULLNESS_LERPED -> MathHelper.lerpPositive(bookCount / (float)chiseledBookshelfBlockEntity.size(), 0, 15);
-            // if the rule is set to fullness_lerped, return the number of books interpolated through 1 and 15
+            case FULLNESS -> bookCount;
+            case FULLNESS_LERPED -> MathHelper.lerpPositive(bookCount / (float)chiseledBookshelf.size(), 0, 15);
+            default -> original;
         };
     }
 

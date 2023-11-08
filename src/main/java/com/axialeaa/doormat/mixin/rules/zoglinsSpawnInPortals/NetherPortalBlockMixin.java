@@ -17,14 +17,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(NetherPortalBlock.class)
 public class NetherPortalBlockMixin {
 
-    @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;", ordinal = 0), cancellable = true)
+    /**
+     * For as long as the rule is enabled, spawn a zoglin at a 10% chance (if the position is valid).
+     */
+    @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;", ordinal = 0))
     private void spawnZoglins(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         if (DoormatSettings.zoglinsSpawnInPortals && random.nextFloat() < 0.1 && world.getBlockState(pos).allowsSpawning(world, pos, EntityType.ZOGLIN)) {
-            // if the rules is enabled, a random number between 0 and 1 is less than 0.1 (1 in 10 chance) and the block at the current pos allows for zoglin spawning...
-            ci.cancel(); // cancel zombified piglin spawning
-            Entity entity = EntityType.ZOGLIN.spawn(world, pos.up(), SpawnReason.STRUCTURE); // spawn a zoglin
+            Entity entity = EntityType.ZOGLIN.spawn(world, pos.up(), SpawnReason.STRUCTURE);
             if (entity != null)
-                entity.resetPortalCooldown(); // and reset the entity's portal cooldown if the entity exists
+                entity.resetPortalCooldown();
         }
     }
 

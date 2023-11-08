@@ -21,14 +21,15 @@ public abstract class JukeboxBlockEntityMixin implements SingleStackInventory {
     @Shadow public abstract ItemStack getStack(int slot);
     @Shadow protected abstract boolean isSongFinished(MusicDiscItem musicDisc);
 
+    /**
+     * Updates adjacent comparators every tick for as long as the rule is enabled and the jukebox is playing a disc.
+     * @implNote Unfortunately this is necessary because the lerp function in {@link JukeboxBlockMixin} updates out-of-phase from the internal seconds counter, and vanilla only updates comparators on disc entry and exit.
+     */
     @Inject(method = "tick(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/entity/JukeboxBlockEntity;isPlayingRecord()Z"))
-    private void test(World world, BlockPos pos, BlockState state, CallbackInfo ci) {
+    private void updateComparatorsEachTick(World world, BlockPos pos, BlockState state, CallbackInfo ci) {
         Item item = this.getStack().getItem();
         boolean finishedPlaying = item instanceof MusicDiscItem musicDisc && this.isSongFinished(musicDisc);
         if (DoormatSettings.jukeboxDiscProgressSignal && !finishedPlaying)
-            // if the rule is enabled and a disc is playing...
-            // update all adjacent comparators every tick
-            // unfortunately this is necessary, as vanilla jukeboxes only update comparators when starting and stopping a playthrough
             world.updateComparators(pos, state.getBlock());
     }
 

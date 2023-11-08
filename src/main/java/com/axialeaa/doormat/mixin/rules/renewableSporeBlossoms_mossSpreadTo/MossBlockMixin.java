@@ -31,23 +31,25 @@ public class MossBlockMixin {
                 reference.value().generate(world, world.getChunkManager().getChunkGenerator(), random, pos.up()));
     }
 
+    /**
+     * @return the original fertilizable check for the moss block, with the addition of checking below it as well.
+     * @implNote This is so that the two directions can be checked independently of one another in the grow() method.
+     */
     @ModifyReturnValue(method = "isFertilizable", at = @At("RETURN"))
     public boolean accommodateBlossoms(boolean original, WorldView world, BlockPos pos) {
         return original || world.getBlockState(pos.down()).isAir();
-        // this just allows us to check for air independently above and below in the grow class
-        // no vanilla behaviour changed here
     }
 
+    /**
+     * Replaces the vanilla implementation with a more customisable setup.
+     */
     @Inject(method = "grow", at = @At("HEAD"), cancellable = true)
     public void overwriteWithCustom(ServerWorld world, Random random, BlockPos pos, BlockState state, CallbackInfo ci) {
-        ci.cancel(); // this seems necessary because there are no method invocations to target with a redirect (? - i'm *very* willing to be proven wrong)
+        ci.cancel();
         generateAboveOnCondition(true, UndergroundConfiguredFeatures.MOSS_PATCH_BONEMEAL, world, random, pos);
-        // vanilla behaviour
         generateAboveOnCondition(DoormatSettings.mossSpreadToCobblestone, DoormatConfiguredFeatures.MOSSY_COBBLESTONE_PATCH, world, random, pos);
         generateAboveOnCondition(DoormatSettings.mossSpreadToStoneBricks, DoormatConfiguredFeatures.MOSSY_STONE_BRICKS_PATCH, world, random, pos);
-
         if (DoormatSettings.renewableSporeBlossoms && world.getBlockState(pos.down()).isAir())
-            // if the rules is enabled and the block underneath is air, place a spore blossom underneath the moss block
             world.setBlockState(pos.down(), Blocks.SPORE_BLOSSOM.getDefaultState());
     }
 

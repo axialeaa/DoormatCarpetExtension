@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class LocalDifficultyMixin {
 
     /**
-     * Bypasses the initial Difficulty.PEACEFUL check which otherwise makes the whole method return 0.0.
+     * Bypasses the initial Difficulty.PEACEFUL check which otherwise makes the whole method return 0.0 at the head, preventing mobs from spawning altogether.
      */
     @ModifyExpressionValue(method = "setLocalDifficulty", at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC, ordinal = 0))
     private Difficulty test(Difficulty original) {

@@ -17,15 +17,22 @@ public class PillarBlockMixin implements BlockPistonBehaviourInterface {
         return DoormatSettings.stickyPillarBlocks.enabled();
     }
 
+    /**
+     * @param level the world
+     * @param pos the position of the block from which the check is performed
+     * @param state the state of the block from which the check is performed
+     * @param neighborPos the position of the neighbouring block
+     * @param neighborState the blockstate of the neighbouring block
+     * @param dir the direction of the neighbour stick check
+     * @param moveDir the movement direction of the piston
+     * @return if set to true, true if the blocks are the same and the checked neighbour direction is of the same axis as the pillar block. If stick_to_all, true if the blocks are the same otherwise false.
+     */
     @Override
     public boolean isStickyToNeighbor(World level, BlockPos pos, BlockState state, BlockPos neighborPos, BlockState neighborState, Direction dir, Direction moveDir) {
         return switch (DoormatSettings.stickyPillarBlocks) {
             case TRUE -> neighborState.isOf(state.getBlock()) && dir.getAxis() == neighborState.get(PillarBlock.AXIS);
-            // if the rules is true, stick to the neighbour if the blocks are the same, and the checked neighbour direction is of the same axis as the pillar block
             case STICK_TO_ALL -> neighborState.isOf(state.getBlock());
-            // if the rules is stick_to_all, stick to the neighbour if the blocks are the same
             default -> false;
-            // otherwise don't stick to the neighbour
         };
     }
 

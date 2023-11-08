@@ -20,10 +20,12 @@ public class PropaguleBlockMixin implements LandingBlock {
 
     @Shadow @Final public static IntProperty AGE;
 
+    /**
+     * Creates a falling block entity of a fully-grown, hanging propagule state next randomTick.
+     */
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/PropaguleBlock;isFullyGrown(Lnet/minecraft/block/BlockState;)Z"))
     private void dropOnFullyGrown(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         if (DoormatSettings.propagulePropagation && state.get(AGE) == 4)
-            // if the rules is enabled and the propagule is fully grown, create a falling block of this state next randomTick
             spawnFallingBlock(state, world, pos);
     }
 

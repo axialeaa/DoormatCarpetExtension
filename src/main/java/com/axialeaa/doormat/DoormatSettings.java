@@ -99,6 +99,9 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, EXPERIMENTAL, BUGFIX, DOORMAT } )
     public static boolean consistentExplosionImmunity = false;
 
+    @Rule( categories = { SURVIVAL, FEATURE, DOORMAT } )
+    public static boolean deepslateDungeons = false;
+
     @Rule( categories = { CREATIVE, DOORMAT } )
     public static boolean disableEndPortalCrossing = false;
 

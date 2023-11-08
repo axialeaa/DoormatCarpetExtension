@@ -12,6 +12,9 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SculkShriekerBlockEntity.class)
 public class SculkShriekerBlockEntityMixin {
 
+    /**
+     * Bypasses the peaceful check for summoning wardens.
+     */
     @WrapOperation(method = "canWarn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty allowPeacefulSpawns(ServerWorld world, Operation<Difficulty> original) {
         return PeacefulMonsterSpawning.bypassPeacefulCheck(world, original);

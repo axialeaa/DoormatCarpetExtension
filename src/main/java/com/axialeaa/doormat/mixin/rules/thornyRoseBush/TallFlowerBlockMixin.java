@@ -17,15 +17,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(TallFlowerBlock.class)
 public class TallFlowerBlockMixin extends AbstractBlockMixin {
 
+    /**
+     * For as long as the rule is enabled, the block is a rose bush and the entity is not a bee, damage it when it has a velocity of 0.003 or more in x or z.
+     */
     @Override
     public void injectedOnEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (DoormatSettings.thornyRoseBush && state.getBlock() == Blocks.ROSE_BUSH && entity instanceof LivingEntity && entity.getType() != EntityType.BEE)
-            // if the rules is enabled, the block in question is a rose bush and the entity is living and not a bee...
-            if (!world.isClient && (entity.lastRenderX != entity.getX() || entity.lastRenderZ != entity.getZ())) { // if this method is called on the server side and the entity is moving...
-                double velocityX = Math.abs(entity.getX() - entity.lastRenderX); // get the absolute velocity of the entity in both x and z
+            if (!world.isClient && (entity.lastRenderX != entity.getX() || entity.lastRenderZ != entity.getZ())) {
+                double velocityX = Math.abs(entity.getX() - entity.lastRenderX);
                 double velocityZ = Math.abs(entity.getZ() - entity.lastRenderZ);
-                if (velocityX >= 0.003 || velocityZ >= 0.003) // if the velocity is greater than or equal to 0.003 in either x or z...
-                    entity.damage(world.getDamageSources().create(DoormatDamageTypes.ROSE_BUSH), 1.0F); // deal rose bush damage
+                if (velocityX >= 0.003 || velocityZ >= 0.003)
+                    entity.damage(world.getDamageSources().create(DoormatDamageTypes.ROSE_BUSH), 1.0F);
             }
     }
 

@@ -18,18 +18,18 @@ public class BlockMixin implements Fertilizable {
         return DoormatSettings.forceGrassSpread && world.getBlockState(pos).isOf(Blocks.DIRT);
     }
 
+    /**
+     * @return true if the rule is enabled and there is at least 1 grass or mycelium block in a 3x3x3 cube centred on an air-exposed dirt block in question, otherwise false.
+     */
     @Override
     public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
         if (isRuleEnabledAndDirt(world, pos)) {
-            // if the rules is enabled and the block in question is dirt...
             if (!world.getBlockState(pos.up()).isTransparent(world, pos))
-                return false; // if the block above the block in question is not transparent, return false immediately
+                return false;
             for (BlockPos blockPos : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1)))
-                // iterate through a list of block positions in a box extending out 1 block from this dirt block
-                if (world.getBlockState(blockPos).isOf(Blocks.GRASS_BLOCK) || world.getBlockState(blockPos).isOf(Blocks.MYCELIUM))
-                    return true; // if the block in this position is grass or mycelium, tell the game to fertilize it
+                return world.getBlockState(blockPos).isOf(Blocks.GRASS_BLOCK) || world.getBlockState(blockPos).isOf(Blocks.MYCELIUM);
         }
-        return false; // if all else fails, return false
+        return false;
     }
 
     @Override
@@ -37,28 +37,29 @@ public class BlockMixin implements Fertilizable {
         return isRuleEnabledAndDirt(world, pos);
     }
 
+    /**
+     * Creates a list of grass and mycelium blocks in a 3x3x3 cube centred on the dirt block in question. If this list contains a grass block OR mycelium and the conditions are valid for spreading, turn the dirt into that block. If there are at least 1 of each in the cube, it picks randomly between them.
+     */
     @Override
     public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-        boolean isGrass = false; // define two variables to change when the following iteration finds grass or mycelium
+        boolean isGrass = false;
         boolean isMycelium = false;
         for (BlockPos blockPos : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
-            // iterate through a list of block positions in a box extending out 1 block from this dirt block
-            BlockState blockState = world.getBlockState(blockPos); // and get the block state at this position
+            BlockState blockState = world.getBlockState(blockPos);
             if (blockState.isOf(Blocks.GRASS_BLOCK))
-                isGrass = true; // if the block is grass, reassign isGrass
+                isGrass = true;
             if (blockState.isOf(Blocks.MYCELIUM))
-                isMycelium = true; // if the block is mycelium, reassign isMycelium
+                isMycelium = true;
             if (!SpreadableBlock.canSpread(state, world, blockPos) || !isGrass || !isMycelium)
-                // if the block position is not valid for spreading, or if either grass or mycelium have not been found yet...
-                continue; // skip this iteration
-            break; // otherwise stop the loop entirely
+                continue;
+            break;
         }
-        if (isGrass && isMycelium) // if both grass and mycelium have been found, choose randomly between grass and mycelium and set the dirt to this
-            world.setBlockState(pos, random.nextBoolean() ? Blocks.GRASS_BLOCK.getDefaultState() : Blocks.MYCELIUM.getDefaultState(), Block.NOTIFY_ALL);
-        else if (isGrass) // otherwise if grass has been found, set the dirt to grass
-            world.setBlockState(pos, Blocks.GRASS_BLOCK.getDefaultState(), Block.NOTIFY_ALL);
-        else if (isMycelium) // otherwise if mycelium has been found, set the dirt to mycelium
-            world.setBlockState(pos, Blocks.MYCELIUM.getDefaultState(), Block.NOTIFY_ALL);
+        if (isGrass && isMycelium)
+            world.setBlockState(pos, random.nextBoolean() ? Blocks.GRASS_BLOCK.getDefaultState() : Blocks.MYCELIUM.getDefaultState());
+        else if (isGrass)
+            world.setBlockState(pos, Blocks.GRASS_BLOCK.getDefaultState());
+        else if (isMycelium)
+            world.setBlockState(pos, Blocks.MYCELIUM.getDefaultState());
     }
 
 }

@@ -22,7 +22,7 @@ public class PeacefulMonsterSpawning {
     }
 
     /**
-     * Establishes conditions based on the selected rule.
+     * Establishes conditional behaviour based on the selected rule.
      */
     public static boolean addPeacefulSpawnCondition(WorldAccess world, SpawnReason spawnReason, BlockPos pos, boolean original) {
         return original && switch (DoormatSettings.peacefulMonsterSpawning) {

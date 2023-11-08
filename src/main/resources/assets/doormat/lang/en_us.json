@@ -18,6 +18,7 @@
   "carpet.rule.composterSideInputs.desc": "Sideways-pointing hoppers and droppers can insert items into composters",
   "carpet.rule.consistentExplosionImmunity.desc": "Explosion-immune blocks also apply this property to their dropped item counterparts",
   "carpet.rule.consistentExplosionImmunity.extra.0": "Though marked as \"Works As Intended\", this rule technically fixes this bug: https://bugs.mojang.com/browse/MC-212764",
+  "carpet.rule.deepslateDungeons.desc": "Dungeons that generate below y = 0 will be made of cobbled deepslate instead of cobblestone",
   "carpet.rule.disableEndPortalCrossing.desc": "Disables travelling through end portals",
   "carpet.rule.disableNetherPortalCrossing.desc": "Disables travelling through nether portals",
   "carpet.rule.disablePetAttacking.desc": "Disables players harming tamed mobs",

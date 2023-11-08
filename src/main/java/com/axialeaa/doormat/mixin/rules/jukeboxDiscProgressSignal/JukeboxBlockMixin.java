@@ -13,16 +13,16 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(JukeboxBlock.class)
 public class JukeboxBlockMixin {
 
-    // this is so FREAKING smart i'm so happy eeeheeehee
-
+    /**
+     * @return for as long as the rule is enabled, an integer between 1 and 15 based on the fraction of the disc played, otherwise the disc index as normal.
+     * @implNote Note from happy Axia: "this is so FREAKING smart i'm so happy eeeheeehee"
+     */
     @ModifyReturnValue(method = "getComparatorOutput", at = @At("RETURN"))
     private int modifyComparatorOutput(int original, @Local JukeboxBlockEntity jukebox, @Local MusicDiscItem disc) {
-        long timePlaying = jukebox.tickCount - jukebox.recordStartTick; // find the time the jukebox has been playing this disc
+        long timePlaying = jukebox.tickCount - jukebox.recordStartTick;
         return DoormatSettings.jukeboxDiscProgressSignal ?
-            // if the rule is enabled...
             MathHelper.lerpPositive(timePlaying / (float)disc.getSongLengthInTicks(), 0, 15) :
-            // interpolate through 1 and 15 based on the fraction of the disc played
-            original; // otherwise return the value of the music disc index, as normal
+            original;
     }
 
 }

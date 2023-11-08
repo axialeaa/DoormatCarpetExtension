@@ -17,14 +17,15 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ComparatorBlock.class)
 public class ComparatorBlockMixin {
 
+    /**
+     * @return true if the block to read through is solid or enabled by the interface, or the original solid block check if the block in question does not have the interface implemented.
+     */
     @ModifyExpressionValue(method = "getPower", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean modifyBlockCheck(boolean original, World world, BlockPos pos, @Local(ordinal = 0) Direction direction) {
         Block blockBehind = world.getBlockState(pos.offset(direction)).getBlock();
         return blockBehind instanceof BlockComparatorBehaviourInterface comparatorBehaviourInterface ?
-            // if the block behind the comparator has the BlockComparatorBehaviourInterface implemented...
             original || comparatorBehaviourInterface.canReadThrough(blockBehind) :
-            // return true if the block is a solid block or the interface method is true
-            original; // otherwise return the output of the solid block check
+            original;
     }
 
 }

@@ -10,7 +10,7 @@ import net.minecraft.block.Block;
 public interface BlockComparatorBehaviourInterface {
 
     /**
-     * @return whether comparators can read through this block
+     * @return whether comparators can read through this block.
      */
     boolean canReadThrough(Block block);
 

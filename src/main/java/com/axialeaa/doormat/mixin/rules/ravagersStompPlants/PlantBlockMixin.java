@@ -15,10 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlantBlock.class)
 public class PlantBlockMixin extends AbstractBlockMixin {
 
+    /**
+     * Breaks the block at the entity's position if the rule is enabled, mob griefing is on and the entity is a ravager.
+     */
     @Override
     public void injectedOnEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (DoormatSettings.ravagersStompPlants && entity instanceof RavagerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
-            // if the rules and mob griefing are enabled and the entity colliding with the block is a ravager, break the block
             world.breakBlock(pos, true, entity);
     }
 

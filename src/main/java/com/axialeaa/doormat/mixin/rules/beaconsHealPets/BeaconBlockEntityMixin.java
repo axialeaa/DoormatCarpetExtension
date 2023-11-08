@@ -20,13 +20,14 @@ import java.util.List;
 @Mixin(BeaconBlockEntity.class)
 public class BeaconBlockEntityMixin {
 
+    /**
+     * Gives the regeneration effect to tamed entities within a box around the beacon.
+     */
     @Inject(method = "applyPlayerEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getNonSpectatingEntities(Ljava/lang/Class;Lnet/minecraft/util/math/Box;)Ljava/util/List;"))
     private static void regenNearbyPets(World world, BlockPos pos, int beaconLevel, StatusEffect primaryEffect, StatusEffect secondaryEffect, CallbackInfo ci, @Local Box box, @Local(ordinal = 2) int duration) {
         if (DoormatSettings.beaconsHealPets && secondaryEffect == StatusEffects.REGENERATION) {
-            // if the rules is enabled and the beacon is set to regeneration...
             List<TameableEntity> list = world.getEntitiesByClass(TameableEntity.class, box, TameableEntity::isTamed);
-            // make a list of all the tamed entities inside the effect box around the beacon
-            for (TameableEntity tameableEntity : list) // give each of these entities regeneration
+            for (TameableEntity tameableEntity : list)
                 tameableEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration, 0, true, true));
         }
     }

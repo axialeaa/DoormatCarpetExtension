@@ -33,7 +33,7 @@ public class DoormatCommands {
                 .executes(context -> RandomTickCommand.execute(context.getSource(), BlockPosArgumentType.getLoadedBlockPos(context, "pos"), 1))
                 .build();
             var count = CommandManager
-                .argument("count", IntegerArgumentType.integer(1, 32768))
+                .argument("count", IntegerArgumentType.integer(1, 4096))
                 .executes(context -> RandomTickCommand.execute(context.getSource(), BlockPosArgumentType.getLoadedBlockPos(context, "pos"), IntegerArgumentType.getInteger(context, "count")))
                 .build();
 
@@ -44,18 +44,24 @@ public class DoormatCommands {
     }
 
     public static class RandomTickCommand {
+        /**
+         * @param source the command source data
+         * @param pos the position of the block the command targets
+         * @param count the inputted value for the number of executed randomTicks
+         * @return a success message when the command has randomTicked the block.
+         * @throws CommandSyntaxException when the command fails.
+         */
         public static int execute(ServerCommandSource source, BlockPos pos, int count) throws CommandSyntaxException {
-            ServerWorld world = source.getWorld(); // get the world
-            BlockState state = world.getBlockState(pos); // get the block state at the entered position
+            ServerWorld world = source.getWorld();
+            BlockState state = world.getBlockState(pos);
             Random random = world.getRandom();
-            // if the block can be randomTicked...
             if (state.hasRandomTicks()) {
                 for (int i = 0; i < count; i++)
-                    state.randomTick(world, pos, random); // send x number of randomTicks to this position where x is the entered count value
+                    state.randomTick(world, pos, random);
                 source.sendFeedback(() -> Text.translatable("carpet.command.randomTick.success", count, pos.getX(), pos.getY(), pos.getZ()), true);
-                return 1; // output this success message, substituting each %s for these args, and return 1 to tell the game this was successful
-            } else throw new SimpleCommandExceptionType(Text.translatable("carpet.command.randomTick.failed")).create();
-            // if all else fails, throw an exception in the form of this error message
+                return 1;
+            }
+            else throw new SimpleCommandExceptionType(Text.translatable("carpet.command.randomTick.failed")).create();
         }
     }
 

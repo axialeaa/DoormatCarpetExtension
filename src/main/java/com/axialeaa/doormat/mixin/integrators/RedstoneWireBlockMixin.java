@@ -17,13 +17,14 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(RedstoneWireBlock.class)
 public class RedstoneWireBlockMixin {
 
+    /**
+     * @return true if the block to descend is solid or enabled by the interface, or the original solid block check if the block in question does not have the interface implemented.
+     */
     @ModifyExpressionValue(method = "getReceivedRedstonePower", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z", ordinal = 0))
     private boolean modifyDescent(boolean original, World world, @Local Direction direction, @Local(ordinal = 0) BlockPos blockPos, @Local BlockState blockState) {
         return blockState.getBlock() instanceof BlockDustBehaviourInterface dustBehaviorInterface ?
-            // if the block in a direction has the BlockDustBehaviourInterface implemented...
             original || dustBehaviorInterface.dustCanDescend(world, blockPos, blockState, direction) :
-            // return true if the interface method is true or the block is a solid block
-            original; // otherwise return the output of the solid block check
+            original;
     }
 
 }
