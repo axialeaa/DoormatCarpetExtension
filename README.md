@@ -110,6 +110,15 @@ Though marked as "Works As Intended", this rule technically fixes this bug: http
 * Additional notes:
   * Thanks to my friend [intricate](https://github.com/lntricate1) for critiquing my code and providing a formula to calculate explosion immunity on the fly <3
 
+## deepslateDungeons
+Dungeons that generate below y = 0 will be made of cobbled deepslate instead of cobblestone.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `SURVIVAL`, `FEATURE`, `DOORMAT`
+* Additional notes:
+  * This will not affect already-generated chunks, so if you intend to feature this modification on a long-term survival world, it's best to enable the setting right away.
+
 ## disableEndPortalCrossing
 Disables travelling through end portals.
 * Type: `Boolean`
@@ -407,7 +416,7 @@ Blackstone adjacent to underwater magma blocks slowly becomes gilded over time.
 Spore blossoms generate underneath fertilized moss blocks.
 * Type: `Boolean`
 * Default value: `false`
-* Allowed options: `false`, `true`
+* Allowed options: `true`, `false`
 * Categories: `FEATURE`, `DOORMAT`
 
 ## softInversion
@@ -425,7 +434,7 @@ Redstone torches placed on the sides of pistons deactivate when the piston exten
 Spore blossoms drop themselves when fertilized, the same way tall flowers do.
 * Type: `Boolean`
 * Default value: `false`
-* Allowed options: `false`, `true`
+* Allowed options: `true`, `false`
 * Categories: `FEATURE`, `DOORMAT`
 * 
 ## stairDiodes
