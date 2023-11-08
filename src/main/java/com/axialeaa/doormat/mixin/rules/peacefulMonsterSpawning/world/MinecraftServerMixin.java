@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MinecraftServerMixin {
 
     /**
-     * Satisfies, from what I know, a very few back-end checks.
+     * Satisfies, from what I know, a very small number of back-end checks.
      */
     @ModifyReturnValue(method = "isMonsterSpawningEnabled", at = @At("RETURN"))
     private static boolean monsterSpawningEnabledInPeaceful(boolean original) {
