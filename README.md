@@ -117,7 +117,7 @@ Dungeons that generate below y = 0 will be made of cobbled deepslate instead of 
 * Allowed options: `true`, `false`
 * Categories: `SURVIVAL`, `FEATURE`, `DOORMAT`
 * Additional notes:
-  * This will not affect already-generated chunks, so if you intend to feature this modification on a long-term survival world, it's best to enable the setting right away.
+  * This will not affect previously-generated chunks, so if you intend to feature this modification on a long-term survival world, it's best to enable the setting right away.
 
 ## disableEndPortalCrossing
 Disables travelling through end portals.
