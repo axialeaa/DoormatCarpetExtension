@@ -9,8 +9,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/**
+ * Mixing into {@link BlockItem} accommodates using cheats or nbt editing to put fire aspect on non-tool items.
+ */
 @Mixin(BlockItem.class)
-// mix directly into BlockItem.class to accommodate using cheats/nbt editing to put fire aspect on non-tool items
 public class BlockItemMixin {
 
     @Inject(method = "useOnBlock", at = @At("HEAD"), cancellable = true)

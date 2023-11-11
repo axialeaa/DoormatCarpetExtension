@@ -50,7 +50,7 @@ public class HostileEntityMixin {
      * Disables mob anger in peaceful mode. This may not be necessary, but it covers our bases in case it is.
      */
     @ModifyReturnValue(method = "isAngryAt", at = @At("RETURN"))
-    private boolean test(boolean original, PlayerEntity player) {
+    private boolean pacifyInPeaceful(boolean original, PlayerEntity player) {
         return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? player.getWorld().getDifficulty() != Difficulty.PEACEFUL : original;
     }
 

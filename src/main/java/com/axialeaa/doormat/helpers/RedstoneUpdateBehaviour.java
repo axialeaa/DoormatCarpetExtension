@@ -23,10 +23,10 @@ public class RedstoneUpdateBehaviour {
 
     /**
      * @return true if the rule flag is 1 or 3.
-     * @implNote This is used for disabling certain instances of world.updateNeighbors().
+     * @implNote This is used for disabling certain instances of world.updateNeighbors(), and in principle this returns true for all odd numbers. The only odd numbers present in the flags of the NeighbourUpdateMode enum entries are BLOCK(1) and BOTH(3).
      */
     public static boolean neighborUpdateOn(DoormatSettings.NeighbourUpdateMode rule) {
-        return rule.getFlags() == 1 || rule.getFlags() == 3;
+        return (rule.getFlags() & 1) == 1;
     }
 
     /**

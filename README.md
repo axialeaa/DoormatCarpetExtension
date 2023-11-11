@@ -94,7 +94,7 @@ Comparators can read through pistons, like in Bedrock Edition.
 * Categories: `FEATURE`, `PARITY`, `DOORMAT`
 
 ## composterSideInputs
-Sideways-pointing hoppers and droppers can insert items into composters.
+Items can be inserted into composters from all 6 sides instead of just the top, via hoppers and droppers.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`

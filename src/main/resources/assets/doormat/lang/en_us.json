@@ -15,7 +15,7 @@
   "carpet.rule.comparatorsReadThroughChains.desc": "Comparators can read through chains, like in Bedrock Edition",
   "carpet.rule.comparatorsReadThroughPaths.desc": "Comparators can read through dirt paths, like in Bedrock Edition",
   "carpet.rule.comparatorsReadThroughPistons.desc": "Comparators can read through pistons, like in Bedrock Edition",
-  "carpet.rule.composterSideInputs.desc": "Sideways-pointing hoppers and droppers can insert items into composters",
+  "carpet.rule.composterSideInputs.desc": "Items can be inserted into composters from all 6 sides instead of just the top, via hoppers and droppers.",
   "carpet.rule.consistentExplosionImmunity.desc": "Explosion-immune blocks also apply this property to their dropped item counterparts",
   "carpet.rule.consistentExplosionImmunity.extra.0": "Though marked as \"Works As Intended\", this rule technically fixes this bug: https://bugs.mojang.com/browse/MC-212764",
   "carpet.rule.deepslateDungeons.desc": "Dungeons that generate below y = 0 will be made of cobbled deepslate instead of cobblestone",
