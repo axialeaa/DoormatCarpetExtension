@@ -1,4 +1,4 @@
-<img src="./src/main/resources/assets/doormat/icon.png" align="right" width="256" alt=""/>
+<img src="./src/main/resources/assets/doormat/icon.png" align="right" width="128"/>
 
 # Hi there! Thanks for checking out Doormat!
 
