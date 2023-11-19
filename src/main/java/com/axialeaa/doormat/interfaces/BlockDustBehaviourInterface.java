@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.interfaces;
 
-import com.axialeaa.doormat.mixin.integrators.RedstoneWireBlockMixin;
+import com.axialeaa.doormat.mixin.integration.RedstoneWireBlockMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;

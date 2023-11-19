@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.integrators;
+package com.axialeaa.doormat.mixin.integration;
 
 import com.axialeaa.doormat.interfaces.BlockDustBehaviourInterface;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;

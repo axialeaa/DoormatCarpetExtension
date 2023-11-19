@@ -15,10 +15,10 @@ public class PeacefulMonsterSpawning {
      * As a result, the check performed is Difficulty.EASY != Difficulty.PEACEFUL which always returns true.
      */
     public static Difficulty bypassPeacefulCheck(WorldAccess world, Operation<Difficulty> original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? Difficulty.EASY : original.call(world);
+        return DoormatSettings.peacefulMonsterSpawning.enabled() ? Difficulty.EASY : original.call(world);
     }
     public static Difficulty bypassPeacefulCheck(Difficulty original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? Difficulty.EASY : original;
+        return DoormatSettings.peacefulMonsterSpawning.enabled() ? Difficulty.EASY : original;
     }
 
     /**

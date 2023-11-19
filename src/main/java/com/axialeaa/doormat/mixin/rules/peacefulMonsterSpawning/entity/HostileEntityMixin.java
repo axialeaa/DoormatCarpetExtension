@@ -51,7 +51,7 @@ public class HostileEntityMixin {
      */
     @ModifyReturnValue(method = "isAngryAt", at = @At("RETURN"))
     private boolean pacifyInPeaceful(boolean original, PlayerEntity player) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? player.getWorld().getDifficulty() != Difficulty.PEACEFUL : original;
+        return DoormatSettings.peacefulMonsterSpawning.enabled() ? player.getWorld().getDifficulty() != Difficulty.PEACEFUL : original;
     }
 
 }

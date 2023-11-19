@@ -2,9 +2,7 @@ package com.axialeaa.doormat;
 
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
-import carpet.api.settings.SettingsManager;
 import carpet.utils.Translations;
-// import com.axialeaa.doormat.command.DoormatCommands;
 import com.axialeaa.doormat.command.DoormatCommands;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
@@ -16,10 +14,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 
 	public static final String MODID = "doormat";
 	public static final String MODNAME = "Axia's Doormat";
-	public static final String MODVERSION = "1.0.2";
     public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
-
-	private static final SettingsManager doormatSettingsManager = new SettingsManager(MODVERSION, MODID, MODNAME);
 
 	@Override
 	public void onInitialize() {
@@ -31,11 +26,6 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	@Override
 	public void onGameStarted() {
 		CarpetServer.settingsManager.parseSettingsClass(DoormatSettings.class);
-	}
-
-	@Override
-	public SettingsManager extensionSettingsManager() {
-		return doormatSettingsManager;
 	}
 
 	@Override

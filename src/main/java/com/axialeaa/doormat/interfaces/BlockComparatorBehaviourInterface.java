@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.interfaces;
 
-import com.axialeaa.doormat.mixin.integrators.ComparatorBlockMixin;
-import com.axialeaa.doormat.mixin.integrators.WorldMixin;
+import com.axialeaa.doormat.mixin.integration.ComparatorBlockMixin;
+import com.axialeaa.doormat.mixin.integration.WorldMixin;
 import net.minecraft.block.Block;
 
 /**

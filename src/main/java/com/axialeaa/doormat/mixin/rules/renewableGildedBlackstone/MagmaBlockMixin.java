@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.renewableGildedBlackstone;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.mixin.extendables.AbstractBlockMixin;
+import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MagmaBlock;
@@ -20,7 +20,7 @@ public class MagmaBlockMixin extends AbstractBlockMixin {
      * As long as the rule is enabled and the block above the magma block is water, replace blackstone for each adjacent direction with gilded blackstone.
      */
     @Override
-    public void injectedRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
+    public void randomTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         if (DoormatSettings.renewableGildedBlackstone && world.getFluidState(pos.up()).isOf(Fluids.WATER))
             for (Direction direction : Direction.values()) {
                 BlockPos blockPos = pos.offset(direction);

@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.extendables;
+package com.axialeaa.doormat.mixin.extensibility;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
@@ -25,15 +25,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class AbstractBlockMixin {
 
     @Inject(method = "getCollisionShape", at = @At("HEAD"), cancellable = true)
-    public void injectedGetCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {}
+    public void getCollisionShapeImpl(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {}
 
     @Inject(method = "onBlockAdded", at = @At("HEAD"))
-    public void injectedOnBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {}
+    public void onBlockAddedImpl(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {}
 
     @Inject(method = "randomTick", at = @At("HEAD"))
-    public void injectedRandomTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {}
+    public void randomTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {}
 
     @Inject(method = "onEntityCollision", at = @At("HEAD"))
-    public void injectedOnEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {}
+    public void onEntityCollisionImpl(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {}
 
 }

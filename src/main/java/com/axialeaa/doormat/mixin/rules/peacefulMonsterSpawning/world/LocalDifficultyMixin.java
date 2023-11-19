@@ -20,7 +20,7 @@ public class LocalDifficultyMixin {
      */
     @ModifyExpressionValue(method = "setLocalDifficulty", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;PEACEFUL:Lnet/minecraft/world/Difficulty;"))
     private Difficulty bypassPeacefulCheck(Difficulty original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original;
+        return DoormatSettings.peacefulMonsterSpawning.enabled() ? null : original;
     }
 
     /**
@@ -28,7 +28,7 @@ public class LocalDifficultyMixin {
      */
     @Inject(method = "setLocalDifficulty", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;EASY:Lnet/minecraft/world/Difficulty;", shift = At.Shift.BEFORE))
     private void reassignVarForPeaceful(Difficulty difficulty, long timeOfDay, long inhabitedTime, float moonSize, CallbackInfoReturnable<Float> cir, @Local(ordinal = 3) float h) {
-        if (DoormatSettings.peacefulMonsterSpawning.isEnabled() && difficulty == Difficulty.PEACEFUL)
+        if (DoormatSettings.peacefulMonsterSpawning.enabled() && difficulty == Difficulty.PEACEFUL)
             h *= 0.5F;
     }
 
@@ -38,7 +38,7 @@ public class LocalDifficultyMixin {
      */
     @WrapOperation(method = "setLocalDifficulty", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Difficulty;getId()I"))
     private int capAbovePeacefulId(Difficulty difficulty, Operation<Integer> original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? Math.max(original.call(difficulty), 1) : original.call(difficulty);
+        return DoormatSettings.peacefulMonsterSpawning.enabled() ? Math.max(original.call(difficulty), 1) : original.call(difficulty);
     }
 
 }

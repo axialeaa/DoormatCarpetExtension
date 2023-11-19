@@ -1,6 +1,6 @@
-package com.axialeaa.doormat.mixin.extendables;
+package com.axialeaa.doormat.mixin.extensibility;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,10 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * Instead, create an empty injection for each method, and extend + override the handler methods from this mixin.
  * That way, method calls are instantiated without clunky instanceof checks and without incompatibility.
  */
-@Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin {
+@Mixin(Entity.class)
+public abstract class EntityMixin {
 
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
-    public void injectedDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {}
+    public void damageImpl(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {}
+
+    @Inject(method = "isCollidable", at = @At("HEAD"), cancellable = true)
+    public void isCollidableImpl(CallbackInfoReturnable<Boolean> cir) {}
 
 }

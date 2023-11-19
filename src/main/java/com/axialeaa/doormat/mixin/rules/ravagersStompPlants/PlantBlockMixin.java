@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.ravagersStompPlants;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.mixin.extendables.AbstractBlockMixin;
+import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PlantBlock;
 import net.minecraft.entity.Entity;
@@ -19,7 +19,7 @@ public class PlantBlockMixin extends AbstractBlockMixin {
      * Breaks the block at the entity's position if the rule is enabled, mob griefing is on and the entity is a ravager.
      */
     @Override
-    public void injectedOnEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
+    public void onEntityCollisionImpl(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (DoormatSettings.ravagersStompPlants && entity instanceof RavagerEntity && world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING))
             world.breakBlock(pos, true, entity);
     }

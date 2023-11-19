@@ -15,36 +15,41 @@ public class DoormatSettings {
 
     public static final String DOORMAT = "doormat";
     public static final String PARITY = "parity";
+    public static final String TOOLTIP = "tooltip";
     public static final String UPDATE = "update";
     public static final String QC = "qc";
+    public static final String APRIL_FOOLS = "april_fools";
 
     /**<h1>VALIDATORS</h1>*/
 
-    private static class PistonMovementTimeValidator extends Validator<Integer> {
-        
+    private static class RedstoneEventTimeValidator extends Validator<Integer> {
         @Override
         public Integer validate(ServerCommandSource source, CarpetRule<Integer> currentRule, Integer newValue, String typedString) {
             return (newValue >= 1 && newValue <= 1200) ? newValue : null;
         }
-        
         @Override
         public String description() {
             return "You must choose a value from 1 to 1200";
         }
-        
     }
 
     /**<h1>ENUMS</h1>*/
 
     public enum PetAttackMode {
         FALSE, TRUE, OWNED;
-        public boolean isEnabled() {
+        public boolean enabled() {
             return this != FALSE;
         }
     }
     public enum PeacefulMonstersMode {
         FALSE, TRUE, BELOW_SURFACE, BELOW_SEA, UNNATURAL;
-        public boolean isEnabled() {
+        public boolean enabled() {
+            return this != FALSE;
+        }
+    }
+    public enum PotTooltipMode {
+        FALSE, TRUE, IGNORE_BRICKS;
+        public boolean enabled() {
             return this != FALSE;
         }
     }
@@ -52,22 +57,18 @@ public class DoormatSettings {
         INTERACTION, FULLNESS, FULLNESS_LERPED
     }
     public enum NeighbourUpdateMode {
-
         NEITHER(0),
         BLOCK(1),
         SHAPE(2),
         BOTH(3);
 
         private final int flags;
-
         NeighbourUpdateMode(int flags) {
             this.flags = flags;
         }
-
         public int getFlags() {
             return flags;
         }
-
     }
 
     /**<h1>RULES</h1>*/
@@ -92,6 +93,15 @@ public class DoormatSettings {
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static ChiseledBookshelfSignalMode chiseledBookshelfSignalBasis = ChiseledBookshelfSignalMode.INTERACTION;
+
+    @Rule( categories = { FEATURE, CLIENT, TOOLTIP, DOORMAT } )
+    public static PotTooltipMode compactPotTooltips = PotTooltipMode.FALSE;
+
+    @Rule( categories = { FEATURE, CLIENT, TOOLTIP, DOORMAT } )
+    public static boolean compactTemplateTooltips = false;
+
+    @Rule( categories = { FEATURE, CLIENT, TOOLTIP, DOORMAT } )
+    public static boolean compactTrimTooltips = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean composterSideInputs = false;
@@ -126,6 +136,9 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean growableSwampOakTrees = false;
 
+    @Rule( options = "8", validators = RedstoneEventTimeValidator.class, strict = false, categories = { FEATURE, APRIL_FOOLS, DOORMAT } )
+    public static int hopperTransferTime = 8;
+
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean huskWashing = false; // technically renewable sand; renamed to avoid conflict with other carpet mods
 
@@ -153,7 +166,7 @@ public class DoormatSettings {
     @Rule( options = { "63", "127", "255" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int phantomMinSpawnAltitude = 63;
 
-    @Rule( options = "2", validators = PistonMovementTimeValidator.class, strict = false, categories = { FEATURE, DOORMAT } )
+    @Rule( options = "2", validators = RedstoneEventTimeValidator.class, strict = false, categories = { FEATURE, DOORMAT } )
     public static int pistonMovementTime = 2;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
@@ -180,6 +193,9 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean softInversion = false;
 
+    @Rule( categories = { FEATURE, APRIL_FOOLS, DOORMAT } )
+    public static boolean solidEntityCollision = false;
+
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean sporeBlossomDuplication = false;
 
@@ -189,7 +205,7 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static CarpetSettings.ChainStoneMode stickyPillarBlocks = CarpetSettings.ChainStoneMode.FALSE;
 
-    @Rule( categories = { FEATURE, DOORMAT } )
+    @Rule( categories = { FEATURE, APRIL_FOOLS, DOORMAT } )
     public static CarpetSettings.ChainStoneMode stickyStickyPistons = CarpetSettings.ChainStoneMode.FALSE;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
@@ -245,6 +261,9 @@ public class DoormatSettings {
     public static boolean bellQuasiConnecting = false;
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
+    public static boolean commandBlockQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean fenceGateQuasiConnecting = false;
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
@@ -258,6 +277,9 @@ public class DoormatSettings {
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean railQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
+    public static boolean structureBlockQuasiConnecting = false;
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean tntQuasiConnecting = false;

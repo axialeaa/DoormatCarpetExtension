@@ -10,11 +10,11 @@ import org.spongepowered.asm.mixin.injection.At;
 public class MobEntityMixin {
 
     /**
-     * Ignores the value of isDisallowedInPeaceful() when deciding if this mob should despawn.
+     * When the rule is enabled, ignores the value of isDisallowedInPeaceful() when deciding if this mob should despawn.
      */
     @ModifyExpressionValue(method = "checkDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;isDisallowedInPeaceful()Z"))
     private boolean bypassPeacefulDespawnCheck(boolean original) {
-        return !DoormatSettings.peacefulMonsterSpawning.isEnabled();
+        return !DoormatSettings.peacefulMonsterSpawning.enabled() && original;
     }
 
 }

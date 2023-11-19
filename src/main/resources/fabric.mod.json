@@ -20,6 +20,17 @@
 			"com.axialeaa.doormat.DoormatServer"
 		]
 	},
+	"custom": {
+		"modmenu": {
+			"parent": {
+				"id": "carpet"
+			},
+			"links": {
+				"modmenu.github_releases": "https://github.com/axialeaa/DoormatCarpetExtension/releases",
+				"modmenu.modrinth": "https://modrinth.com/mod/doormat"
+			}
+		}
+	},
 	"mixins": [
 		"doormat.mixins.json"
 	],

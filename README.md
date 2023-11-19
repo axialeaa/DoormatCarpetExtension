@@ -61,6 +61,13 @@ Lerped interpolates from 1 to 15, instead of outputting the exact number.
 * Allowed options: `interaction`, `fullness`, `fullness_lerped`
 * Categories: `FEATURE`, `DOORMAT`
 
+## commandBlockQuasiConnecting
+Whether command blocks can be quasi-powered.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `QC`, `DOORMAT`
+
 ## commandRandomTick
 Enables /randomtick command to forcibly send randomTicks to the specified block position.
 * Type: `String`
@@ -71,6 +78,29 @@ Enables /randomtick command to forcibly send randomTicks to the specified block 
   * It has an accompanying command
   * Can be limited to 'ops' only, true/false for everyone/no one, or a custom permission level
   * Currently has an issue with generating multiple features for one plant
+
+## compactPotTooltips
+Compacts the tooltips of decorated pots by grouping like sherds together.
+"ignore_bricks" removes bricks from the tooltips entirely.
+* Type: `PotTooltipMode`
+* Default value: `false`
+* Allowed options: `true`, `false`, `ignore_bricks`
+* Categories: `FEATURE`, `CLIENT`, `TOOLTIP`, `DOORMAT`
+
+## compactTemplateTooltips
+Compacts the tooltips of smithing templates by removing the "Applies to" and "Ingredients" text.
+This doesn't change practicality because the same information is provided in the smithing table itself.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `CLIENT`, `TOOLTIP`, `DOORMAT`
+
+## compactTrimTooltips
+Compacts the tooltips of armor trims to a single line.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `CLIENT`, `TOOLTIP`, `DOORMAT`
 
 ## comparatorsReadThroughChains
 Comparators can read through chains, like in Bedrock Edition.
@@ -214,6 +244,14 @@ Whether hoppers can be quasi-powered.
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `QC`, `DOORMAT`
+
+## hopperTransferTime
+The length of time in ticks it takes for a hopper to transfer an item.
+* Type: `Integer`
+* Default value: `8`
+* Categories: `FEATURE`, `APRIL_FOOLS`, `DOORMAT`
+* Additional notes:
+  * Must be a number from 1 to 1200
 
 ## hopperUpdateType
 The type(s) of update hoppers emit when changing state.
@@ -430,6 +468,13 @@ Redstone torches placed on the sides of pistons deactivate when the piston exten
   * Due to the differences in Java Edition's neighbor update system, such an implementation would cause the torches to become budded if the piston was powered and couldn't extend (the thing that gives neighbor updates).
   * I opted for this method, which should stay true to Java's quirks as the real soft inversion does to Bedrock's. :)
 
+## solidEntityCollision
+Living entities can be collided with like boats.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `APRIL_FOOLS`, `DOORMAT`
+
 ## sporeBlossomDuplication
 Spore blossoms drop themselves when fertilized, the same way tall flowers do.
 * Type: `Boolean`
@@ -458,7 +503,14 @@ Sticky pistons act like directional slime blocks.
 * Type: `ChainStoneMode`
 * Default value: `false`
 * Allowed options: `true`, `false`, `stick_to_all`
-* Categories: `FEATURE`, `DOORMAT`
+* Categories: `FEATURE`, `APRIL_FOOLS`, `DOORMAT`
+
+## structureBlockQuasiConnecting
+Whether structure blocks can be quasi-powered.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `QC`, `DOORMAT`
 
 ## thornyRoseBush
 Similarly to sweet berry bushes, rose bushes deal damage when you walk inside them.

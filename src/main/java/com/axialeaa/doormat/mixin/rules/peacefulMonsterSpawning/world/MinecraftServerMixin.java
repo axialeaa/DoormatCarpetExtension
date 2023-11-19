@@ -14,7 +14,7 @@ public class MinecraftServerMixin {
      */
     @ModifyReturnValue(method = "isMonsterSpawningEnabled", at = @At("RETURN"))
     private static boolean monsterSpawningEnabledInPeaceful(boolean original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() || original;
+        return DoormatSettings.peacefulMonsterSpawning.enabled() || original;
     }
 
 }

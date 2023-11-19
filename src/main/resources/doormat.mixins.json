@@ -3,11 +3,11 @@
   "package": "com.axialeaa.doormat.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "extendables.AbstractBlockMixin",
-    "extendables.LivingEntityMixin",
-    "integrators.ComparatorBlockMixin",
-    "integrators.RedstoneWireBlockMixin",
-    "integrators.WorldMixin",
+    "extensibility.AbstractBlockMixin",
+    "extensibility.EntityMixin",
+    "integration.ComparatorBlockMixin",
+    "integration.RedstoneWireBlockMixin",
+    "integration.WorldMixin",
     "rules.accurateAzaleaLeafDistribution.AzaleaBlockMixin",
     "rules.azaleaLeavesGrowFlowers.LeavesBlockMixin",
     "rules.beaconsHealPets.BeaconBlockEntityMixin",
@@ -28,6 +28,7 @@
     "rules.fireAspectLighting.ItemMixin",
     "rules.forceGrassSpread.BlockMixin",
     "rules.growableSwampOakTrees.SaplingBlockMixin",
+    "rules.hopperTransferTime.HopperBlockEntityMixin",
     "rules.huskWashing.HuskEntityMixin",
     "rules.insomniaDaysSinceSlept.PhantomSpawnerMixin",
     "rules.jukeboxDiscProgressSignal.JukeboxBlockEntityMixin",
@@ -64,6 +65,7 @@
     "rules.renewableSporeBlossoms_mossSpreadTo.MossBlockMixin",
     "rules.softInversion.RedstoneTorchBlockMixin",
     "rules.softInversion.WallRedstoneTorchBlockMixin",
+    "rules.solidEntityCollision.LivingEntityMixin",
     "rules.sporeBlossomDuplication.SporeBlossomBlockMixin",
     "rules.stairDiodes.StairBlockMixin",
     "rules.stickyPillarBlocks.PillarBlockMixin",
@@ -72,6 +74,7 @@
     "rules.torchBurnout.RedstoneTorchBlockMixin",
     "rules.updateType_quasiConnecting.AbstractRailBlockMixin",
     "rules.updateType_quasiConnecting.BellBlockMixin",
+    "rules.updateType_quasiConnecting.CommandBlockMixin",
     "rules.updateType_quasiConnecting.DispenserBlockMixin",
     "rules.updateType_quasiConnecting.DoorBlockMixin",
     "rules.updateType_quasiConnecting.FenceGateBlock",
@@ -82,9 +85,15 @@
     "rules.updateType_quasiConnecting.PistonHeadBlockMixin",
     "rules.updateType_quasiConnecting.PoweredRailBlockMixin",
     "rules.updateType_quasiConnecting.RedstoneLampBlockMixin",
+    "rules.updateType_quasiConnecting.StructureBlockMixin",
     "rules.updateType_quasiConnecting.TntBlockMixin",
     "rules.updateType_quasiConnecting.TrapdoorBlockMixin",
     "rules.zoglinsSpawnInPortals.NetherPortalBlockMixin"
+  ],
+  "client": [
+    "rules.compactPotTooltips.DecoratedPotBlockMixin",
+    "rules.compactTemplateTooltips.SmithingTemplateItem",
+    "rules.compactTrimTooltips.ArmorTrimMixin"
   ],
   "injectors": {
     "defaultRequire": 1

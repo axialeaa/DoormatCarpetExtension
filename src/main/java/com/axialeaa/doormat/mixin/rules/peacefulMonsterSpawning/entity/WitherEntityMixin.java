@@ -14,7 +14,7 @@ public class WitherEntityMixin {
      */
     @ModifyExpressionValue(method = "checkDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/boss/WitherEntity;isDisallowedInPeaceful()Z"))
     private boolean bypassPeacefulDespawnCheck(boolean original) {
-        return !DoormatSettings.peacefulMonsterSpawning.isEnabled();
+        return !DoormatSettings.peacefulMonsterSpawning.enabled();
     }
 
 }

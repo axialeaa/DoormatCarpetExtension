@@ -2,7 +2,7 @@ package com.axialeaa.doormat.mixin.rules.thornyRoseBush;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.entity.DoormatDamageTypes;
-import com.axialeaa.doormat.mixin.extendables.AbstractBlockMixin;
+import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.TallFlowerBlock;
@@ -21,7 +21,7 @@ public class TallFlowerBlockMixin extends AbstractBlockMixin {
      * For as long as the rule is enabled, the block is a rose bush and the entity is not a bee, damage it when it has a velocity of 0.003 or more in x or z.
      */
     @Override
-    public void injectedOnEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
+    public void onEntityCollisionImpl(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
         if (DoormatSettings.thornyRoseBush && state.getBlock() == Blocks.ROSE_BUSH && entity instanceof LivingEntity && entity.getType() != EntityType.BEE)
             if (!world.isClient && (entity.lastRenderX != entity.getX() || entity.lastRenderZ != entity.getZ())) {
                 double velocityX = Math.abs(entity.getX() - entity.lastRenderX);
