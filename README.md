@@ -79,13 +79,20 @@ Enables /randomtick command to forcibly send randomTicks to the specified block 
   * Can be limited to 'ops' only, true/false for everyone/no one, or a custom permission level
   * Currently has an issue with generating multiple features for one plant
 
+## compactEnchantTooltips
+Compacts the tooltips of enchantments by listing them as a cycling carousel.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `CLIENT`, `TOOLTIP`, `DOORMAT`
+
 ## compactPotTooltips
 Compacts the tooltips of decorated pots by grouping like sherds together.
-"ignore_bricks" removes bricks from the tooltips entirely.
+`ignore_bricks` removes bricks from the tooltips entirely.
 * Type: `PotTooltipMode`
 * Default value: `false`
 * Allowed options: `true`, `false`, `ignore_bricks`
-* Categories: `FEATURE`, `CLIENT`, `TOOLTIP`, `DOORMAT`
+* Categories: `CLIENT`, `TOOLTIP`, `DOORMAT`
 
 ## compactTemplateTooltips
 Compacts the tooltips of smithing templates by removing the "Applies to" and "Ingredients" text.
@@ -93,14 +100,15 @@ This doesn't change practicality because the same information is provided in the
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
-* Categories: `FEATURE`, `CLIENT`, `TOOLTIP`, `DOORMAT`
+* Categories: `CLIENT`, `TOOLTIP`, `DOORMAT`
 
 ## compactTrimTooltips
 Compacts the tooltips of armor trims to a single line.
-* Type: `Boolean`
+`only_pattern` removes the material text but leaves the color formatting.
+* Type: `TrimTooltipMode`
 * Default value: `false`
-* Allowed options: `true`, `false`
-* Categories: `FEATURE`, `CLIENT`, `TOOLTIP`, `DOORMAT`
+* Allowed options: `true`, `false`, `only_pattern`
+* Categories: `CLIENT`, `TOOLTIP`, `DOORMAT`
 
 ## comparatorsReadThroughChains
 Comparators can read through chains, like in Bedrock Edition.
@@ -165,7 +173,7 @@ Disables travelling through nether portals.
 
 ## disablePetAttacking
 Disables players harming tamed mobs.
-"owned" allows players to hit pets that aren't their own.
+`owned` allows players to hit pets that aren't their own.
 * Type: `PetHurtMode`
 * Default value: `false`
 * Allowed options: `true`, `false`, `owned`
@@ -348,10 +356,10 @@ The type(s) of update note blocks emit when changing state.
 
 ## peacefulMonsterSpawning
 Hostile mobs can passively spawn in peaceful mode.
-"true" entirely matches easy mode behavior.
-"below_surface" ensures that there is always a roof above the spawning location of a mob.
-"below_sea" ensures that the spawning location of the mob is below y = 63.
-"unnatural" removes the capability for natural and chunk generation spawns.
+`true` entirely matches easy mode behavior.
+`below_surface` ensures that there is always a roof above the spawning location of a mob.
+`below_sea` ensures that the spawning location of the mob is below y = 63.
+`unnatural` removes the capability for natural and chunk generation spawns.
 * Type: `PeacefulMonstersMode`
 * Default value: `false`
 * Suggested options: `false`, `true`, `below_surface`, `below_sea`, `unnatural`
@@ -385,7 +393,7 @@ The type(s) of update pistons emit when changing state.
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
 * Additional notes: 
   * Expect many issues to arise from removing shape updates from pistons
-    * "neither" has the capability of deleting blocks on motion
+    * `neither` has the capability of deleting blocks on motion
   * Piston heads currently emit an elusive block update when they start to retract, regardless of this setting
 
 ## playersDropAllXp
@@ -491,7 +499,7 @@ Redstone dust can travel both up and down the full-square side(s) of stairs, but
 
 ## stickyPillarBlocks
 Pillar blocks like logs and bone blocks stick to each other based on the axis direction when moved.
-"stick_to_all" causes them to connect to each other regardless of axis direction.
+`stick_to_all` causes them to connect to each other regardless of axis direction.
 * Type: `ChainStoneMode`
 * Default value: `false`
 * Allowed options: `true`, `false`, `stick_to_all`
@@ -499,7 +507,7 @@ Pillar blocks like logs and bone blocks stick to each other based on the axis di
 
 ## stickyStickyPistons
 Sticky pistons act like directional slime blocks.
-"stick_to_all" causes them to stick omnidirectionally like normal slime blocks.
+`stick_to_all` causes them to stick omnidirectionally like normal slime blocks.
 * Type: `ChainStoneMode`
 * Default value: `false`
 * Allowed options: `true`, `false`, `stick_to_all`

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public class AbstractGlassBlockMixin implements BlockDustBehaviourInterface {
 
     @Override
-    public boolean dustCanDescend(World world, BlockPos pos, BlockState state, Direction direction) {
+    public boolean doormat$dustCanDescend(World world, BlockPos pos, BlockState state, Direction direction) {
         return DoormatSettings.dustTravelDownGlass;
     }
 

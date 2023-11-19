@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public class ChainBlockMixin implements BlockComparatorBehaviourInterface {
 
     @Override
-    public boolean canReadThrough(Block block) {
+    public boolean doormat$canReadThrough(Block block) {
         return DoormatSettings.comparatorsReadThroughChains;
     }
 

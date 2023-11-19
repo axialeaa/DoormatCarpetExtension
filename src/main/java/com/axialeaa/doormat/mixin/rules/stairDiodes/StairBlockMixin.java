@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public class StairBlockMixin implements BlockDustBehaviourInterface {
 
     @Override
-    public boolean dustCanDescend(World world, BlockPos pos, BlockState state, Direction direction) {
+    public boolean doormat$dustCanDescend(World world, BlockPos pos, BlockState state, Direction direction) {
         return DoormatSettings.stairDiodes && state.isSideSolidFullSquare(world, pos, direction.getOpposite());
     }
 

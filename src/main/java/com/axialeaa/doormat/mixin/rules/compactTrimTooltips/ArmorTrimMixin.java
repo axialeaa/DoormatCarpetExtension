@@ -28,17 +28,22 @@ public class ArmorTrimMixin {
      */
     @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0, shift = At.Shift.BEFORE), cancellable = true)
     private static void replaceWithCompact(ItemStack stack, DynamicRegistryManager registryManager, List<Text> tooltip, CallbackInfo ci, @Local ArmorTrim armorTrim) {
-        if (DoormatSettings.compactTrimTooltips) {
+        if (DoormatSettings.compactTrimTooltips.enabled()) {
             ci.cancel();
             ArmorTrimMaterial material = armorTrim.getMaterial().value();
             ArmorTrimPattern pattern = armorTrim.getPattern().value();
             String ingredient = I18n.translate("trim_material." + material.assetName() + ".compact");
-
-            tooltip.add(Text
-                .literal(ingredient) // add the material name
-                .setStyle(material.description().getStyle()) // set the colour of the text
-                .append(ScreenTexts.space())
-                .append(pattern.description())); // "____ Armor Trim"
+            if (DoormatSettings.compactTrimTooltips == DoormatSettings.TrimTooltipMode.ONLY_PATTERN)
+                tooltip.add(Text
+                    .literal("")
+                    .setStyle(material.description().getStyle())
+                    .append(pattern.description()));
+            else
+                tooltip.add(Text
+                    .literal(ingredient) // add the material name
+                    .setStyle(material.description().getStyle()) // set the colour of the text
+                    .append(ScreenTexts.space())
+                    .append(pattern.description())); // "____ Armor Trim"
         }
     }
 

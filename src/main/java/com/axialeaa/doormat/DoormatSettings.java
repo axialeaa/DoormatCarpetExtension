@@ -53,6 +53,12 @@ public class DoormatSettings {
             return this != FALSE;
         }
     }
+    public enum TrimTooltipMode {
+        FALSE, TRUE, ONLY_PATTERN;
+        public boolean enabled() {
+            return this != FALSE;
+        }
+    }
     public enum ChiseledBookshelfSignalMode {
         INTERACTION, FULLNESS, FULLNESS_LERPED
     }
@@ -94,14 +100,17 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static ChiseledBookshelfSignalMode chiseledBookshelfSignalBasis = ChiseledBookshelfSignalMode.INTERACTION;
 
-    @Rule( categories = { FEATURE, CLIENT, TOOLTIP, DOORMAT } )
+    @Rule( categories = { CLIENT, TOOLTIP, DOORMAT } )
+    public static boolean compactEnchantTooltips = false;
+
+    @Rule( categories = { CLIENT, TOOLTIP, DOORMAT } )
     public static PotTooltipMode compactPotTooltips = PotTooltipMode.FALSE;
 
-    @Rule( categories = { FEATURE, CLIENT, TOOLTIP, DOORMAT } )
+    @Rule( categories = { CLIENT, TOOLTIP, DOORMAT } )
     public static boolean compactTemplateTooltips = false;
 
-    @Rule( categories = { FEATURE, CLIENT, TOOLTIP, DOORMAT } )
-    public static boolean compactTrimTooltips = false;
+    @Rule( categories = { CLIENT, TOOLTIP, DOORMAT } )
+    public static TrimTooltipMode compactTrimTooltips = TrimTooltipMode.FALSE;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean composterSideInputs = false;

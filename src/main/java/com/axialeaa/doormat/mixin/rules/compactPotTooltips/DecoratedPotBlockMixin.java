@@ -51,7 +51,9 @@ public class DecoratedPotBlockMixin {
 
                 String translate = I18n.translate("pot." + sherd.getTranslationKey().replace("item.minecraft.", "") + ".compact");
                 tooltip.add(Text
-                    .literal(count > 1 ? translate + " x" + count : translate) // add a numerical tag at the end if there are more than 1 of this type
+                    .literal(count > 1 ?
+                        translate + " x" + count :
+                        translate) // add a numerical tag at the end if there are more than 1 of this type
                     .formatted(Formatting.GRAY)); // set the colour
             }
         }

@@ -14,6 +14,6 @@ public interface BlockDustBehaviourInterface {
     /**
      * @return whether dust power can travel down this block.
      */
-    boolean dustCanDescend(World world, BlockPos pos, BlockState state, Direction direction);
+    boolean doormat$dustCanDescend(World world, BlockPos pos, BlockState state, Direction direction);
 
 }

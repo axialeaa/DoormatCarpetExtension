@@ -24,7 +24,7 @@ public abstract class WorldMixin {
     private boolean modifyBlockCheck(boolean original, BlockPos pos, @Local(ordinal = 0) Direction direction) {
         Block blockBehind = this.getBlockState(pos.offset(direction)).getBlock();
         return blockBehind instanceof BlockComparatorBehaviourInterface comparatorBehaviourInterface ?
-            original || comparatorBehaviourInterface.canReadThrough(blockBehind) :
+            original || comparatorBehaviourInterface.doormat$canReadThrough(blockBehind) :
             original;
     }
 

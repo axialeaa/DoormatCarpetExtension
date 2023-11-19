@@ -24,8 +24,7 @@
     "rules.disablePetAttacking.TameableEntityMixin",
     "rules.disableShulkerReproduction.ShulkerEntityMixin",
     "rules.dustTravelDownGlass.AbstractGlassBlockMixin",
-    "rules.fireAspectLighting.BlockItemMixin",
-    "rules.fireAspectLighting.ItemMixin",
+    "rules.fireAspectLighting.Item_BlockItemMixin",
     "rules.forceGrassSpread.BlockMixin",
     "rules.growableSwampOakTrees.SaplingBlockMixin",
     "rules.hopperTransferTime.HopperBlockEntityMixin",
@@ -91,6 +90,8 @@
     "rules.zoglinsSpawnInPortals.NetherPortalBlockMixin"
   ],
   "client": [
+    "rules.compactEnchantTooltips.ItemStackMixin",
+    "rules.compactEnchantTooltips.MinecraftClientMixin",
     "rules.compactPotTooltips.DecoratedPotBlockMixin",
     "rules.compactTemplateTooltips.SmithingTemplateItem",
     "rules.compactTrimTooltips.ArmorTrimMixin"

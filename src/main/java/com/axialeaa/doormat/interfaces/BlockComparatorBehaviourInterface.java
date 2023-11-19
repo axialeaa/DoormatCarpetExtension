@@ -12,6 +12,6 @@ public interface BlockComparatorBehaviourInterface {
     /**
      * @return whether comparators can read through this block.
      */
-    boolean canReadThrough(Block block);
+    boolean doormat$canReadThrough(Block block);
 
 }
