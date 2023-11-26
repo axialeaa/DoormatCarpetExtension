@@ -2,6 +2,8 @@ package com.axialeaa.doormat.mixin.rules.compactTemplateTooltips;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
@@ -9,6 +11,7 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 @Mixin(net.minecraft.item.SmithingTemplateItem.class)
 public class SmithingTemplateItem {
 

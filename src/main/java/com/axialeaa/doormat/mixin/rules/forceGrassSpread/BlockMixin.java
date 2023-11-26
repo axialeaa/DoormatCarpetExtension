@@ -50,8 +50,7 @@ public class BlockMixin implements Fertilizable {
                 isGrass = true;
             if (blockState.isOf(Blocks.MYCELIUM))
                 isMycelium = true;
-            if (!SpreadableBlock.canSpread(state, world, blockPos) || !isGrass || !isMycelium)
-                continue;
+            if (!SpreadableBlock.canSpread(state, world, blockPos) || !isGrass || !isMycelium) continue;
             break;
         }
         if (isGrass && isMycelium)

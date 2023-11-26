@@ -1,6 +1,7 @@
 package com.axialeaa.doormat.mixin.extensibility;
 
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
@@ -35,5 +36,8 @@ public abstract class AbstractBlockMixin {
 
     @Inject(method = "onEntityCollision", at = @At("HEAD"))
     public void onEntityCollisionImpl(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {}
+
+    @Inject(method = "neighborUpdate", at = @At("HEAD"))
+    public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {}
 
 }

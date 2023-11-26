@@ -67,7 +67,6 @@ public class DoormatSettings {
         BLOCK(1),
         SHAPE(2),
         BOTH(3);
-
         private final int flags;
         NeighbourUpdateMode(int flags) {
             this.flags = flags;
@@ -88,14 +87,11 @@ public class DoormatSettings {
     @Rule( categories = { SURVIVAL, DOORMAT } )
     public static boolean beaconsHealPets = false;
 
-    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
-    public static boolean comparatorsReadThroughChains = false;
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean barrelItemDumping = false;
 
-    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
-    public static boolean comparatorsReadThroughPaths = false;
-
-    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
-    public static boolean comparatorsReadThroughPistons = false;
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean bulbOxidationStageSignal = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static ChiseledBookshelfSignalMode chiseledBookshelfSignalBasis = ChiseledBookshelfSignalMode.INTERACTION;
@@ -111,6 +107,15 @@ public class DoormatSettings {
 
     @Rule( categories = { CLIENT, TOOLTIP, DOORMAT } )
     public static TrimTooltipMode compactTrimTooltips = TrimTooltipMode.FALSE;
+
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
+    public static boolean comparatorsReadThroughChains = false;
+
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
+    public static boolean comparatorsReadThroughPaths = false;
+
+    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
+    public static boolean comparatorsReadThroughPistons = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean composterSideInputs = false;
@@ -132,9 +137,6 @@ public class DoormatSettings {
 
     @Rule( categories = { CREATIVE, SURVIVAL, DOORMAT } )
     public static boolean disableShulkerReproduction = false;
-
-    @Rule( categories = { FEATURE, PARITY, DOORMAT } )
-    public static boolean dustTravelDownGlass = false;
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean fireAspectLighting = false;
@@ -163,14 +165,14 @@ public class DoormatSettings {
     @Rule( options = { "8.0", "16.0" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { CREATIVE, DOORMAT } )
     public static double maxMinecartSpeed = 8.0;
 
-    @Rule( categories = { SURVIVAL, EXPERIMENTAL, DOORMAT } )
-    public static PeacefulMonstersMode peacefulMonsterSpawning = PeacefulMonstersMode.FALSE;
-
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean mossSpreadToCobblestone = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean mossSpreadToStoneBricks = false;
+
+    @Rule( categories = { SURVIVAL, EXPERIMENTAL, DOORMAT } )
+    public static PeacefulMonstersMode peacefulMonsterSpawning = PeacefulMonstersMode.FALSE;
 
     @Rule( options = { "63", "127", "255" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int phantomMinSpawnAltitude = 63;
@@ -190,6 +192,12 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean ravagersStompPlants = false;
 
+    @Rule( categories = { CLIENT, PARITY, DOORMAT } )
+    public static boolean reachAroundBridging = false;
+
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean redstoneOpensBarrels = false;
+
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean renewableCobwebs = false;
 
@@ -199,6 +207,9 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean renewableSporeBlossoms = false;
 
+    @Rule( categories = { CREATIVE, DOORMAT } )
+    public static boolean trialSpawnerSheepActivation = false;
+
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean softInversion = false;
 
@@ -207,9 +218,6 @@ public class DoormatSettings {
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean sporeBlossomDuplication = false;
-
-    @Rule( categories = { FEATURE, DOORMAT } )
-    public static boolean stairDiodes = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static CarpetSettings.ChainStoneMode stickyPillarBlocks = CarpetSettings.ChainStoneMode.FALSE;
@@ -232,7 +240,16 @@ public class DoormatSettings {
     /** <h2>UPDATE TYPES</h2> */
 
     @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
+    public static NeighbourUpdateMode barrelUpdateType = NeighbourUpdateMode.BOTH;
+
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode bellUpdateType = NeighbourUpdateMode.BOTH;
+
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
+    public static NeighbourUpdateMode bulbUpdateType = NeighbourUpdateMode.BOTH;
+
+    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
+    public static NeighbourUpdateMode crafterUpdateType = NeighbourUpdateMode.SHAPE;
 
     @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
     public static NeighbourUpdateMode dispenserUpdateType = NeighbourUpdateMode.SHAPE;
@@ -267,10 +284,25 @@ public class DoormatSettings {
     /**<h2>QUASI CONNECTING</h2>*/
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
+    public static boolean barrelQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean bellQuasiConnecting = false;
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
+    public static boolean bulbQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean commandBlockQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
+    public static boolean crafterQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
+    public static boolean dispenserQuasiConnecting = true;
+
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
+    public static boolean doorQuasiConnecting = false;
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean fenceGateQuasiConnecting = false;
@@ -283,6 +315,9 @@ public class DoormatSettings {
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean noteBlockQuasiConnecting = false;
+
+    @Rule( categories = { FEATURE, QC, DOORMAT } )
+    public static boolean pistonQuasiConnecting = true;
 
     @Rule( categories = { FEATURE, QC, DOORMAT } )
     public static boolean railQuasiConnecting = false;

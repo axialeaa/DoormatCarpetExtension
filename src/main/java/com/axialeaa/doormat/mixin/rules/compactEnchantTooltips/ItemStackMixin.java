@@ -2,6 +2,8 @@ package com.axialeaa.doormat.mixin.rules.compactEnchantTooltips;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.helpers.EnchantmentCarousel;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -15,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
 

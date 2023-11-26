@@ -5,3 +5,4 @@ accessible method net/minecraft/block/SpreadableBlock canSpread (Lnet/minecraft/
 accessible field net/minecraft/block/entity/JukeboxBlockEntity tickCount J
 accessible field net/minecraft/block/entity/JukeboxBlockEntity recordStartTick J
 accessible class net/minecraft/block/ComposterBlock$ComposterInventory
+accessible field net/minecraft/block/entity/BarrelBlockEntity inventory Lnet/minecraft/util/collection/DefaultedList;

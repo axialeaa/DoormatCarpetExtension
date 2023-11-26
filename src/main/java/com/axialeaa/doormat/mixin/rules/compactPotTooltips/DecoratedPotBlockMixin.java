@@ -3,6 +3,8 @@ package com.axialeaa.doormat.mixin.rules.compactPotTooltips;
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.DecoratedPotBlock;
 import net.minecraft.block.entity.DecoratedPotBlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -22,6 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collections;
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 @Mixin(DecoratedPotBlock.class)
 public class DecoratedPotBlockMixin {
 
@@ -44,17 +47,17 @@ public class DecoratedPotBlockMixin {
     private void compressAndRename(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options, CallbackInfo ci, @Local DecoratedPotBlockEntity.Sherds sherds) {
         if (DoormatSettings.compactPotTooltips.enabled()) {
             ci.cancel();
-            for (Item sherd : sherds.stream().distinct().toList()) {
-                int count = Collections.frequency(sherds.stream().toList(), sherd);
+            for (Item sherd : sherds.stream().distinct().toList()) { // iterates through a list of distinct items
+                int count = Collections.frequency(sherds.stream().toList(), sherd); // and finds the quantity of this item in the original list
                 if (DoormatSettings.compactPotTooltips == DoormatSettings.PotTooltipMode.IGNORE_BRICKS && sherd == Items.BRICK)
-                    continue; // if the sherd item is a brick and the rule says to ignore it, skip this iteration
+                    continue;
 
                 String translate = I18n.translate("pot." + sherd.getTranslationKey().replace("item.minecraft.", "") + ".compact");
                 tooltip.add(Text
                     .literal(count > 1 ?
                         translate + " x" + count :
                         translate) // add a numerical tag at the end if there are more than 1 of this type
-                    .formatted(Formatting.GRAY)); // set the colour
+                    .formatted(Formatting.GRAY));
             }
         }
     }

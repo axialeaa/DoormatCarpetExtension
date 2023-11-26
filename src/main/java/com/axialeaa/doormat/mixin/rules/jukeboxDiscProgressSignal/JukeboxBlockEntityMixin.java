@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(JukeboxBlockEntity.class)
 public abstract class JukeboxBlockEntityMixin implements SingleStackInventory {
 
-    @Shadow public abstract ItemStack getStack(int slot);
+    @Shadow public abstract ItemStack getStack();
     @Shadow protected abstract boolean isSongFinished(MusicDiscItem musicDisc);
 
     /**

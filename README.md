@@ -37,6 +37,31 @@ Beacons with their secondary effect set to regeneration can heal nearby tamed mo
 * Allowed options: `true`, `false`
 * Categories: `SURVIVAL`, `DOORMAT`
 
+## barrelItemDumping
+Barrels facing down will eject all of their contained items when opened.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `DOORMAT`
+
+## barrelQuasiConnecting
+Whether barrels can be quasi-powered when redstoneOpensBarrels is enabled.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `QC`, `DOORMAT`
+* Additional notes:
+  * DON'T GET CONFUSED ABOUT THIS RULE! Interactivity with redstone is not something barrels normally possess. This rule is simply here for inclusion with redstoneOpensBarrels, another rule in this mod!
+
+## barrelUpdateType
+The type(s) of update barrels emit when changing state, when redstoneOpensBarrels is enabled.
+* Type: `NeighbourUpdateMode`
+* Default value: `both`
+* Allowed options: `neither`, `block`, `shape`, `both`
+* Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+* Additional notes:
+  * DON'T GET CONFUSED ABOUT THIS RULE! Interactivity with redstone is not something barrels normally possess. This rule is simply here for inclusion with redstoneOpensBarrels, another rule in this mod!
+
 ## bellQuasiConnecting
 Whether bells can be quasi-powered.
 * Type: `Boolean`
@@ -46,6 +71,27 @@ Whether bells can be quasi-powered.
 
 ## bellUpdateType
 The type(s) of update bells emit when changing state.
+* Type: `NeighbourUpdateMode`
+* Default value: `both`
+* Allowed options: `neither`, `block`, `shape`, `both`
+* Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+
+## bulbOxidationStageSignal
+Comparators measure the oxidation stages of copper bulbs, instead of a binary output.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `DOORMAT`
+
+## bulbQuasiConnecting
+Whether copper bulbs can be quasi-powered.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `QC`, `DOORMAT`
+
+## bulbUpdateType
+The type(s) of update copper bulbs emit when changing state.
 * Type: `NeighbourUpdateMode`
 * Default value: `both`
 * Allowed options: `neither`, `block`, `shape`, `both`
@@ -148,6 +194,20 @@ Though marked as "Works As Intended", this rule technically fixes this bug: http
 * Additional notes:
   * Thanks to my friend [intricate](https://github.com/lntricate1) for critiquing my code and providing a formula to calculate explosion immunity on the fly <3
 
+## crafterQuasiConnecting
+Whether crafters can be quasi-powered.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `QC`, `DOORMAT`
+
+## crafterUpdateType
+The type(s) of update crafters emit when changing state.
+* Type: `NeighbourUpdateMode`
+* Default value: `both`
+* Allowed options: `neither`, `block`, `shape`, `both`
+* Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+
 ## deepslateDungeons
 Dungeons that generate below y = 0 will be made of cobbled deepslate instead of cobblestone.
 * Type: `Boolean`
@@ -187,12 +247,26 @@ Intended to be used in tandem with carpet's shulkerSpawningInEndCities.
 * Allowed options: `true`, `false`
 * Categories: `CREATIVE`, `SURVIVAL`, `DOORMAT`
 
+## dispenserQuasiConnecting
+Whether dispensers and droppers can be quasi-powered.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `QC`, `DOORMAT`
+
 ## dispenserUpdateType
 The type(s) of update dispensers and droppers emit when changing state.
 * Type: `NeighbourUpdateMode`
 * Default value: `both`
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+
+## doorQuasiConnecting
+Whether doors can be quasi-powered.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `QC`, `DOORMAT`
 
 ## doorUpdateType
 The type(s) of update doors emit when changing state.
@@ -202,13 +276,6 @@ The type(s) of update doors emit when changing state.
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
 * Additional notes:
   * Disabling shape updates affects the connection between the two halves of the door
-
-## dustTravelDownGlass
-Redstone dust can travel down glass blocks, like in Bedrock Edition.
-* Type: `boolean`
-* Default value: `false`
-* Allowed options: `true`, `false`
-* Categories: `FEATURE`, `PARITY`, `DOORMAT`
 
 ## fenceGateQuasiConnecting
 Whether fence gates can be quasi-powered.
@@ -385,6 +452,13 @@ The length of time in ticks it takes for a piston to fully extend or retract.
 * Additional notes:
   * Must be a number from 1 to 1200
 
+## pistonQuasiConnecting
+Whether pistons can be quasi-powered.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `QC`, `DOORMAT`
+
 ## pistonUpdateType
 The type(s) of update pistons emit when changing state.
 * Type: `NeighbourUpdateMode`
@@ -440,16 +514,32 @@ Ravagers can break plants, like in Bedrock Edition.
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `PARITY`, `DOORMAT`
 
+## reachAroundBridging
+Blocks can be placed by aiming in front of the block you're standing on, like in Bedrock Edition.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `CLIENT`, `PARITY`, `DOORMAT`
+
+## redstoneOpensBarrels
+Powering barrels with redstone forces them open.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `FEATURE`, `DOORMAT`
+* Additional notes:
+  * This can be used in tandem with barrelItemDumping to make auto-droppers, and can be customized fully with barrelQuasiConnecting and barrelUpdateType.
+
 ## renewableCobwebs
 Cave spider spawners generate cobwebs between nearby solid faces each spawn cycle.
-Cobwebs generate within a 9x9x9 cube centred on the spawner, forming only in block positions that have two or more supporting faces.
+Cobwebs generate within a 9x9x9 cube centred on the spawner (a 3x1x3 "ring" in the case of a trial spawner), forming only in block positions that have two or more supporting faces.
 The more supporting faces, the more likely the cobweb is to generate.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
 * Categories: `FEATURE`, `DOORMAT`
 * Additional notes:
-  * This makes me super happy to show you. This feature had a lot of planning and testing put behind it, and it measured my expertise in a really fascinating way. I hope you enjoy <3
+  * This makes me super happy to show you. This feature had a lot of planning and testing put behind it, and it measured my expertise in a really fascinating way. I really hope you enjoy <3
 
 ## renewableGildedBlackstone
 Blackstone adjacent to underwater magma blocks slowly becomes gilded over time.
@@ -485,13 +575,6 @@ Living entities can be collided with like boats.
 
 ## sporeBlossomDuplication
 Spore blossoms drop themselves when fertilized, the same way tall flowers do.
-* Type: `Boolean`
-* Default value: `false`
-* Allowed options: `true`, `false`
-* Categories: `FEATURE`, `DOORMAT`
-* 
-## stairDiodes
-Redstone dust can travel both up and down the full-square side(s) of stairs, but only up the other sides.
 * Type: `Boolean`
 * Default value: `false`
 * Allowed options: `true`, `false`
@@ -573,6 +656,13 @@ The type(s) of update trapdoors emit when changing state.
 * Default value: `shape`
 * Allowed options: `neither`, `block`, `shape`, `both`
 * Categories: `FEATURE`, `UPDATE`, `DOORMAT`
+
+## trialSpawnerSheepActivation
+Sheep activate trial spawners instead of players.
+* Type: `Boolean`
+* Default value: `false`
+* Allowed options: `true`, `false`
+* Categories: `CREATIVE`, `DOORMAT`
 
 ## zoglinsSpawnInPortals
 Zoglins have a chance of spawning inside overworld nether portals.

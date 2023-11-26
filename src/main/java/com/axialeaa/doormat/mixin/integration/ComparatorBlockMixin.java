@@ -23,9 +23,7 @@ public class ComparatorBlockMixin {
     @ModifyExpressionValue(method = "getPower", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean modifyBlockCheck(boolean original, World world, BlockPos pos, @Local(ordinal = 0) Direction direction) {
         Block blockBehind = world.getBlockState(pos.offset(direction)).getBlock();
-        return blockBehind instanceof BlockComparatorBehaviourInterface comparatorBehaviourInterface ?
-            original || comparatorBehaviourInterface.doormat$canReadThrough(blockBehind) :
-            original;
+        return original || blockBehind instanceof BlockComparatorBehaviourInterface BCBI && BCBI.doormat$canReadThrough(blockBehind);
     }
 
 }

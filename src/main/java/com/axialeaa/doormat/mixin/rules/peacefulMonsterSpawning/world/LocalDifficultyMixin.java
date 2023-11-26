@@ -1,6 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.world;
 
 import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.helpers.PeacefulMonsterSpawning;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -20,7 +21,7 @@ public class LocalDifficultyMixin {
      */
     @ModifyExpressionValue(method = "setLocalDifficulty", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;PEACEFUL:Lnet/minecraft/world/Difficulty;"))
     private Difficulty bypassPeacefulCheck(Difficulty original) {
-        return DoormatSettings.peacefulMonsterSpawning.enabled() ? null : original;
+        return PeacefulMonsterSpawning.bypassPeacefulCheck(original);
     }
 
     /**
@@ -38,7 +39,7 @@ public class LocalDifficultyMixin {
      */
     @WrapOperation(method = "setLocalDifficulty", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Difficulty;getId()I"))
     private int capAbovePeacefulId(Difficulty difficulty, Operation<Integer> original) {
-        return DoormatSettings.peacefulMonsterSpawning.enabled() ? Math.max(original.call(difficulty), 1) : original.call(difficulty);
+        return Math.max(original.call(difficulty), DoormatSettings.peacefulMonsterSpawning.enabled() ? 1 : 0);
     }
 
 }

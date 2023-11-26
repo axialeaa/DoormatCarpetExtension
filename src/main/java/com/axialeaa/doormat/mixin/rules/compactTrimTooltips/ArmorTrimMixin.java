@@ -2,6 +2,8 @@ package com.axialeaa.doormat.mixin.rules.compactTrimTooltips;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.trim.ArmorTrim;
@@ -17,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 @Mixin(ArmorTrim.class)
 public class ArmorTrimMixin {
 

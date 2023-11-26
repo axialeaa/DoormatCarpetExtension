@@ -16,9 +16,7 @@ public class RedstoneUpdateBehaviour {
      */
     public static boolean quasiConnectOn(boolean rule, World world, BlockPos pos) {
         boolean isPowered = world.isReceivingRedstonePower(pos);
-        return rule && CarpetSettings.quasiConnectivity != 0 ?
-            isPowered || QuasiConnectivity.hasQuasiSignal(world, pos) :
-            isPowered;
+        return isPowered || (QuasiConnectivity.hasQuasiSignal(world, pos) && rule && CarpetSettings.quasiConnectivity != 0);
     }
 
     /**

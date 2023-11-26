@@ -15,7 +15,7 @@ public class NetherPortalBlockMixin {
      */
     @ModifyExpressionValue(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Difficulty;getId()I"))
     private int capAbovePeacefulId(int original) {
-        return DoormatSettings.peacefulMonsterSpawning.enabled() ? Math.max(original, 1) : original;
+        return Math.max(original, DoormatSettings.peacefulMonsterSpawning.enabled() ? 1 : 0);
     }
 
 }

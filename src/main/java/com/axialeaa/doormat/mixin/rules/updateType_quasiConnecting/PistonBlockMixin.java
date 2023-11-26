@@ -2,16 +2,20 @@ package com.axialeaa.doormat.mixin.rules.updateType_quasiConnecting;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.helpers.RedstoneUpdateBehaviour;
+import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.Block;
 import net.minecraft.block.PistonBlock;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.RedstoneView;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(PistonBlock.class)
+@Mixin(value = PistonBlock.class, priority = 1500)
 public class PistonBlockMixin {
 
     @ModifyArg(method = "onSyncedBlockEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z", ordinal = 1))
@@ -27,6 +31,15 @@ public class PistonBlockMixin {
     @WrapWithCondition(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
     private boolean disableNeighborUpdates_move(World world, BlockPos pos, Block block) {
         return RedstoneUpdateBehaviour.neighborUpdateOn(DoormatSettings.pistonUpdateType);
+    }
+
+    /**
+     * This needs to be different because of carpet's modified quasi-connectivity logic.
+     */
+    @TargetHandler(mixin = "carpet.mixins.PistonBaseBlock_qcMixin", name = "carpet_checkQuasiSignal")
+    @WrapOperation(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target =  "Lcarpet/helpers/QuasiConnectivity;hasQuasiSignal(Lnet/minecraft/world/RedstoneView;Lnet/minecraft/util/math/BlockPos;)Z"))
+    private boolean carpet_hasQuasiSignal(RedstoneView world, BlockPos pos, Operation<Boolean> original) {
+        return DoormatSettings.pistonQuasiConnecting && original.call(world, pos);
     }
 
 }
