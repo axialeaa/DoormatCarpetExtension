@@ -1,6 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.growableSwampOakTrees;
 
 import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.block.DoormatSaplingGenerator;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.BlockState;
@@ -12,17 +13,11 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.Optional;
 
 @Mixin(SaplingBlock.class)
 public class SaplingBlockMixin {
-
-    @Unique private static final SaplingGenerator SWAMP_OAK_GENERATOR = new SaplingGenerator("swamp_oak", Optional.of(TreeConfiguredFeatures.SWAMP_OAK), Optional.empty(), Optional.empty());
 
     /**
      * @return a swamp oak tree if the rule is enabled, the sapling is oak and the biome is a swamp, otherwise a normal tree.
@@ -30,7 +25,7 @@ public class SaplingBlockMixin {
     @WrapOperation(method = "generate", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/SaplingGenerator;generate(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/world/gen/chunk/ChunkGenerator;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/random/Random;)Z"))
     protected boolean swampGenerate(SaplingGenerator generator, ServerWorld world, ChunkGenerator chunkGenerator, BlockPos pos, BlockState state, Random random, Operation<Boolean> original) {
         return DoormatSettings.growableSwampOakTrees && state.isOf(Blocks.OAK_SAPLING) && world.getBiome(pos).isIn(BiomeTags.ALLOWS_SURFACE_SLIME_SPAWNS) ?
-            SWAMP_OAK_GENERATOR.generate(world, chunkGenerator, pos, state, random) :
+            DoormatSaplingGenerator.SWAMP_OAK.generate(world, chunkGenerator, pos, state, random) :
             original.call(generator, world, chunkGenerator, pos, state, random);
     }
 

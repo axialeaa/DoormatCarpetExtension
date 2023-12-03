@@ -14,7 +14,7 @@ public class MobEntityMixin {
      */
     @ModifyExpressionValue(method = "checkDespawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/mob/MobEntity;isDisallowedInPeaceful()Z"))
     private boolean bypassPeacefulDespawnCheck(boolean original) {
-        return !DoormatSettings.peacefulMonsterSpawning.enabled() && original;
+        return original && !DoormatSettings.peacefulMonsterSpawning.enabled();
     }
 
 }

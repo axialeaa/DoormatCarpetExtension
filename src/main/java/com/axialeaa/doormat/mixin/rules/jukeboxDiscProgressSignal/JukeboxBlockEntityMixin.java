@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class JukeboxBlockEntityMixin implements SingleStackInventory {
 
     @Shadow public abstract ItemStack getStack();
-    @Shadow protected abstract boolean isSongFinished(MusicDiscItem musicDisc);
+    @Shadow protected abstract boolean isSongFinished(MusicDiscItem disc);
 
     /**
      * Updates adjacent comparators every tick for as long as the rule is enabled and the jukebox is playing a disc.
@@ -28,7 +28,7 @@ public abstract class JukeboxBlockEntityMixin implements SingleStackInventory {
     @Inject(method = "tick(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/entity/JukeboxBlockEntity;isPlayingRecord()Z"))
     private void updateComparatorsEachTick(World world, BlockPos pos, BlockState state, CallbackInfo ci) {
         Item item = this.getStack().getItem();
-        boolean finishedPlaying = item instanceof MusicDiscItem musicDisc && this.isSongFinished(musicDisc);
+        boolean finishedPlaying = item instanceof MusicDiscItem disc && isSongFinished(disc);
         if (DoormatSettings.jukeboxDiscProgressSignal && !finishedPlaying)
             world.updateComparators(pos, state.getBlock());
     }

@@ -1,8 +1,10 @@
 package com.axialeaa.doormat.mixin.rules.softInversion;
 
-import com.axialeaa.doormat.helpers.RedstoneUpdateBehaviour;
+import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.PistonBlock;
 import net.minecraft.block.WallRedstoneTorchBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -15,7 +17,10 @@ public class WallRedstoneTorchBlockMixin {
 
     @ModifyReturnValue(method = "shouldUnpower", at = @At("RETURN"))
     private boolean unpowerOnPistonExtend(boolean original, World world, BlockPos pos, @Local Direction direction) {
-        return RedstoneUpdateBehaviour.unpowerOnPistonExtended(original, world, pos, direction);
+        BlockPos blockPos = pos.offset(direction);
+        BlockState blockState = world.getBlockState(blockPos);
+        return DoormatSettings.softInversion && blockState.getBlock() instanceof PistonBlock ?
+            blockState.get(PistonBlock.EXTENDED) : original;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.renewableCobwebs;
 
-import com.axialeaa.doormat.helpers.CobwebGeneration;
+import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.util.CobwebGeneration;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.spawner.TrialSpawnerLogic;
 import net.minecraft.entity.Entity;
@@ -19,7 +20,8 @@ public class TrialSpawnerLogicMixin {
 
     @Inject(method = "trySpawnMob", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;spawnNewEntityAndPassengers(Lnet/minecraft/entity/Entity;)Z"))
     private void generateCobwebsOnSpawnCycle(ServerWorld world, BlockPos pos, CallbackInfoReturnable<Optional<UUID>> cir, @Local Entity storedEntity) {
-        CobwebGeneration.forBox(world, pos, storedEntity, 1, 0, 16);
+        if (DoormatSettings.renewableCobwebs)
+            CobwebGeneration.forBox(world, pos, storedEntity, 1, 0, 16);
     }
 
 }

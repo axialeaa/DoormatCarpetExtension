@@ -15,7 +15,7 @@ public class SpawnGroupMixin {
      */
     @ModifyReturnValue(method = "isPeaceful", at = @At("RETURN"))
     private boolean alwaysIsPeaceful(boolean original) {
-        return DoormatSettings.peacefulMonsterSpawning.enabled() || original;
+        return original || DoormatSettings.peacefulMonsterSpawning.enabled();
     }
 
 }

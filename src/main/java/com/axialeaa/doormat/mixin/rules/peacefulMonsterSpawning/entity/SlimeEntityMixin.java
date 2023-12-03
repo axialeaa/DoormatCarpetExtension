@@ -1,6 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.entity;
 
-import com.axialeaa.doormat.helpers.PeacefulMonsterSpawning;
+import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.helpers.PeacefulSpawningHelper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.entity.EntityType;
@@ -18,12 +19,12 @@ public class SlimeEntityMixin {
 
     @ModifyReturnValue(method = "canSpawn", at = {@At(value = "RETURN", ordinal = 0), @At(value = "RETURN", ordinal = 2)})
     private static boolean addSpawnCondition(boolean original, EntityType<SlimeEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return PeacefulMonsterSpawning.addPeacefulSpawnCondition(world, spawnReason, pos, original);
+        return PeacefulSpawningHelper.addSpawningCondition(world, spawnReason, pos, original);
     }
 
     @ModifyExpressionValue(method = "canSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty bypassPeacefulConversionCheck(Difficulty original) {
-        return PeacefulMonsterSpawning.bypassPeacefulCheck(original);
+        return PeacefulSpawningHelper.bypassCheck(original);
     }
 
 }

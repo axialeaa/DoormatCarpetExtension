@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.block;
 
-import com.axialeaa.doormat.helpers.PeacefulMonsterSpawning;
+import com.axialeaa.doormat.helpers.PeacefulSpawningHelper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.block.WitherSkullBlock;
 import net.minecraft.world.Difficulty;
@@ -15,7 +15,7 @@ public class WitherSkullBlockMixin {
      */
     @ModifyExpressionValue(method = {"onPlaced(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/SkullBlockEntity;)V", "canDispense"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty bypassPeacefulDespawnCheck(Difficulty original) {
-        return PeacefulMonsterSpawning.bypassPeacefulCheck(original);
+        return PeacefulSpawningHelper.bypassCheck(original);
     }
 
 }

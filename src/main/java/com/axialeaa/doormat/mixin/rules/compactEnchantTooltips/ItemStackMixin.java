@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.compactEnchantTooltips;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.EnchantmentCarousel;
+import com.axialeaa.doormat.helpers.EnchantmentCarouselHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -28,8 +28,8 @@ public class ItemStackMixin {
     private static void createCarousel(List<Text> tooltip, NbtList enchantments, CallbackInfo ci) {
         if (DoormatSettings.compactEnchantTooltips) {
             ci.cancel();
-            EnchantmentCarousel.listSize = enchantments.size(); // set the listSize variable to the length of the enchantment list
-            NbtCompound nbtCompound = enchantments.getCompound(EnchantmentCarousel.listIndex); // get the data of the enchantment at the index set via the helper class
+            EnchantmentCarouselHelper.LIST_SIZE = enchantments.size(); // set the listSize variable to the length of the enchantment list
+            NbtCompound nbtCompound = enchantments.getCompound(EnchantmentCarouselHelper.LIST_INDEX); // get the data of the enchantment at the index set via the helper class
             Registries.ENCHANTMENT.getOrEmpty(EnchantmentHelper.getIdFromNbt(nbtCompound)).ifPresent((enchantment) ->
                 tooltip.add(enchantment.getName(EnchantmentHelper.getLevelFromNbt(nbtCompound)))); // add the tooltip line based on this data
         }

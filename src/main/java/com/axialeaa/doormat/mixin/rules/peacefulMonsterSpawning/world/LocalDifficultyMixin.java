@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.world;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.PeacefulMonsterSpawning;
+import com.axialeaa.doormat.helpers.PeacefulSpawningHelper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -21,7 +21,7 @@ public class LocalDifficultyMixin {
      */
     @ModifyExpressionValue(method = "setLocalDifficulty", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;PEACEFUL:Lnet/minecraft/world/Difficulty;"))
     private Difficulty bypassPeacefulCheck(Difficulty original) {
-        return PeacefulMonsterSpawning.bypassPeacefulCheck(original);
+        return PeacefulSpawningHelper.bypassCheck(original);
     }
 
     /**

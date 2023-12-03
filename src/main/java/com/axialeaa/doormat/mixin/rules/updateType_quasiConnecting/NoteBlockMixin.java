@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.updateType_quasiConnecting;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.RedstoneUpdateBehaviour;
+import com.axialeaa.doormat.helpers.RedstoneHelper;
 import net.minecraft.block.NoteBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -20,7 +20,7 @@ public class NoteBlockMixin {
 
     @Redirect(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting(World world, BlockPos pos) {
-        return RedstoneUpdateBehaviour.quasiConnectOn(DoormatSettings.noteBlockQuasiConnecting, world, pos);
+        return RedstoneHelper.quasiConnectForRule(world, pos, DoormatSettings.noteBlockQuasiConnecting);
     }
 
 }

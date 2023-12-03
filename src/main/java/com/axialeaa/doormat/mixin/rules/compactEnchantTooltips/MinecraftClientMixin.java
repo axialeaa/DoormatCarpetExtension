@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rules.compactEnchantTooltips;
 
-import com.axialeaa.doormat.helpers.EnchantmentCarousel;
+import com.axialeaa.doormat.helpers.EnchantmentCarouselHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -14,14 +14,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
 @Mixin(MinecraftClient.class)
-public abstract class MinecraftClientMixin {
+public class MinecraftClientMixin {
 
     @Shadow @Nullable public ClientWorld world;
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void getCarouselTime(CallbackInfo ci) {
         if (this.world != null)
-            EnchantmentCarousel.tick(this.world.getTime());
+            EnchantmentCarouselHelper.carouselTick(this.world.getTime());
     }
 
 }

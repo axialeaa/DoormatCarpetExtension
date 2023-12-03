@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.updateType_quasiConnecting;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.RedstoneUpdateBehaviour;
+import com.axialeaa.doormat.helpers.RedstoneHelper;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -25,12 +25,12 @@ public class PistonBlockMixin {
 
     @WrapWithCondition(method = "onSyncedBlockEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbors(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V", ordinal = 0))
     private boolean disableNeighborUpdates_onSyncedBlockEvent(World world, BlockPos pos, Block block) {
-        return RedstoneUpdateBehaviour.neighborUpdateOn(DoormatSettings.pistonUpdateType);
+        return RedstoneHelper.neighbourUpdateForRule(DoormatSettings.pistonUpdateType);
     }
 
     @WrapWithCondition(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
     private boolean disableNeighborUpdates_move(World world, BlockPos pos, Block block) {
-        return RedstoneUpdateBehaviour.neighborUpdateOn(DoormatSettings.pistonUpdateType);
+        return RedstoneHelper.neighbourUpdateForRule(DoormatSettings.pistonUpdateType);
     }
 
     /**
@@ -38,8 +38,8 @@ public class PistonBlockMixin {
      */
     @TargetHandler(mixin = "carpet.mixins.PistonBaseBlock_qcMixin", name = "carpet_checkQuasiSignal")
     @WrapOperation(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target =  "Lcarpet/helpers/QuasiConnectivity;hasQuasiSignal(Lnet/minecraft/world/RedstoneView;Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean carpet_hasQuasiSignal(RedstoneView world, BlockPos pos, Operation<Boolean> original) {
-        return DoormatSettings.pistonQuasiConnecting && original.call(world, pos);
+    private boolean disableCarpetQC(RedstoneView world, BlockPos pos, Operation<Boolean> original) {
+        return original.call(world, pos) && DoormatSettings.pistonQuasiConnecting;
     }
 
 }

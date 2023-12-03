@@ -24,8 +24,8 @@ public class DispenserBlockMixin {
      */
     @TargetHandler(mixin = "carpet.mixins.DispenserBlock_qcMixin", name = "carpet_hasQuasiSignal")
     @WrapOperation(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target =  "Lcarpet/helpers/QuasiConnectivity;hasQuasiSignal(Lnet/minecraft/world/RedstoneView;Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean carpet_hasQuasiSignal(RedstoneView world, BlockPos pos, Operation<Boolean> original) {
-        return DoormatSettings.dispenserQuasiConnecting && original.call(world, pos);
+    private boolean disableCarpetQC(RedstoneView world, BlockPos pos, Operation<Boolean> original) {
+        return original.call(world, pos) && DoormatSettings.dispenserQuasiConnecting;
     }
 
 }

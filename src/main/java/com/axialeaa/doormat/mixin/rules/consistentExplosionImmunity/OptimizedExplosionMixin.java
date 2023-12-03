@@ -2,7 +2,8 @@ package com.axialeaa.doormat.mixin.rules.consistentExplosionImmunity;
 
 import carpet.helpers.OptimizedExplosion;
 import carpet.mixins.ExplosionAccessor;
-import com.axialeaa.doormat.helpers.ConsistentExplosionImmunity;
+import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.helpers.ConsistentExplosionImmunityHelper;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
@@ -15,7 +16,7 @@ public class OptimizedExplosionMixin {
 
     @WrapWithCondition(method = "doExplosionA", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private static boolean disableDamage(Entity entity, DamageSource source, float amount, @Local ExplosionAccessor eAccess) {
-        return ConsistentExplosionImmunity.disableDamageIfResistant(entity, eAccess.getRadius());
+        return DoormatSettings.consistentExplosionImmunity && ConsistentExplosionImmunityHelper.shouldDamage(entity, eAccess.getRadius());
     }
 
 }

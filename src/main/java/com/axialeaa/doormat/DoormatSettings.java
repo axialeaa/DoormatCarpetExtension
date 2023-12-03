@@ -16,9 +16,10 @@ public class DoormatSettings {
     public static final String DOORMAT = "doormat";
     public static final String PARITY = "parity";
     public static final String TOOLTIP = "tooltip";
-    public static final String UPDATE = "update";
+    public static final String UPDATE_TYPE = "update_type";
     public static final String QC = "qc";
     public static final String APRIL_FOOLS = "april_fools";
+    public static final String RETRO = "retro";
 
     /**<h1>VALIDATORS</h1>*/
 
@@ -62,13 +63,13 @@ public class DoormatSettings {
     public enum ChiseledBookshelfSignalMode {
         INTERACTION, FULLNESS, FULLNESS_LERPED
     }
-    public enum NeighbourUpdateMode {
+    public enum UpdateMode {
         NEITHER(0),
         BLOCK(1),
         SHAPE(2),
         BOTH(3);
         private final int flags;
-        NeighbourUpdateMode(int flags) {
+        UpdateMode(int flags) {
             this.flags = flags;
         }
         public int getFlags() {
@@ -123,6 +124,9 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, EXPERIMENTAL, BUGFIX, DOORMAT } )
     public static boolean consistentExplosionImmunity = false;
 
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean cryingObsidianPortalFrames = false;
+
     @Rule( categories = { SURVIVAL, FEATURE, DOORMAT } )
     public static boolean deepslateDungeons = false;
 
@@ -137,6 +141,9 @@ public class DoormatSettings {
 
     @Rule( categories = { CREATIVE, SURVIVAL, DOORMAT } )
     public static boolean disableShulkerReproduction = false;
+
+    @Rule( options = { "0.0", "0.075" }, validators = Validators.Probablity.class, strict = false, categories = { FEATURE, DOORMAT })
+    public static double fastLeafDecay = 0.0;
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean fireAspectLighting = false;
@@ -153,7 +160,7 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean huskWashing = false; // technically renewable sand; renamed to avoid conflict with other carpet mods
 
-    @Rule( options = { "3", "7" }, validators = { Validators.NonNegativeNumber.class }, strict = false, categories = { SURVIVAL, DOORMAT } )
+    @Rule( options = { "3", "7" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int insomniaDaysSinceSlept = 3;
 
     @Rule( categories = { FEATURE, DOORMAT } )
@@ -207,8 +214,8 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean renewableSporeBlossoms = false;
 
-    @Rule( categories = { CREATIVE, DOORMAT } )
-    public static boolean trialSpawnerSheepActivation = false;
+    @Rule( categories = { RETRO, DOORMAT } )
+    public static boolean retroRepeaterDelay = false;
 
     @Rule( categories = { FEATURE, PARITY, DOORMAT } )
     public static boolean softInversion = false;
@@ -234,52 +241,55 @@ public class DoormatSettings {
     @Rule( options = { "60", "40" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { FEATURE, DOORMAT } )
     public static int torchBurnoutTime = 60;
 
+    @Rule( categories = { CREATIVE, DOORMAT } )
+    public static boolean trialSpawnerSheepActivation = false;
+
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean zoglinsSpawnInPortals = false;
 
     /** <h2>UPDATE TYPES</h2> */
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode barrelUpdateType = NeighbourUpdateMode.BOTH;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode barrelUpdateType = UpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode bellUpdateType = NeighbourUpdateMode.BOTH;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode bellUpdateType = UpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode bulbUpdateType = NeighbourUpdateMode.BOTH;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode bulbUpdateType = UpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode crafterUpdateType = NeighbourUpdateMode.SHAPE;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode crafterUpdateType = UpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode dispenserUpdateType = NeighbourUpdateMode.SHAPE;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode dispenserUpdateType = UpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode doorUpdateType = NeighbourUpdateMode.SHAPE;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode doorUpdateType = UpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode fenceGateUpdateType = NeighbourUpdateMode.SHAPE;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode fenceGateUpdateType = UpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode hopperUpdateType = NeighbourUpdateMode.SHAPE;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode hopperUpdateType = UpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode lampUpdateType = NeighbourUpdateMode.SHAPE;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode lampUpdateType = UpdateMode.SHAPE;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode noteBlockUpdateType = NeighbourUpdateMode.BOTH;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode noteBlockUpdateType = UpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode pistonUpdateType = NeighbourUpdateMode.BOTH;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode pistonUpdateType = UpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode railUpdateType = NeighbourUpdateMode.BOTH;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode railUpdateType = UpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode tntUpdateType = NeighbourUpdateMode.BOTH;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode tntUpdateType = UpdateMode.BOTH;
 
-    @Rule( categories = { FEATURE, UPDATE, DOORMAT } )
-    public static NeighbourUpdateMode trapdoorUpdateType = NeighbourUpdateMode.SHAPE;
+    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
+    public static UpdateMode trapdoorUpdateType = UpdateMode.SHAPE;
 
     /**<h2>QUASI CONNECTING</h2>*/
 

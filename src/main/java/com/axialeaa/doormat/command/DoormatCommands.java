@@ -44,6 +44,7 @@ public class DoormatCommands {
     }
 
     public static class RandomTickCommand {
+
         /**
          * @param source the command source data
          * @param pos the position of the block the command targets
@@ -63,6 +64,7 @@ public class DoormatCommands {
             }
             else throw new SimpleCommandExceptionType(Text.translatable("carpet.command.randomTick.failed")).create();
         }
+
     }
 
 }

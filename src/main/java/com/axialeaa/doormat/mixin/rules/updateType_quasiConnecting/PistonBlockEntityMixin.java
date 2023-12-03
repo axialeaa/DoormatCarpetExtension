@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.updateType_quasiConnecting;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.RedstoneUpdateBehaviour;
+import com.axialeaa.doormat.helpers.RedstoneHelper;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.PistonBlockEntity;
@@ -26,12 +26,12 @@ public class PistonBlockEntityMixin {
 
     @WrapWithCondition(method = "finish", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbor(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;Lnet/minecraft/util/math/BlockPos;)V", ordinal = 0))
     private boolean disableNeighborUpdates_finish(World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos) {
-        return RedstoneUpdateBehaviour.neighborUpdateOn(DoormatSettings.pistonUpdateType);
+        return RedstoneHelper.neighbourUpdateForRule(DoormatSettings.pistonUpdateType);
     }
 
     @WrapWithCondition(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbor(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;Lnet/minecraft/util/math/BlockPos;)V", ordinal = 0))
     private static boolean disableNeighborUpdates_tick(World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos) {
-        return RedstoneUpdateBehaviour.neighborUpdateOn(DoormatSettings.pistonUpdateType);
+        return RedstoneHelper.neighbourUpdateForRule(DoormatSettings.pistonUpdateType);
     }
 
 }

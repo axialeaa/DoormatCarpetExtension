@@ -1,6 +1,7 @@
 package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.entity;
 
-import com.axialeaa.doormat.helpers.PeacefulMonsterSpawning;
+import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.helpers.PeacefulSpawningHelper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.passive.VillagerEntity;
@@ -16,7 +17,7 @@ public class Pig_VillagerEntityMixin {
      */
     @ModifyExpressionValue(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty bypassPeacefulConversionCheck(Difficulty original) {
-        return PeacefulMonsterSpawning.bypassPeacefulCheck(original);
+        return PeacefulSpawningHelper.bypassCheck(original);
     }
 
 }

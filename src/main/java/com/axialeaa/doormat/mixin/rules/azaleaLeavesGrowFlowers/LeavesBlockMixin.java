@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(LeavesBlock.class)
-public abstract class LeavesBlockMixin implements Fertilizable {
+public class LeavesBlockMixin implements Fertilizable {
 
     @Unique
     private boolean isRuleIsLeaves(BlockState state) {

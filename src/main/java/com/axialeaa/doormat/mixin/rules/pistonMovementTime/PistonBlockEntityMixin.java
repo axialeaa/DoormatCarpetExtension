@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class PistonBlockEntityMixin {
 
     /**
-     * @return the distance moved per tick in blocks.
+     * @return the speed of the arm in blocks per tick.
      */
     @ModifyConstant(method = "tick", constant = @Constant(floatValue = 0.5F))
     private static float adjustTiming(float constant) {

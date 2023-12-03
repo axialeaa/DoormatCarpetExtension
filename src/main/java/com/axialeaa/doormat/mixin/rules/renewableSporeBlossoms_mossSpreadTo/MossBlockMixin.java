@@ -39,8 +39,8 @@ public class MossBlockMixin {
 
     /**
      * Due to the changes in the above handler method, we need to re-add the "air-above" check to the moss patch feature.
+     * @implNote This throws a bunch of errors, but that's just MCDev being silly. It works fine.
      */
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @WrapWithCondition(method = "grow", slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/world/gen/feature/UndergroundConfiguredFeatures;MOSS_PATCH_BONEMEAL:Lnet/minecraft/registry/RegistryKey;", opcode = Opcodes.GETSTATIC)), at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V", ordinal = 0))
     private boolean rewrapMossPatchFeature(Optional<?> optional, Consumer<?> consumer, ServerWorld world, Random random, BlockPos pos, BlockState state) {
         return world.getBlockState(pos.up()).isAir();
@@ -58,8 +58,8 @@ public class MossBlockMixin {
     }
 
     @Unique
-    private void generateAboveOnCondition(boolean condition, RegistryKey<ConfiguredFeature<?, ?>> feature, ServerWorld world, Random random, BlockPos pos) {
-        if (condition && world.getBlockState(pos.up()).isAir())
+    private void generateAboveOnCondition(boolean rule, RegistryKey<ConfiguredFeature<?, ?>> feature, ServerWorld world, Random random, BlockPos pos) {
+        if (rule && world.getBlockState(pos.up()).isAir())
             world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap(registry ->
                 registry.getEntry(feature)).ifPresent(reference ->
                 reference.value().generate(world, world.getChunkManager().getChunkGenerator(), random, pos.up()));
