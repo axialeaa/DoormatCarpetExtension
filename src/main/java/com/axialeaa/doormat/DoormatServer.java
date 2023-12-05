@@ -3,8 +3,13 @@ package com.axialeaa.doormat;
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
 import carpet.utils.Translations;
-import com.axialeaa.doormat.command.DoormatCommands;
+import com.axialeaa.doormat.command.QuasiConnectivityCommand;
+import com.axialeaa.doormat.command.RandomTickCommand;
+import com.axialeaa.doormat.command.UpdateTypeCommand;
+import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.server.command.ServerCommandSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,13 +24,19 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	@Override
 	public void onInitialize() {
 		CarpetServer.manageExtension(new DoormatServer());
-		DoormatCommands.registerCommands();
 		LOGGER.info(MODNAME + " initialized. Wipe your feet!");
 	}
 
 	@Override
 	public void onGameStarted() {
 		CarpetServer.settingsManager.parseSettingsClass(DoormatSettings.class);
+	}
+
+	@Override
+	public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandBuildContext) {
+		RandomTickCommand.register(dispatcher);
+		QuasiConnectivityCommand.register(dispatcher);
+		UpdateTypeCommand.register(dispatcher);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
-package com.axialeaa.doormat.mixin.rules.updateType_quasiConnecting;
+package com.axialeaa.doormat.mixin.redstone_rules.update_type;
 
-import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.RedstoneHelper;
+import com.axialeaa.doormat.util.UpdateTypeRules;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.TntBlock;
@@ -17,19 +16,13 @@ public class TntBlockMixin {
 
     @Redirect(method = { "onBlockAdded", "neighborUpdate", "onProjectileHit" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
     private boolean changeUpdateType(World world, BlockPos pos, boolean move) {
-        return world.setBlockState(pos, Blocks.AIR.getDefaultState(), DoormatSettings.tntUpdateType.getFlags());
+        return world.setBlockState(pos, Blocks.AIR.getDefaultState(), UpdateTypeRules.ruleValues.get(UpdateTypeRules.TNT).getFlags());
         // reconstructing the function of removeBlock() is necessary here, because neighbor updates are intrinsic to that method
     }
 
     @ModifyArg(method = "onUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int changeUpdateType_onUse(int flags) {
-        return DoormatSettings.tntUpdateType.getFlags() | Block.REDRAW_ON_MAIN_THREAD;
+        return UpdateTypeRules.ruleValues.get(UpdateTypeRules.TNT).getFlags() | Block.REDRAW_ON_MAIN_THREAD;
     }
-
-    @Redirect(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean allowQuasiConnecting(World world, BlockPos pos) {
-        return RedstoneHelper.quasiConnectForRule(world, pos, DoormatSettings.tntQuasiConnecting);
-    }
-
 
 }

@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.2-SNAPSHOT'
+	id 'fabric-loom' version '1.4-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -30,11 +30,6 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// Necessary for the CommandRegistrationCallback interface
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	// MixinExtras
-	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.2.0")))
 	// MixinSquared
 	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.1")))
 

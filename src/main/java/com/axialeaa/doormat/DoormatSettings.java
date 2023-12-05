@@ -16,8 +16,6 @@ public class DoormatSettings {
     public static final String DOORMAT = "doormat";
     public static final String PARITY = "parity";
     public static final String TOOLTIP = "tooltip";
-    public static final String UPDATE_TYPE = "update_type";
-    public static final String QC = "qc";
     public static final String APRIL_FOOLS = "april_fools";
     public static final String RETRO = "retro";
 
@@ -62,19 +60,6 @@ public class DoormatSettings {
     }
     public enum ChiseledBookshelfSignalMode {
         INTERACTION, FULLNESS, FULLNESS_LERPED
-    }
-    public enum UpdateMode {
-        NEITHER(0),
-        BLOCK(1),
-        SHAPE(2),
-        BOTH(3);
-        private final int flags;
-        UpdateMode(int flags) {
-            this.flags = flags;
-        }
-        public int getFlags() {
-            return flags;
-        }
     }
 
     /**<h1>RULES</h1>*/
@@ -247,101 +232,13 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean zoglinsSpawnInPortals = false;
 
-    /** <h2>UPDATE TYPES</h2> */
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode barrelUpdateType = UpdateMode.BOTH;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode bellUpdateType = UpdateMode.BOTH;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode bulbUpdateType = UpdateMode.BOTH;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode crafterUpdateType = UpdateMode.SHAPE;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode dispenserUpdateType = UpdateMode.SHAPE;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode doorUpdateType = UpdateMode.SHAPE;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode fenceGateUpdateType = UpdateMode.SHAPE;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode hopperUpdateType = UpdateMode.SHAPE;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode lampUpdateType = UpdateMode.SHAPE;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode noteBlockUpdateType = UpdateMode.BOTH;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode pistonUpdateType = UpdateMode.BOTH;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode railUpdateType = UpdateMode.BOTH;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode tntUpdateType = UpdateMode.BOTH;
-
-    @Rule( categories = { FEATURE, UPDATE_TYPE, DOORMAT } )
-    public static UpdateMode trapdoorUpdateType = UpdateMode.SHAPE;
-
-    /**<h2>QUASI CONNECTING</h2>*/
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean barrelQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean bellQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean bulbQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean commandBlockQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean crafterQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean dispenserQuasiConnecting = true;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean doorQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean fenceGateQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean hopperQuasiConnecting = false;
-    
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean lampQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean noteBlockQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean pistonQuasiConnecting = true;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean railQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean structureBlockQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean tntQuasiConnecting = false;
-
-    @Rule( categories = { FEATURE, QC, DOORMAT } )
-    public static boolean trapdoorQuasiConnecting = false;
-
     /**<h2>COMMANDS</h2>*/
+
+    @Rule( categories = { COMMAND, DOORMAT } )
+    public static String commandQC = "true";
+
+    @Rule( categories = { COMMAND, DOORMAT } )
+    public static String commandUpdateType = "true";
 
     @Rule( categories = { COMMAND, DOORMAT } )
     public static String commandRandomTick = "true";
