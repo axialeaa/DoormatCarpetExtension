@@ -13,7 +13,7 @@ For more information and a list of rules, please check out the [Doormat wiki](ht
 ***
 
 ### Getting Started
-Doormat depends on Carpet being installed, and due to the use of `CommandRegistrationCallback`, you will need to download [Fabric API](https://modrinth.com/mod/fabric-api). Once you have, simply drag Carpet, Fabric API and Doormat into your Fabric mods folder. If you're playing on a multiplayer server, you'll need to have these 3 mods installed on both the server and client sides.
+Once you have downloaded [Carpet](https://github.com/gnembon/fabric-carpet), simply drag Carpet and Doormat into your Fabric mods folder. If you're playing on a multiplayer server, you'll need to have these 3 mods installed on both the server and client sides.
 ***
 
 ### More Extensions
