@@ -4,12 +4,12 @@ import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.util.ConfigFile;
-import com.axialeaa.doormat.util.UpdateTypeRules;
+import com.axialeaa.doormat.util.RedstoneRule;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 
-import static com.axialeaa.doormat.util.UpdateTypeRules.*;
+import static com.axialeaa.doormat.util.RedstoneRule.*;
 import static net.minecraft.command.CommandSource.suggestMatching;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -22,7 +22,7 @@ public class UpdateTypeCommand {
         dispatcher.register(literal(ALIAS)
             .requires(player -> CommandHelper.canUseCommand(player, DoormatSettings.commandUpdateType))
             .then(argument("component", StringArgumentType.word())
-                .suggests((ctx, builder) -> suggestMatching(UpdateTypeRules.getCommandSuggestions(), builder))
+                .suggests((ctx, builder) -> suggestMatching(RedstoneRule.getUpdateTypeCommandSuggestions(), builder))
                 .executes(ctx -> UpdateTypeCommand.get(
                     ctx.getSource(),
                     StringArgumentType.getString(ctx, "component"))
@@ -45,16 +45,26 @@ public class UpdateTypeCommand {
     }
 
     /**
-     * Assigns a new enum value to the entered-in redstone component's update type hashmap, defined in {@link UpdateTypeRules}.
+     * Assigns a new enum value to the entered-in redstone component's update type hashmap, defined in {@link RedstoneRule}.
      */
     private static int set(ServerCommandSource source, String key, String input) {
-        UpdateTypeRules component = ruleKeys.get(key);
+        if (!updateTypeKeys.containsKey(key)) {
+            Messenger.m(source, "r \"" + key + "\" is not a valid component!");
+            return 0;
+        }
+
+        if (!UpdateTypes.keys.containsKey(input)) {
+            Messenger.m(source, "r \"" + input + "\" is not a valid update type!");
+            return 0;
+        }
+
+        RedstoneRule component = updateTypeKeys.get(key);
         UpdateTypes enumInput = UpdateTypes.keys.get(input);
-        // Commands can't take in enum entries, so we find the entry corresponding to the string using the update type's own hashmap.
+        // Commands can't take in enum constants, so we find the constant corresponding to the string using the update type's own hashmap.
         // There are a lot of hashmaps in this implementation. I apologise.
 
-        if (ruleValues.get(component) != enumInput) { // If the value assigned to the component via the values hashmap is not the same as the inputted argument...
-            ruleValues.put(component, enumInput);
+        if (updateTypeValues.get(component) != enumInput) { // If the value assigned to the component via the values hashmap is not the same as the inputted argument...
+            updateTypeValues.put(component, enumInput);
             Messenger.m(source, "w Set " + component.getPrettyName() + " update type to " + enumInput);
             ConfigFile.save(source.getServer());
             return 1;
@@ -66,13 +76,18 @@ public class UpdateTypeCommand {
     }
 
     /**
-     * Finds the value assigned to the entered-in redstone component's update type hashmap, defined in {@link UpdateTypeRules}.
+     * Finds the value assigned to the entered-in redstone component's update type hashmap, defined in {@link RedstoneRule}.
      */
     private static int get(ServerCommandSource source, String key) {
-        UpdateTypeRules component = ruleKeys.get(key);
-        UpdateTypes value = ruleValues.get(component);
+        if (!updateTypeKeys.containsKey(key)) {
+            Messenger.m(source, "r \"" + key + "\" is not a valid component!");
+            return 0;
+        }
 
-        Messenger.m(source, "w " + component.getPrettyName() + " update type is set to " + value + (value == component.getDefaultValue() ? " (default value)" : " (modified value)"));
+        RedstoneRule component = updateTypeKeys.get(key);
+        UpdateTypes value = updateTypeValues.get(component);
+
+        Messenger.m(source, "w " + component.getPrettyName() + " update type is set to " + value + (value == component.getDefaultUpdateTypeValue() ? " (default value)" : " (modified value)"));
         return 1;
     }
 
@@ -82,9 +97,9 @@ public class UpdateTypeCommand {
     private static int reset(ServerCommandSource source) {
         boolean bl = false; // Define a new boolean
         StringBuilder sb = new StringBuilder(); // Create a string builder which will be used for creating a list of modified components ("Bell, Crafter, Dispenser and Dropper, Trapdoor")
-        for (UpdateTypeRules component : UpdateTypeRules.values()) // Iterate through a list of all enum entries...
-            if (ruleValues.get(component) != component.getDefaultValue()) { // If the value has been modified...
-                ruleValues.put(component, component.getDefaultValue()); // Set it to the default value
+        for (RedstoneRule component : RedstoneRule.values()) // Iterate through a list of all enum constants...
+            if (updateTypeValues.get(component) != component.getDefaultUpdateTypeValue()) { // If the value has been modified...
+                updateTypeValues.put(component, component.getDefaultUpdateTypeValue()); // Set it to the default value
                 if (bl)
                     sb.append(", ");
                 sb.append(component.getPrettyName());

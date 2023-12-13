@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.redstone_rules.update_type;
 
 import com.axialeaa.doormat.helpers.RedstoneRuleHelper;
-import com.axialeaa.doormat.util.UpdateTypeRules;
+import com.axialeaa.doormat.util.RedstoneRule;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.block.Block;
 import net.minecraft.block.PoweredRailBlock;
@@ -16,12 +16,12 @@ public class PoweredRailBlockMixin {
 
     @ModifyArg(method = "updateBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int changeUpdateType(int flags) {
-        return UpdateTypeRules.ruleValues.get(UpdateTypeRules.RAIL).getFlags();
+        return RedstoneRuleHelper.getRuleFlags(RedstoneRule.RAIL);
     }
 
     @WrapWithCondition(method = "updateBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V", ordinal = 0))
     private boolean disableNeighborUpdates(World world, BlockPos pos, Block block) {
-        return RedstoneRuleHelper.neighbourUpdateForRule(UpdateTypeRules.RAIL);
+        return RedstoneRuleHelper.shouldUpdateNeighbours(RedstoneRule.RAIL);
     }
 
 }

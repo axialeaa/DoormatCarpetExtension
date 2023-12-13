@@ -8,8 +8,7 @@ import com.axialeaa.doormat.command.QuasiConnectivityCommand;
 import com.axialeaa.doormat.command.RandomTickCommand;
 import com.axialeaa.doormat.command.UpdateTypeCommand;
 import com.axialeaa.doormat.util.ConfigFile;
-import com.axialeaa.doormat.util.QuasiConnectivityRules;
-import com.axialeaa.doormat.util.UpdateTypeRules;
+import com.axialeaa.doormat.util.RedstoneRule;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.command.CommandRegistryAccess;
@@ -67,13 +66,14 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	 */
 	public static void amendKeysMapsForRule(ServerCommandSource serverCommandSource, CarpetRule<?> currentRuleState, String originalUserTest) {
 		boolean settingState = currentRuleState.settingsManager().getCarpetRule("redstoneOpensBarrels").value().equals(true);
+		String key = RedstoneRule.BARREL.getKey();
 		if (settingState) {
-			QuasiConnectivityRules.ruleKeys.put(QuasiConnectivityRules.BARREL.getKey(), QuasiConnectivityRules.BARREL);
-			UpdateTypeRules.ruleKeys.put(UpdateTypeRules.BARREL.getKey(), UpdateTypeRules.BARREL);
+			RedstoneRule.qcKeys.put(key, RedstoneRule.BARREL);
+			RedstoneRule.updateTypeKeys.put(key, RedstoneRule.BARREL);
 		}
 		else {
-			QuasiConnectivityRules.ruleKeys.remove(QuasiConnectivityRules.BARREL.getKey());
-			UpdateTypeRules.ruleKeys.remove(UpdateTypeRules.BARREL.getKey());
+			RedstoneRule.qcKeys.remove(key);
+			RedstoneRule.updateTypeKeys.remove(key);
 		}
 	}
 

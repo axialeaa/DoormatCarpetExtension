@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.redstone_rules.quasiconnectivity;
 
 import com.axialeaa.doormat.helpers.RedstoneRuleHelper;
-import com.axialeaa.doormat.util.QuasiConnectivityRules;
+import com.axialeaa.doormat.util.RedstoneRule;
 import net.minecraft.block.PoweredRailBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -14,12 +14,12 @@ public class PoweredRailBlockMixin {
 
     @Redirect(method = "isPoweredByOtherRails(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;ZILnet/minecraft/block/enums/RailShape;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting_isPoweredByOtherRails(World world, BlockPos pos) {
-        return RedstoneRuleHelper.quasiConnectForRule(world, pos, QuasiConnectivityRules.RAIL);
+        return RedstoneRuleHelper.quasiConnectForRule(world, pos, RedstoneRule.RAIL);
     }
 
     @Redirect(method = "updateBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting_updateBlockState(World world, BlockPos pos) {
-        return RedstoneRuleHelper.quasiConnectForRule(world, pos, QuasiConnectivityRules.RAIL);
+        return RedstoneRuleHelper.quasiConnectForRule(world, pos, RedstoneRule.RAIL);
     }
 
 }

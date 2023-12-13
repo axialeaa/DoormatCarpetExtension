@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.redstone_rules.quasiconnectivity;
 
-import com.axialeaa.doormat.util.QuasiConnectivityRules;
+import com.axialeaa.doormat.util.RedstoneRule;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -20,7 +20,7 @@ public class DispenserBlockMixin {
     @TargetHandler(mixin = "carpet.mixins.DispenserBlock_qcMixin", name = "carpet_hasQuasiSignal")
     @WrapOperation(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target =  "Lcarpet/helpers/QuasiConnectivity;hasQuasiSignal(Lnet/minecraft/world/RedstoneView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean disableCarpetQC(RedstoneView world, BlockPos pos, Operation<Boolean> original) {
-        return original.call(world, pos) && QuasiConnectivityRules.ruleValues.get(QuasiConnectivityRules.DISPENSER);
+        return original.call(world, pos) && RedstoneRule.qcValues.get(RedstoneRule.DISPENSER);
     }
 
 }

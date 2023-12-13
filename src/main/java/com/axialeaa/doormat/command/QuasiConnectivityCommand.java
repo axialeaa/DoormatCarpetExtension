@@ -4,13 +4,13 @@ import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.util.ConfigFile;
-import com.axialeaa.doormat.util.QuasiConnectivityRules;
+import com.axialeaa.doormat.util.RedstoneRule;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 
-import static com.axialeaa.doormat.util.QuasiConnectivityRules.*;
+import static com.axialeaa.doormat.util.RedstoneRule.*;
 import static net.minecraft.command.CommandSource.suggestMatching;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -23,7 +23,7 @@ public class QuasiConnectivityCommand {
         dispatcher.register(literal(ALIAS)
             .requires(player -> CommandHelper.canUseCommand(player, DoormatSettings.commandQC))
             .then(argument("component", StringArgumentType.word())
-                .suggests((ctx, builder) -> suggestMatching(QuasiConnectivityRules.getCommandSuggestions(), builder))
+                .suggests((ctx, builder) -> suggestMatching(RedstoneRule.getQCCommandSuggestions(), builder))
                 .executes(ctx -> QuasiConnectivityCommand.get(
                     ctx.getSource(),
                     StringArgumentType.getString(ctx, "component"))
@@ -45,14 +45,19 @@ public class QuasiConnectivityCommand {
     }
 
     /**
-     * Assigns a new boolean value to the entered-in redstone component's quasi-connectivity hashmap, defined in {@link QuasiConnectivityRules}.
+     * Assigns a new boolean value to the entered-in redstone component's quasi-connectivity hashmap, defined in {@link RedstoneRule}.
      */
     private static int set(ServerCommandSource source, String key, boolean input) {
-        QuasiConnectivityRules component = ruleKeys.get(key);
-        // Get the enum entry assigned to the specified selection via the hashmap.
+        if (!qcKeys.containsKey(key)) {
+            Messenger.m(source, "r \"" + key + "\" is not a valid component!");
+            return 0;
+        }
 
-        if (ruleValues.get(component) != input) { // If the value assigned to the component via the values hashmap is not the same as the inputted argument...
-            ruleValues.put(component, input);
+        RedstoneRule component = qcKeys.get(key);
+        // Get the enum constant assigned to the specified selection via the hashmap.
+
+        if (qcValues.get(component) != input) { // If the value assigned to the component via the values hashmap is not the same as the inputted argument...
+            qcValues.put(component, input);
             Messenger.m(source, "w Set " + component.getPrettyName() + " quasi-connectivity to " + input);
             ConfigFile.save(source.getServer());
             return 1;
@@ -64,13 +69,18 @@ public class QuasiConnectivityCommand {
     }
 
     /**
-     * Finds the value assigned to the entered-in redstone component's quasi-connectivity hashmap, defined in {@link QuasiConnectivityRules}.
+     * Finds the value assigned to the entered-in redstone component's quasi-connectivity hashmap, defined in {@link RedstoneRule}.
      */
     private static int get(ServerCommandSource source, String key) {
-        QuasiConnectivityRules component = ruleKeys.get(key);
-        boolean value = ruleValues.get(component);
+        if (!qcKeys.containsKey(key)) {
+            Messenger.m(source, "r \"" + key + "\" is not a valid component!");
+            return 0;
+        }
 
-        Messenger.m(source, "w " + component.getPrettyName() + " quasi-connectivity is set to " + value + (value == component.getDefaultValue() ? " (default value)" : " (modified value)"));
+        RedstoneRule component = qcKeys.get(key);
+        boolean value = qcValues.get(component);
+
+        Messenger.m(source, "w " + component.getPrettyName() + " quasi-connectivity is set to " + value + (value == component.getDefaultQCValue() ? " (default value)" : " (modified value)"));
         return 1;
     }
 
@@ -80,9 +90,10 @@ public class QuasiConnectivityCommand {
     private static int reset(ServerCommandSource source) {
         boolean bl = false; // Define a new boolean
         StringBuilder sb = new StringBuilder();
-        for (QuasiConnectivityRules component : QuasiConnectivityRules.values()) // Iterate through a list of all enum entries...
-            if (ruleValues.get(component) != component.getDefaultValue()) { // If the value has been modified...
-                ruleValues.put(component, component.getDefaultValue()); // Set it to the default value
+
+        for (RedstoneRule component : RedstoneRule.values()) // Iterate through a list of all enum constants...
+            if (qcValues.get(component) != component.getDefaultQCValue()) { // If the value has been modified...
+                qcValues.put(component, component.getDefaultQCValue()); // Set it to the default value
                 if (bl)
                     sb.append(", ");
                 sb.append(component.getPrettyName());

@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.redstone_rules.quasiconnectivity;
 
-import com.axialeaa.doormat.util.QuasiConnectivityRules;
+import com.axialeaa.doormat.util.RedstoneRule;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.DoorBlock;
@@ -18,7 +18,7 @@ public class DoorBlockMixin {
      */
     @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z", ordinal = 0))
     private boolean allowQuasiConnecting(World world, BlockPos pos, Operation<Boolean> original) {
-        return original.call(world, pos) || QuasiConnectivityRules.ruleValues.get(QuasiConnectivityRules.DOOR) && world.isReceivingRedstonePower(pos.up(world.getBlockState(pos).get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? 2 : 1));
+        return original.call(world, pos) || RedstoneRule.qcValues.get(RedstoneRule.DOOR) && world.isReceivingRedstonePower(pos.up(world.getBlockState(pos).get(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? 2 : 1));
     }
 
 }

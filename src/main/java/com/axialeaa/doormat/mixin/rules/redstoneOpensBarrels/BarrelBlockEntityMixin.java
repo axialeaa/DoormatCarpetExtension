@@ -2,7 +2,7 @@ package com.axialeaa.doormat.mixin.rules.redstoneOpensBarrels;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.helpers.RedstoneRuleHelper;
-import com.axialeaa.doormat.util.QuasiConnectivityRules;
+import com.axialeaa.doormat.util.RedstoneRule;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BarrelBlockEntity;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(BarrelBlockEntity.class)
 public class BarrelBlockEntityMixin extends BlockEntity {
 
-    @Unique boolean condition = !(DoormatSettings.redstoneOpensBarrels && RedstoneRuleHelper.quasiConnectForRule(world, pos, QuasiConnectivityRules.BARREL));
+    @Unique boolean condition = !(DoormatSettings.redstoneOpensBarrels && RedstoneRuleHelper.quasiConnectForRule(world, pos, RedstoneRule.BARREL));
 
     public BarrelBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);

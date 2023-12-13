@@ -36,13 +36,13 @@ public class ConfigFile {
             root.add(UpdateTypeCommand.ALIAS, updateTypeObj);
             // Reuse the command aliases for the object names because why not? It saves writing another string xd
 
-            for (QuasiConnectivityRules component : QuasiConnectivityRules.values())
-                if (QuasiConnectivityRules.ruleValues.get(component) != component.getDefaultValue())
-                    qcObj.add(component.getKey(), new JsonPrimitive(QuasiConnectivityRules.ruleValues.get(component)));
+            for (RedstoneRule component : RedstoneRule.values()) {
+                if (RedstoneRule.qcValues.get(component) != component.getDefaultQCValue())
+                    qcObj.add(component.getKey(), new JsonPrimitive(RedstoneRule.qcValues.get(component)));
 
-            for (UpdateTypeRules component : UpdateTypeRules.values())
-                if (UpdateTypeRules.ruleValues.get(component) != component.getDefaultValue())
-                    updateTypeObj.add(component.getKey(), new JsonPrimitive(UpdateTypeRules.ruleValues.get(component).getKey()));
+                if (RedstoneRule.updateTypeValues.get(component) != component.getDefaultUpdateTypeValue())
+                    updateTypeObj.add(component.getKey(), new JsonPrimitive(RedstoneRule.updateTypeValues.get(component).getKey()));
+            }
             // Saves the value when, and only when, it has been modified from default.
             //  This helps prevent unnecessary bloat, since the default values are provided in the enum classes anyway.
 
@@ -82,11 +82,10 @@ public class ConfigFile {
         File configFile = new File(getWorldDirectory(server), FILE_NAME);
 
         if (!configFile.exists()) {
-            for (QuasiConnectivityRules component : QuasiConnectivityRules.values())
-                QuasiConnectivityRules.ruleValues.put(component, component.getDefaultValue());
-
-            for (UpdateTypeRules component : UpdateTypeRules.values())
-                UpdateTypeRules.ruleValues.put(component, component.getDefaultValue());
+            for (RedstoneRule component : RedstoneRule.values()) {
+                RedstoneRule.qcValues.put(component, component.getDefaultQCValue());
+                RedstoneRule.updateTypeValues.put(component, component.getDefaultUpdateTypeValue());
+            }
         }
         else if (configFile.isFile() && configFile.canRead()) {
             JsonElement parseElement = null;
@@ -102,26 +101,18 @@ public class ConfigFile {
                 JsonObject qcObj = root.get(QuasiConnectivityCommand.ALIAS).getAsJsonObject();
                 JsonObject updateTypeObj = root.get(UpdateTypeCommand.ALIAS).getAsJsonObject();
 
-                for (QuasiConnectivityRules component : QuasiConnectivityRules.values()) {
+                for (RedstoneRule component : RedstoneRule.values()) {
                     String key = component.getKey();
-                    JsonElement keyElement = qcObj.get(key);
-                    boolean keyExists = qcObj.has(key) && keyElement.isJsonPrimitive();
 
-                    QuasiConnectivityRules.ruleValues.put(component, keyExists ?
-                        keyElement.getAsBoolean() : component.getDefaultValue());
+                    JsonElement qcElement = qcObj.get(key);
+                    boolean qcKeyExists = qcObj.has(key) && qcElement.isJsonPrimitive();
+
+                    JsonElement updateTypeElement = updateTypeObj.get(key);
+                    boolean updateTypeKeyExists = updateTypeObj.has(key) && updateTypeElement.isJsonPrimitive();
+
+                    RedstoneRule.qcValues.put(component, qcKeyExists ? qcElement.getAsBoolean() : component.getDefaultQCValue());
+                    RedstoneRule.updateTypeValues.put(component, updateTypeKeyExists ? RedstoneRule.UpdateTypes.keys.get(updateTypeElement.getAsString()) : component.getDefaultUpdateTypeValue());
                 }
-                // One for quasi-connectivity...
-
-                for (UpdateTypeRules component : UpdateTypeRules.values()) {
-                    String key = component.getKey();
-                    JsonElement keyElement = updateTypeObj.get(key);
-                    boolean keyExists = updateTypeObj.has(key) && keyElement.isJsonPrimitive();
-
-                    UpdateTypeRules.ruleValues.put(component, keyExists ?
-                        UpdateTypeRules.UpdateTypes.keys.get(keyElement.getAsString()) :
-                        component.getDefaultValue());
-                }
-                // and one for update type!
             }
         }
         else DoormatServer.LOGGER.warn("Could not read the file at: {}", configFile.getAbsolutePath());

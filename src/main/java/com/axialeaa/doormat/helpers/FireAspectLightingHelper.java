@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.helpers;
 
-import com.axialeaa.doormat.util.UpdateTypeRules;
+import com.axialeaa.doormat.util.RedstoneRule;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -29,7 +29,7 @@ public class FireAspectLightingHelper {
         if (EnchantmentHelper.getLevel(Enchantments.FIRE_ASPECT, stack) > 0) {
             if (state.getBlock() instanceof TntBlock) {
                 TntBlock.primeTnt(world, pos);
-                world.setBlockState(pos, Blocks.AIR.getDefaultState(), UpdateTypeRules.ruleValues.get(UpdateTypeRules.TNT).getFlags() | Block.REDRAW_ON_MAIN_THREAD);
+                world.setBlockState(pos, Blocks.AIR.getDefaultState(), RedstoneRuleHelper.getRuleFlags(RedstoneRule.TNT) | Block.REDRAW_ON_MAIN_THREAD);
             }
             else if (CampfireBlock.canBeLit(state) || CandleBlock.canBeLit(state) || CandleCakeBlock.canBeLit(state)) {
                 world.setBlockState(pos, state.with(Properties.LIT, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
