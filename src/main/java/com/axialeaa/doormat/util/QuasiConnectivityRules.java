@@ -1,5 +1,7 @@
 package com.axialeaa.doormat.util;
 
+import carpet.CarpetServer;
+import com.axialeaa.doormat.DoormatServer;
 import com.axialeaa.doormat.helpers.RedstoneRuleHelper;
 
 import java.util.HashMap;
@@ -56,8 +58,11 @@ public enum QuasiConnectivityRules {
     // Define new hashmaps comprised of the component enum entries and their boolean values, and another for the entries' keys.
 
     static {
-        for (QuasiConnectivityRules component : values())
+        for (QuasiConnectivityRules component : values()) {
+            if (!DoormatServer.hasExperimentalDatapack(CarpetServer.minecraft_server) && (component == CRAFTER || component == COPPER_BULB))
+                continue;
             ruleKeys.put(component.getKey(), component);
+        }
         // Go through the list of components in the enum, and assign their keys to the hashmap above,
         // This will be useful for command autocompletion later down the line.
     }

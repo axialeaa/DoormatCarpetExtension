@@ -65,7 +65,7 @@
     "rules.growableSwampOakTrees.SaplingBlockMixin",
     "rules.hopperTransferTime.HopperBlockEntityMixin",
     "rules.huskWashing.HuskEntityMixin",
-    "rules.insomniaDaysSinceSlept.PhantomSpawnerMixin",
+    "rules.insomniaDayCount.PhantomSpawnerMixin",
     "rules.jukeboxDiscProgressSignal.JukeboxBlockEntityMixin",
     "rules.jukeboxDiscProgressSignal.JukeboxBlockMixin",
     "rules.leavesNoCollision.LeavesBlockMixin",

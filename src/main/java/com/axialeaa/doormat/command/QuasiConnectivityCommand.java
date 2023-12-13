@@ -1,8 +1,9 @@
 package com.axialeaa.doormat.command;
 
+import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
+import com.axialeaa.doormat.DoormatServer;
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.CommandHelper;
 import com.axialeaa.doormat.util.ConfigFile;
 import com.axialeaa.doormat.util.QuasiConnectivityRules;
 import com.mojang.brigadier.CommandDispatcher;
@@ -21,7 +22,7 @@ public class QuasiConnectivityCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(ALIAS)
-            .requires(player -> carpet.utils.CommandHelper.canUseCommand(player, DoormatSettings.commandQC))
+            .requires(player -> CommandHelper.canUseCommand(player, DoormatSettings.commandQC))
             .then(argument("component", StringArgumentType.word())
                 .suggests((ctx, builder) -> suggestMatching(QuasiConnectivityRules.getCommandSuggestions(), builder))
                 .executes(ctx -> QuasiConnectivityCommand.get(
@@ -51,7 +52,7 @@ public class QuasiConnectivityCommand {
         QuasiConnectivityRules component = ruleKeys.get(key);
         // Get the enum entry assigned to the specified selection via the hashmap.
 
-        if (CommandHelper.isExperimentalDatapackDisabled(source) && (component == CRAFTER || component == COPPER_BULB)) {
+        if (!DoormatServer.hasExperimentalDatapack(source.getServer()) && (component == CRAFTER || component == COPPER_BULB)) {
             Messenger.m(source, "r " + component.getPrettyName() + " is not enabled on this world!");
             return 0;
         }
@@ -78,7 +79,7 @@ public class QuasiConnectivityCommand {
         QuasiConnectivityRules component = ruleKeys.get(key);
         boolean value = ruleValues.get(component);
 
-        if (CommandHelper.isExperimentalDatapackDisabled(source) && (component == CRAFTER || component == COPPER_BULB)) {
+        if (!DoormatServer.hasExperimentalDatapack(source.getServer()) && (component == CRAFTER || component == COPPER_BULB)) {
             Messenger.m(source, "r " + component.getPrettyName() + " is not enabled on this world!");
             return 0;
         }

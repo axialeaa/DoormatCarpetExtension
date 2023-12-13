@@ -1,8 +1,8 @@
 package com.axialeaa.doormat.command;
 
+import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helpers.CommandHelper;
 import com.axialeaa.doormat.util.ConfigFile;
 import com.axialeaa.doormat.util.UpdateTypeRules;
 import com.mojang.brigadier.CommandDispatcher;
@@ -20,7 +20,7 @@ public class UpdateTypeCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(ALIAS)
-            .requires(player -> carpet.utils.CommandHelper.canUseCommand(player, DoormatSettings.commandUpdateType))
+            .requires(player -> CommandHelper.canUseCommand(player, DoormatSettings.commandUpdateType))
             .then(argument("component", StringArgumentType.word())
                 .suggests((ctx, builder) -> suggestMatching(UpdateTypeRules.getCommandSuggestions(), builder))
                 .executes(ctx -> UpdateTypeCommand.get(
@@ -53,10 +53,6 @@ public class UpdateTypeCommand {
         // Commands can't take in enum entries, so we find the entry corresponding to the string using the update type's own hashmap.
         // There are a lot of hashmaps in this implementation. I apologise.
 
-        if (CommandHelper.isExperimentalDatapackDisabled(source) && (component == CRAFTER || component == COPPER_BULB)) {
-            Messenger.m(source, "r " + component.getPrettyName() + " is not enabled on this world!");
-            return 0;
-        }
         if (!DoormatSettings.redstoneOpensBarrels && component == BARREL) {
             Messenger.m(source, "r redstoneOpensBarrels is not enabled on this world!");
             return 0;
@@ -80,10 +76,6 @@ public class UpdateTypeCommand {
         UpdateTypeRules component = ruleKeys.get(key);
         UpdateTypes value = ruleValues.get(component);
 
-        if (CommandHelper.isExperimentalDatapackDisabled(source) && (component == CRAFTER || component == COPPER_BULB)) {
-            Messenger.m(source, "r " + component.getPrettyName() + " is not enabled on this world!");
-            return 0;
-        }
         if (!DoormatSettings.redstoneOpensBarrels && component == BARREL) {
             Messenger.m(source, "r redstoneOpensBarrels is not enabled on this world!");
             return 0;

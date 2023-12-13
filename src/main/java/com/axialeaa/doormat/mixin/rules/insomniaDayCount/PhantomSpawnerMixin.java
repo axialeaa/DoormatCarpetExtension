@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rules.insomniaDaysSinceSlept;
+package com.axialeaa.doormat.mixin.rules.insomniaDayCount;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.world.spawner.PhantomSpawner;

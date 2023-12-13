@@ -10,6 +10,8 @@ import com.axialeaa.doormat.util.ConfigFile;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.resource.featuretoggle.FeatureFlags;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import org.slf4j.Logger;
@@ -22,6 +24,11 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	public static final String MOD_ID = "doormat";
 	public static final String MOD_NAME = "Doormat";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+	public static boolean hasExperimentalDatapack(MinecraftServer server) {
+		FeatureSet featureSet = server.getSaveProperties().getEnabledFeatures();
+		return featureSet.contains(FeatureFlags.UPDATE_1_21);
+	}
 
 	@Override
 	public void onInitialize() {
