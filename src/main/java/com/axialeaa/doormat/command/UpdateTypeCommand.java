@@ -53,10 +53,6 @@ public class UpdateTypeCommand {
         // Commands can't take in enum entries, so we find the entry corresponding to the string using the update type's own hashmap.
         // There are a lot of hashmaps in this implementation. I apologise.
 
-        if (!DoormatSettings.redstoneOpensBarrels && component == BARREL) {
-            Messenger.m(source, "r redstoneOpensBarrels is not enabled on this world!");
-            return 0;
-        }
         if (ruleValues.get(component) != enumInput) { // If the value assigned to the component via the values hashmap is not the same as the inputted argument...
             ruleValues.put(component, enumInput);
             Messenger.m(source, "w Set " + component.getPrettyName() + " update type to " + enumInput);
@@ -76,10 +72,6 @@ public class UpdateTypeCommand {
         UpdateTypeRules component = ruleKeys.get(key);
         UpdateTypes value = ruleValues.get(component);
 
-        if (!DoormatSettings.redstoneOpensBarrels && component == BARREL) {
-            Messenger.m(source, "r redstoneOpensBarrels is not enabled on this world!");
-            return 0;
-        }
         Messenger.m(source, "w " + component.getPrettyName() + " update type is set to " + value + (value == component.getDefaultValue() ? " (default value)" : " (modified value)"));
         return 1;
     }
@@ -89,19 +81,23 @@ public class UpdateTypeCommand {
      */
     private static int reset(ServerCommandSource source) {
         boolean bl = false; // Define a new boolean
+        StringBuilder sb = new StringBuilder(); // Create a string builder which will be used for creating a list of modified components ("Bell, Crafter, Dispenser and Dropper, Trapdoor")
         for (UpdateTypeRules component : UpdateTypeRules.values()) // Iterate through a list of all enum entries...
             if (ruleValues.get(component) != component.getDefaultValue()) { // If the value has been modified...
                 ruleValues.put(component, component.getDefaultValue()); // Set it to the default value
+                if (bl)
+                    sb.append(", ");
+                sb.append(component.getPrettyName());
                 bl = true; // Reassign the boolean to true, to indicate the hashmap has been changed
             }
 
         if (bl) { // If the hashmap had to change in order to restore default settings...
-            Messenger.m(source, "w Restored vanilla update type settings");
+            Messenger.m(source, "w Restored vanilla update type value(s), modifying " + sb);
             ConfigFile.save(source.getServer());
             return 1; // Success!
         }
         else {
-            Messenger.m(source, "r Update type values haven't changed. Try tweaking some settings first!");
+            Messenger.m(source, "r Update type values match vanilla. Try tweaking some settings first!");
             return 0;
         }
     }

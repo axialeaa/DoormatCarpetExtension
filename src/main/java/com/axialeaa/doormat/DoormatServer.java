@@ -2,11 +2,14 @@ package com.axialeaa.doormat;
 
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
+import carpet.api.settings.CarpetRule;
 import carpet.utils.Translations;
 import com.axialeaa.doormat.command.QuasiConnectivityCommand;
 import com.axialeaa.doormat.command.RandomTickCommand;
 import com.axialeaa.doormat.command.UpdateTypeCommand;
 import com.axialeaa.doormat.util.ConfigFile;
+import com.axialeaa.doormat.util.QuasiConnectivityRules;
+import com.axialeaa.doormat.util.UpdateTypeRules;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.command.CommandRegistryAccess;
@@ -44,6 +47,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	@Override
 	public void onGameStarted() {
 		CarpetServer.settingsManager.parseSettingsClass(DoormatSettings.class);
+		CarpetServer.settingsManager.registerRuleObserver(DoormatServer::amendKeysMapsForRule);
 	}
 
 	@Override
@@ -56,6 +60,21 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	@Override
 	public Map<String, String> canHasTranslations(String lang) {
 		return Translations.getTranslationFromResourcePath("assets/" + MOD_ID + "/lang/%s.json".formatted(lang));
+	}
+
+	/**
+	 * Removes "barrel" from the /quasiconnectivity and /updatetype key hashmaps when redstoneOpensBarrels is disabled, and adds it back when enabled.
+	 */
+	public static void amendKeysMapsForRule(ServerCommandSource serverCommandSource, CarpetRule<?> currentRuleState, String originalUserTest) {
+		boolean settingState = currentRuleState.settingsManager().getCarpetRule("redstoneOpensBarrels").value().equals(true);
+		if (settingState) {
+			QuasiConnectivityRules.ruleKeys.put(QuasiConnectivityRules.BARREL.getKey(), QuasiConnectivityRules.BARREL);
+			UpdateTypeRules.ruleKeys.put(UpdateTypeRules.BARREL.getKey(), UpdateTypeRules.BARREL);
+		}
+		else {
+			QuasiConnectivityRules.ruleKeys.remove(QuasiConnectivityRules.BARREL.getKey());
+			UpdateTypeRules.ruleKeys.remove(UpdateTypeRules.BARREL.getKey());
+		}
 	}
 
 }

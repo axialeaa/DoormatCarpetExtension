@@ -2,7 +2,6 @@ package com.axialeaa.doormat.command;
 
 import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
-import com.axialeaa.doormat.DoormatServer;
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.util.ConfigFile;
 import com.axialeaa.doormat.util.QuasiConnectivityRules;
@@ -52,14 +51,6 @@ public class QuasiConnectivityCommand {
         QuasiConnectivityRules component = ruleKeys.get(key);
         // Get the enum entry assigned to the specified selection via the hashmap.
 
-        if (!DoormatServer.hasExperimentalDatapack(source.getServer()) && (component == CRAFTER || component == COPPER_BULB)) {
-            Messenger.m(source, "r " + component.getPrettyName() + " is not enabled on this world!");
-            return 0;
-        }
-        if (!DoormatSettings.redstoneOpensBarrels && component == BARREL) {
-            Messenger.m(source, "r redstoneOpensBarrels is not enabled on this world!");
-            return 0;
-        }
         if (ruleValues.get(component) != input) { // If the value assigned to the component via the values hashmap is not the same as the inputted argument...
             ruleValues.put(component, input);
             Messenger.m(source, "w Set " + component.getPrettyName() + " quasi-connectivity to " + input);
@@ -79,14 +70,6 @@ public class QuasiConnectivityCommand {
         QuasiConnectivityRules component = ruleKeys.get(key);
         boolean value = ruleValues.get(component);
 
-        if (!DoormatServer.hasExperimentalDatapack(source.getServer()) && (component == CRAFTER || component == COPPER_BULB)) {
-            Messenger.m(source, "r " + component.getPrettyName() + " is not enabled on this world!");
-            return 0;
-        }
-        if (!DoormatSettings.redstoneOpensBarrels && component == BARREL) {
-            Messenger.m(source, "r redstoneOpensBarrels is not enabled on this world!");
-            return 0;
-        }
         Messenger.m(source, "w " + component.getPrettyName() + " quasi-connectivity is set to " + value + (value == component.getDefaultValue() ? " (default value)" : " (modified value)"));
         return 1;
     }
@@ -96,19 +79,23 @@ public class QuasiConnectivityCommand {
      */
     private static int reset(ServerCommandSource source) {
         boolean bl = false; // Define a new boolean
+        StringBuilder sb = new StringBuilder();
         for (QuasiConnectivityRules component : QuasiConnectivityRules.values()) // Iterate through a list of all enum entries...
             if (ruleValues.get(component) != component.getDefaultValue()) { // If the value has been modified...
                 ruleValues.put(component, component.getDefaultValue()); // Set it to the default value
+                if (bl)
+                    sb.append(", ");
+                sb.append(component.getPrettyName());
                 bl = true; // Reassign the boolean to true, to indicate the hashmap has been changed
             }
 
         if (bl) { // If the hashmap had to change in order to restore default settings...
-            Messenger.m(source, "w Restored vanilla quasi-connectivity settings");
+            Messenger.m(source, "w Restored vanilla quasi-connectivity value(s), modifying " + sb);
             ConfigFile.save(source.getServer());
             return 1; // Success!
         }
         else {
-            Messenger.m(source, "r Quasi-connectivity values haven't changed. Try tweaking some settings first!");
+            Messenger.m(source, "r Quasi-connectivity values match vanilla. Try tweaking some settings first!");
             return 0;
         }
     }
