@@ -1,76 +1,101 @@
 package com.axialeaa.doormat.command;
 
-import carpet.utils.CommandHelper;
+import carpet.utils.Messenger;
 import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.helpers.CommandHelper;
+import com.axialeaa.doormat.util.ConfigFile;
 import com.axialeaa.doormat.util.UpdateTypeRules;
-import com.axialeaa.doormat.util.UpdateTypeRules.UpdateTypes;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 
-import static com.axialeaa.doormat.util.UpdateTypeRules.ruleKeys;
-import static com.axialeaa.doormat.util.UpdateTypeRules.ruleValues;
+import static com.axialeaa.doormat.util.UpdateTypeRules.*;
 import static net.minecraft.command.CommandSource.suggestMatching;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class UpdateTypeCommand {
 
+    public static final String ALIAS = "updatetype";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal("updatetype")
-            .requires(player -> CommandHelper.canUseCommand(player, DoormatSettings.commandUpdateType))
+        dispatcher.register(literal(ALIAS)
+            .requires(player -> carpet.utils.CommandHelper.canUseCommand(player, DoormatSettings.commandUpdateType))
             .then(argument("component", StringArgumentType.word())
                 .suggests((ctx, builder) -> suggestMatching(UpdateTypeRules.getCommandSuggestions(), builder))
-                .executes(UpdateTypeCommand::get)
+                .executes(ctx -> UpdateTypeCommand.get(
+                    ctx.getSource(),
+                    StringArgumentType.getString(ctx, "component"))
+                )
                 .then(argument("value", StringArgumentType.word())
                     .suggests((ctx, builder) -> suggestMatching(UpdateTypes.getCommandSuggestions(), builder))
-                    .executes(UpdateTypeCommand::set)))
+                    .executes(ctx -> UpdateTypeCommand.set(
+                        ctx.getSource(),
+                        StringArgumentType.getString(ctx, "component"),
+                        StringArgumentType.getString(ctx, "value"))
+                    )
+                )
+            )
             .then(literal("reset")
-                .executes(UpdateTypeCommand::reset))
+                .executes(ctx -> UpdateTypeCommand.reset(
+                    ctx.getSource())
+                )
+            )
         );
     }
 
     /**
      * Assigns a new enum value to the entered-in redstone component's update type hashmap, defined in {@link UpdateTypeRules}.
-     * @throws CommandSyntaxException when the specified value matches the one present in the hashmap.
      */
-    private static int set(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        ServerCommandSource source = ctx.getSource();
-        UpdateTypeRules component = ruleKeys.get((StringArgumentType.getString(ctx, "component")));
-        UpdateTypes input = UpdateTypes.keys.get(StringArgumentType.getString(ctx, "value"));
+    private static int set(ServerCommandSource source, String key, String input) {
+        UpdateTypeRules component = ruleKeys.get(key);
+        UpdateTypes enumInput = UpdateTypes.keys.get(input);
         // Commands can't take in enum entries, so we find the entry corresponding to the string using the update type's own hashmap.
         // There are a lot of hashmaps in this implementation. I apologise.
 
-        if (ruleValues.get(component) != input) { // If the value assigned to the component via the values hashmap is not the same as the inputted argument...
-            ruleValues.put(component, input);
-            source.sendFeedback(() -> Text.translatable("carpet.command.updateType.set.success", component.getFormattedName(), input), true);
+        if (CommandHelper.isExperimentalDatapackDisabled(source) && (component == CRAFTER || component == COPPER_BULB)) {
+            Messenger.m(source, "r " + component.getPrettyName() + " is not enabled on this world!");
+            return 0;
+        }
+        if (!DoormatSettings.redstoneOpensBarrels && component == BARREL) {
+            Messenger.m(source, "r redstoneOpensBarrels is not enabled on this world!");
+            return 0;
+        }
+        if (ruleValues.get(component) != enumInput) { // If the value assigned to the component via the values hashmap is not the same as the inputted argument...
+            ruleValues.put(component, enumInput);
+            Messenger.m(source, "w Set " + component.getPrettyName() + " update type to " + enumInput);
+            ConfigFile.save(source.getServer());
             return 1;
         }
-        else throw new SimpleCommandExceptionType(Text.translatable("carpet.command.updateType.set.failed", component.getFormattedName(), input)).create();
+        else {
+            Messenger.m(source, "r " + component.getPrettyName() + " update type is already set to " + enumInput);
+            return 0;
+        }
     }
 
     /**
      * Finds the value assigned to the entered-in redstone component's update type hashmap, defined in {@link UpdateTypeRules}.
      */
-    private static int get(CommandContext<ServerCommandSource> ctx) {
-        ServerCommandSource source = ctx.getSource();
-        UpdateTypeRules component = ruleKeys.get((StringArgumentType.getString(ctx, "component")));
+    private static int get(ServerCommandSource source, String key) {
+        UpdateTypeRules component = ruleKeys.get(key);
         UpdateTypes value = ruleValues.get(component);
 
-        source.sendFeedback(() -> Text.translatable((value == component.getDefaultValue() ? "carpet.command.updateType.get.unchanged" : "carpet.command.updateType.get.changed"), component.getFormattedName(), value), true);
+        if (CommandHelper.isExperimentalDatapackDisabled(source) && (component == CRAFTER || component == COPPER_BULB)) {
+            Messenger.m(source, "r " + component.getPrettyName() + " is not enabled on this world!");
+            return 0;
+        }
+        if (!DoormatSettings.redstoneOpensBarrels && component == BARREL) {
+            Messenger.m(source, "r redstoneOpensBarrels is not enabled on this world!");
+            return 0;
+        }
+        Messenger.m(source, "w " + component.getPrettyName() + " update type is set to " + value + (value == component.getDefaultValue() ? " (default value)" : " (modified value)"));
         return 1;
     }
 
     /**
      * Sets each redstone component's update type hashmap value to its default.
-     * @throws CommandSyntaxException when all values are unchanged from their defaults.
      */
-    private static int reset(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        ServerCommandSource source = ctx.getSource();
+    private static int reset(ServerCommandSource source) {
         boolean bl = false; // Define a new boolean
         for (UpdateTypeRules component : UpdateTypeRules.values()) // Iterate through a list of all enum entries...
             if (ruleValues.get(component) != component.getDefaultValue()) { // If the value has been modified...
@@ -79,10 +104,14 @@ public class UpdateTypeCommand {
             }
 
         if (bl) { // If the hashmap had to change in order to restore default settings...
-            source.sendFeedback(() -> Text.translatable("carpet.command.quasiConnectivity.reset.success"), true);
+            Messenger.m(source, "w Restored vanilla update type settings");
+            ConfigFile.save(source.getServer());
             return 1; // Success!
         }
-        else throw new SimpleCommandExceptionType(Text.translatable("carpet.command.quasiConnectivity.reset.failed")).create();
+        else {
+            Messenger.m(source, "r Update type values haven't changed. Try tweaking some settings first!");
+            return 0;
+        }
     }
 
 }

@@ -4,5 +4,4 @@ accessible method net/minecraft/entity/damage/DamageSources create (Lnet/minecra
 accessible method net/minecraft/block/SpreadableBlock canSpread (Lnet/minecraft/block/BlockState;Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Z
 accessible field net/minecraft/block/entity/JukeboxBlockEntity tickCount J
 accessible field net/minecraft/block/entity/JukeboxBlockEntity recordStartTick J
-accessible class net/minecraft/block/ComposterBlock$ComposterInventory
 accessible field net/minecraft/block/entity/BarrelBlockEntity inventory Lnet/minecraft/util/collection/DefaultedList;

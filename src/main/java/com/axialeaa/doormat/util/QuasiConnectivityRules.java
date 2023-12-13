@@ -1,7 +1,6 @@
 package com.axialeaa.doormat.util;
 
 import com.axialeaa.doormat.helpers.RedstoneRuleHelper;
-import net.minecraft.text.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,40 +10,41 @@ import java.util.Map;
  * @see UpdateTypeRules
  */
 public enum QuasiConnectivityRules {
-    BARREL          ("barrel",              false),
-    BELL            ("bell",                false),
-    COPPER_BULB     ("copper_bulb",         false),
-    COMMAND_BLOCK   ("command_block",       false),
-    CRAFTER         ("crafter",             false),
-    DISPENSER       ("dispenser",           true),
-    DOOR            ("door",                false),
-    FENCE_GATE      ("fence_gate",          false),
-    HOPPER          ("hopper",              false),
-    REDSTONE_LAMP   ("redstone_lamp",       false),
-    NOTE_BLOCK      ("note_block",          false),
-    PISTON          ("piston",              true),
-    RAIL            ("rail",                false),
-    STRUCTURE_BLOCK ("structure_block",     false),
-    TNT             ("tnt",                 false),
-    TRAPDOOR        ("trapdoor",            false);
+    BARREL          ("barrel",          "Barrel",                   false),
+    BELL            ("bell",            "Bell",                     false),
+    COPPER_BULB     ("copper_bulb",     "Copper Bulb",              false),
+    COMMAND_BLOCK   ("command_block",   "Command Block",            false),
+    CRAFTER         ("crafter",         "Crafter",                  false),
+    DISPENSER       ("dispenser",       "Dispenser and Dropper",    true),
+    DOOR            ("door",            "Door",                     false),
+    FENCE_GATE      ("fence_gate",      "Fence Gate",               false),
+    HOPPER          ("hopper",          "Hopper",                   false),
+    REDSTONE_LAMP   ("redstone_lamp",   "Redstone Lamp",            false),
+    NOTE_BLOCK      ("note_block",      "Note Block",               false),
+    PISTON          ("piston",          "Piston and Sticky Piston", true),
+    RAIL            ("rail",            "Rail",                     false),
+    STRUCTURE_BLOCK ("structure_block", "Structure Block",          false),
+    TNT             ("tnt",             "TNT",                      false),
+    TRAPDOOR        ("trapdoor",        "Trapdoor",                 false);
 
     private final String key;
+    private final String prettyName;
     private final boolean defaultValue;
 
-    public boolean getDefaultValue() {
-        return defaultValue;
-    }
     public String getKey() {
         return key;
     }
-
-    QuasiConnectivityRules(String key, boolean defaultValue) {
-        this.key = key;
-        this.defaultValue = defaultValue;
+    public String getPrettyName() {
+        return prettyName;
+    }
+    public boolean getDefaultValue() {
+        return defaultValue;
     }
 
-    public Text getFormattedName() {
-        return RedstoneRuleHelper.getFormattedComponentName(getKey());
+    QuasiConnectivityRules(String key, String prettyName, boolean defaultValue) {
+        this.key = key;
+        this.prettyName = prettyName;
+        this.defaultValue = defaultValue;
     }
 
     public static String[] getCommandSuggestions() {
@@ -56,13 +56,10 @@ public enum QuasiConnectivityRules {
     // Define new hashmaps comprised of the component enum entries and their boolean values, and another for the entries' keys.
 
     static {
-        for (QuasiConnectivityRules component : values()) {
-            ruleValues.put(component, component.getDefaultValue());
+        for (QuasiConnectivityRules component : values())
             ruleKeys.put(component.getKey(), component);
-            // Go through the list of components in the enum, and assign "starting"--default--values to the hashmap above,
-            //      as well as the keys from the enum itself.
-            // The latter will be useful for command autocompletion and text localisation later down the line.
-        }
+        // Go through the list of components in the enum, and assign their keys to the hashmap above,
+        // This will be useful for command autocompletion later down the line.
     }
 
 }

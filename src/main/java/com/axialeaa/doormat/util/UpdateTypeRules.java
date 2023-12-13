@@ -1,7 +1,6 @@
 package com.axialeaa.doormat.util;
 
 import com.axialeaa.doormat.helpers.RedstoneRuleHelper;
-import net.minecraft.text.Text;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,38 +10,39 @@ import java.util.Map;
  * @see QuasiConnectivityRules
  */
 public enum UpdateTypeRules {
-    BARREL          ("barrel",              UpdateTypes.SHAPE),
-    BELL            ("bell",                UpdateTypes.BOTH),
-    COPPER_BULB     ("copper_bulb",         UpdateTypes.BOTH),
-    CRAFTER         ("crafter",             UpdateTypes.SHAPE),
-    DISPENSER       ("dispenser",           UpdateTypes.SHAPE),
-    DOOR            ("door",                UpdateTypes.SHAPE),
-    FENCE_GATE      ("fence_gate",          UpdateTypes.SHAPE),
-    HOPPER          ("hopper",              UpdateTypes.SHAPE),
-    REDSTONE_LAMP   ("redstone_lamp",       UpdateTypes.SHAPE),
-    NOTE_BLOCK      ("note_block",          UpdateTypes.BOTH),
-    PISTON          ("piston",              UpdateTypes.BOTH),
-    RAIL            ("rail",                UpdateTypes.BOTH),
-    TNT             ("tnt",                 UpdateTypes.BOTH),
-    TRAPDOOR        ("trapdoor",            UpdateTypes.SHAPE);
+    BARREL          ("barrel",          "Barrel",                   UpdateTypes.SHAPE),
+    BELL            ("bell",            "Bell",                     UpdateTypes.BOTH),
+    COPPER_BULB     ("copper_bulb",     "Copper Bulb",              UpdateTypes.BOTH),
+    CRAFTER         ("crafter",         "Crafter",                  UpdateTypes.SHAPE),
+    DISPENSER       ("dispenser",       "Dispenser and Dropper",    UpdateTypes.SHAPE),
+    DOOR            ("door",            "Door",                     UpdateTypes.SHAPE),
+    FENCE_GATE      ("fence_gate",      "Fence Gate",               UpdateTypes.SHAPE),
+    HOPPER          ("hopper",          "Hopper",                   UpdateTypes.SHAPE),
+    REDSTONE_LAMP   ("redstone_lamp",   "Redstone Lamp",            UpdateTypes.SHAPE),
+    NOTE_BLOCK      ("note_block",      "Note Block",               UpdateTypes.BOTH),
+    PISTON          ("piston",          "Piston and Sticky Piston", UpdateTypes.BOTH),
+    RAIL            ("rail",            "Rail",                     UpdateTypes.BOTH),
+    TNT             ("tnt",             "TNT",                      UpdateTypes.BOTH),
+    TRAPDOOR        ("trapdoor",        "Trapdoor",                 UpdateTypes.SHAPE);
 
     private final String key;
+    private final String prettyName;
     private final UpdateTypes defaultValue;
 
-    UpdateTypeRules(String key, UpdateTypes defaultValue) {
+    UpdateTypeRules(String key, String prettyName, UpdateTypes defaultValue) {
         this.key = key;
+        this.prettyName = prettyName;
         this.defaultValue = defaultValue;
     }
 
-    public UpdateTypes getDefaultValue() {
-        return defaultValue;
-    }
     public String getKey() {
         return key;
     }
-
-    public Text getFormattedName() {
-        return RedstoneRuleHelper.getFormattedComponentName(getKey());
+    public String getPrettyName() {
+        return prettyName;
+    }
+    public UpdateTypes getDefaultValue() {
+        return defaultValue;
     }
 
     public static String[] getCommandSuggestions() {
@@ -54,13 +54,10 @@ public enum UpdateTypeRules {
     // Define new hashmaps comprised of the component enum entries and their values, and another for the entries' keys.
 
     static {
-        for (UpdateTypeRules component : values()) {
-            ruleValues.put(component, component.getDefaultValue());
+        for (UpdateTypeRules component : values())
             ruleKeys.put(component.getKey(), component);
-            // Go through the list of components in the enum, and assign "starting"--default--values to the hashmap above,
-            //      as well as the keys from the enum itself.
-            // The latter will be useful for command autocompletion and text localisation later down the line.
-        }
+        // Go through the list of components in the enum, and assign their keys to the hashmap above,
+        // This will be useful for command autocompletion later down the line.
     }
 
     /**

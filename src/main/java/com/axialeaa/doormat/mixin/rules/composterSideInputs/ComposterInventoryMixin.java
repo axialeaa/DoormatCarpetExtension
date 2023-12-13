@@ -1,7 +1,6 @@
 package com.axialeaa.doormat.mixin.rules.composterSideInputs;
 
 import com.axialeaa.doormat.DoormatSettings;
-import net.minecraft.block.ComposterBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
@@ -9,7 +8,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(ComposterBlock.ComposterInventory.class)
+/**
+ * This uses a target instead of a direct class reference, due to being private.
+ */
+@Mixin(targets = "net/minecraft/block/ComposterBlock$ComposterInventory")
 public class ComposterInventoryMixin {
 
     /**

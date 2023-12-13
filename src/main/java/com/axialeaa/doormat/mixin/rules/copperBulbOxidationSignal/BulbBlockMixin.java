@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rules.bulbOxidationStageSignal;
+package com.axialeaa.doormat.mixin.rules.copperBulbOxidationSignal;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
@@ -14,7 +14,7 @@ public class BulbBlockMixin {
 
     @ModifyReturnValue(method = "getComparatorOutput", at = @At(value = "RETURN"))
     private int modifyComparatorOutput(int original, BlockState state, World world, BlockPos pos) {
-        return DoormatSettings.bulbOxidationStageSignal ? state.getLuminance() : original;
+        return DoormatSettings.copperBulbOxidationSignal ? state.getLuminance() : original;
     }
 
 }

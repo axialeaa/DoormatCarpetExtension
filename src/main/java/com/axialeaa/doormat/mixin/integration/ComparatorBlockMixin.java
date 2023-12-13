@@ -1,6 +1,7 @@
 package com.axialeaa.doormat.mixin.integration;
 
-import com.axialeaa.doormat.interfaces.BlockComparatorBehaviourInterface;
+import com.axialeaa.doormat.helpers.ComparatorBehaviourHelper;
+import com.axialeaa.doormat.interfaces.ComparatorBehaviourInterface;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.BlockState;
@@ -11,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
- * This mixin (alongside {@link WorldMixin}) causes the behaviour that implementing {@link BlockComparatorBehaviourInterface} on a class creates.
+ * This mixin (alongside {@link WorldMixin}) causes the behaviour that implementing {@link ComparatorBehaviourInterface} on a class creates.
  */
 @Mixin(ComparatorBlock.class)
 public class ComparatorBlockMixin {
@@ -21,8 +22,7 @@ public class ComparatorBlockMixin {
      */
     @WrapOperation(method = "getPower", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;isSolidBlock(Lnet/minecraft/world/BlockView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean modifyBlockCheck(BlockState state, BlockView world, BlockPos pos, Operation<Boolean> original) {
-        return original.call(state, world, pos) ||
-            state.getBlock() instanceof BlockComparatorBehaviourInterface BCBI && BCBI.doormat$canReadThrough(state.getBlock());
+        return ComparatorBehaviourHelper.modifyBlockCheck(state, world, pos, original);
     }
 
 }

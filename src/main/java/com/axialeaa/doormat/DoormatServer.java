@@ -6,9 +6,11 @@ import carpet.utils.Translations;
 import com.axialeaa.doormat.command.QuasiConnectivityCommand;
 import com.axialeaa.doormat.command.RandomTickCommand;
 import com.axialeaa.doormat.command.UpdateTypeCommand;
+import com.axialeaa.doormat.util.ConfigFile;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.command.CommandRegistryAccess;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,14 +19,19 @@ import java.util.Map;
 
 public class DoormatServer implements ModInitializer, CarpetExtension {
 
-	public static final String MODID = "doormat";
-	public static final String MODNAME = "Axia's Doormat";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MODID);
+	public static final String MOD_ID = "doormat";
+	public static final String MOD_NAME = "Doormat";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	@Override
 	public void onInitialize() {
 		CarpetServer.manageExtension(new DoormatServer());
-		LOGGER.info(MODNAME + " initialized. Wipe your feet!");
+		LOGGER.info(MOD_NAME + " initialized. Wipe your feet!");
+	}
+
+	@Override
+	public void onServerLoaded(MinecraftServer server) {
+		ConfigFile.load(server); // Loads all quasi-connectivity and update type values when the server starts.
 	}
 
 	@Override
@@ -41,7 +48,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 
 	@Override
 	public Map<String, String> canHasTranslations(String lang) {
-		return Translations.getTranslationFromResourcePath("assets/" + MODID + "/lang/%s.json".formatted(lang));
+		return Translations.getTranslationFromResourcePath("assets/" + MOD_ID + "/lang/%s.json".formatted(lang));
 	}
 
 }

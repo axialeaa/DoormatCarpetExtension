@@ -40,4 +40,7 @@ public abstract class AbstractBlockMixin {
     @Inject(method = "neighborUpdate", at = @At("HEAD"))
     public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {}
 
+    @Inject(method = "scheduledTick", at = @At("HEAD"))
+    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {}
+
 }

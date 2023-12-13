@@ -1,6 +1,8 @@
 package com.axialeaa.doormat.mixin.rules.redstoneOpensBarrels;
 
 import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.helpers.RedstoneRuleHelper;
+import com.axialeaa.doormat.util.QuasiConnectivityRules;
 import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BarrelBlockEntity;
@@ -15,19 +17,17 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
-import java.util.Objects;
-
 @Mixin(BarrelBlockEntity.class)
 public class BarrelBlockEntityMixin extends BlockEntity {
 
-    @Unique boolean condition = !DoormatSettings.redstoneOpensBarrels || !Objects.requireNonNull(world).isReceivingRedstonePower(pos);
+    @Unique boolean condition = !(DoormatSettings.redstoneOpensBarrels && RedstoneRuleHelper.quasiConnectForRule(world, pos, QuasiConnectivityRules.BARREL));
 
     public BarrelBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
     }
 
     /**
-     * Stops players from being able to change the open state of the barrel when it's activated by redstone.
+     * Stops players from being able to change the open state of the barrel while it's activated by redstone.
      */
     @WrapWithCondition(method = "setOpen", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private boolean conditionalStateChange(World world, BlockPos pos, BlockState state, int flags) {

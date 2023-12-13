@@ -15,7 +15,7 @@ public class DoormatConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> MOSSY_STONE_BRICKS_PATCH = registerKey("mossy_stone_bricks_patch");
 
     public static RegistryKey<ConfiguredFeature<?,?>> registerKey(String name) {
-        return RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, new Identifier(DoormatServer.MODID, name));
+        return RegistryKey.of(RegistryKeys.CONFIGURED_FEATURE, new Identifier(DoormatServer.MOD_ID, name));
     }
 
 }

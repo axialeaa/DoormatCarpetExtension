@@ -1,74 +1,99 @@
 package com.axialeaa.doormat.command;
 
-import carpet.utils.CommandHelper;
+import carpet.utils.Messenger;
 import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.helpers.CommandHelper;
+import com.axialeaa.doormat.util.ConfigFile;
 import com.axialeaa.doormat.util.QuasiConnectivityRules;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
-import net.minecraft.command.CommandSource;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.text.Text;
 
-import static com.axialeaa.doormat.util.QuasiConnectivityRules.ruleKeys;
-import static com.axialeaa.doormat.util.QuasiConnectivityRules.ruleValues;
+import static com.axialeaa.doormat.util.QuasiConnectivityRules.*;
+import static net.minecraft.command.CommandSource.suggestMatching;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class QuasiConnectivityCommand {
 
+    public static final String ALIAS = "quasiconnectivity";
+
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        dispatcher.register(literal("quasiconnectivity")
-            .requires(player -> CommandHelper.canUseCommand(player, DoormatSettings.commandQC))
+        dispatcher.register(literal(ALIAS)
+            .requires(player -> carpet.utils.CommandHelper.canUseCommand(player, DoormatSettings.commandQC))
             .then(argument("component", StringArgumentType.word())
-                .suggests((ctx, builder) -> CommandSource.suggestMatching(QuasiConnectivityRules.getCommandSuggestions(), builder))
-                .executes(QuasiConnectivityCommand::get)
+                .suggests((ctx, builder) -> suggestMatching(QuasiConnectivityRules.getCommandSuggestions(), builder))
+                .executes(ctx -> QuasiConnectivityCommand.get(
+                    ctx.getSource(),
+                    StringArgumentType.getString(ctx, "component"))
+                )
                 .then(argument("value", BoolArgumentType.bool())
-                    .executes(QuasiConnectivityCommand::set)))
+                    .executes(ctx -> QuasiConnectivityCommand.set(
+                        ctx.getSource(),
+                        StringArgumentType.getString(ctx, "component"),
+                        BoolArgumentType.getBool(ctx, "value"))
+                    )
+                )
+            )
             .then(literal("reset")
-                .executes(QuasiConnectivityCommand::reset))
+                .executes(ctx -> QuasiConnectivityCommand.reset(
+                    ctx.getSource())
+                )
+            )
         );
     }
 
     /**
      * Assigns a new boolean value to the entered-in redstone component's quasi-connectivity hashmap, defined in {@link QuasiConnectivityRules}.
-     * @throws CommandSyntaxException when the specified value matches the one present in the hashmap.
      */
-    private static int set(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        ServerCommandSource source = ctx.getSource();
-        QuasiConnectivityRules component = ruleKeys.get((StringArgumentType.getString(ctx, "component")));
+    private static int set(ServerCommandSource source, String key, boolean input) {
+        QuasiConnectivityRules component = ruleKeys.get(key);
         // Get the enum entry assigned to the specified selection via the hashmap.
-        boolean input = BoolArgumentType.getBool(ctx, "value");
 
+        if (CommandHelper.isExperimentalDatapackDisabled(source) && (component == CRAFTER || component == COPPER_BULB)) {
+            Messenger.m(source, "r " + component.getPrettyName() + " is not enabled on this world!");
+            return 0;
+        }
+        if (!DoormatSettings.redstoneOpensBarrels && component == BARREL) {
+            Messenger.m(source, "r redstoneOpensBarrels is not enabled on this world!");
+            return 0;
+        }
         if (ruleValues.get(component) != input) { // If the value assigned to the component via the values hashmap is not the same as the inputted argument...
             ruleValues.put(component, input);
-            source.sendFeedback(() -> Text.translatable("carpet.command.quasiConnectivity.set.success", component.getFormattedName(), input), true);
+            Messenger.m(source, "w Set " + component.getPrettyName() + " quasi-connectivity to " + input);
+            ConfigFile.save(source.getServer());
             return 1;
         }
-        else throw new SimpleCommandExceptionType(Text.translatable("carpet.command.quasiConnectivity.set.failed", component.getFormattedName(), input)).create();
+        else {
+            Messenger.m(source, "r " + component.getPrettyName() + " quasi-connectivity is already set to " + input);
+            return 0;
+        }
     }
 
     /**
      * Finds the value assigned to the entered-in redstone component's quasi-connectivity hashmap, defined in {@link QuasiConnectivityRules}.
      */
-    private static int get(CommandContext<ServerCommandSource> ctx) {
-        ServerCommandSource source = ctx.getSource();
-        QuasiConnectivityRules component = ruleKeys.get((StringArgumentType.getString(ctx, "component")));
+    private static int get(ServerCommandSource source, String key) {
+        QuasiConnectivityRules component = ruleKeys.get(key);
         boolean value = ruleValues.get(component);
 
-        source.sendFeedback(() -> Text.translatable((value == component.getDefaultValue() ? "carpet.command.quasiConnectivity.get.unchanged" : "carpet.command.quasiConnectivity.get.changed"), component.getFormattedName(), value), true);
+        if (CommandHelper.isExperimentalDatapackDisabled(source) && (component == CRAFTER || component == COPPER_BULB)) {
+            Messenger.m(source, "r " + component.getPrettyName() + " is not enabled on this world!");
+            return 0;
+        }
+        if (!DoormatSettings.redstoneOpensBarrels && component == BARREL) {
+            Messenger.m(source, "r redstoneOpensBarrels is not enabled on this world!");
+            return 0;
+        }
+        Messenger.m(source, "w " + component.getPrettyName() + " quasi-connectivity is set to " + value + (value == component.getDefaultValue() ? " (default value)" : " (modified value)"));
         return 1;
     }
 
     /**
      * Sets each redstone component's quasi-connectivity hashmap value to its default.
-     * @throws CommandSyntaxException when all values are unchanged from their defaults.
      */
-    private static int reset(CommandContext<ServerCommandSource> ctx) throws CommandSyntaxException {
-        ServerCommandSource source = ctx.getSource();
+    private static int reset(ServerCommandSource source) {
         boolean bl = false; // Define a new boolean
         for (QuasiConnectivityRules component : QuasiConnectivityRules.values()) // Iterate through a list of all enum entries...
             if (ruleValues.get(component) != component.getDefaultValue()) { // If the value has been modified...
@@ -77,10 +102,14 @@ public class QuasiConnectivityCommand {
             }
 
         if (bl) { // If the hashmap had to change in order to restore default settings...
-            source.sendFeedback(() -> Text.translatable("carpet.command.quasiConnectivity.reset.success"), true);
+            Messenger.m(source, "w Restored vanilla quasi-connectivity settings");
+            ConfigFile.save(source.getServer());
             return 1; // Success!
         }
-        else throw new SimpleCommandExceptionType(Text.translatable("carpet.command.quasiConnectivity.reset.failed")).create();
+        else {
+            Messenger.m(source, "r Quasi-connectivity values haven't changed. Try tweaking some settings first!");
+            return 0;
+        }
     }
 
 }

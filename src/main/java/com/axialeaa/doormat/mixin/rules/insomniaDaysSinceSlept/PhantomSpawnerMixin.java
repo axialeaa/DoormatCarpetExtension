@@ -11,7 +11,7 @@ public class PhantomSpawnerMixin {
 
     @ModifyConstant(method = "spawn", constant = @Constant(intValue = 72000))
     private int modifySpawnTime(int constant) {
-        return DoormatSettings.insomniaDaysSinceSlept * 24000; // number of ticks in a day
+        return DoormatSettings.insomniaDayCount * 24000; // number of ticks in a day
     }
 
 }

@@ -4,7 +4,6 @@ import carpet.CarpetSettings;
 import carpet.helpers.QuasiConnectivity;
 import com.axialeaa.doormat.util.QuasiConnectivityRules;
 import com.axialeaa.doormat.util.UpdateTypeRules;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -15,9 +14,9 @@ public class RedstoneRuleHelper {
     /**
      * @return true if the rule is enabled, carpet's quasiConnectivity is set to something above 0 and the block is powered directly or via QC, otherwise true if the block is directly powered.
      */
-    public static boolean quasiConnectForRule(World world, BlockPos pos, QuasiConnectivityRules rule) {
+    public static boolean quasiConnectForRule(World world, BlockPos pos, QuasiConnectivityRules component) {
         boolean isPowered = world.isReceivingRedstonePower(pos);
-        return isPowered || (QuasiConnectivity.hasQuasiSignal(world, pos) && QuasiConnectivityRules.ruleValues.get(rule) && CarpetSettings.quasiConnectivity != 0);
+        return isPowered || (QuasiConnectivity.hasQuasiSignal(world, pos) && QuasiConnectivityRules.ruleValues.get(component) && CarpetSettings.quasiConnectivity > 0);
     }
 
     /**
@@ -34,14 +33,6 @@ public class RedstoneRuleHelper {
      */
     public static String[] getCommandSuggestions(Map<String, ?> stringMap) {
         return stringMap.keySet().toArray(new String[0]);
-    }
-
-    /**
-     * @param key the key of the component listed in the enum which will be translated using the prefix
-     * @return a translated text object from the inputted component key.
-     */
-    public static Text getFormattedComponentName(String key) {
-        return Text.translatable("redstone_rule.component." + key);
     }
 
 }

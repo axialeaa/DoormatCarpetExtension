@@ -7,7 +7,7 @@ import net.minecraft.block.Block;
 /**
  * Opt-in interface for easily configurable comparator behaviour via {@link ComparatorBlockMixin} and {@link WorldMixin}.
  */
-public interface BlockComparatorBehaviourInterface {
+public interface ComparatorBehaviourInterface {
 
     /**
      * @return whether comparators can read through this block.
