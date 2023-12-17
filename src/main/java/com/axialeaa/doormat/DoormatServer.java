@@ -11,6 +11,7 @@ import com.axialeaa.doormat.util.ConfigFile;
 import com.axialeaa.doormat.util.RedstoneRule;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.resource.featuretoggle.FeatureSet;
@@ -26,6 +27,8 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	public static final String MOD_ID = "doormat";
 	public static final String MOD_NAME = "Doormat";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+	public static final boolean IS_DEBUG = DoormatSettings.incrediblySecretSetting || FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	public static boolean hasExperimentalDatapack(MinecraftServer server) {
 		FeatureSet featureSet = server.getSaveProperties().getEnabledFeatures();
@@ -46,7 +49,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	@Override
 	public void onGameStarted() {
 		CarpetServer.settingsManager.parseSettingsClass(DoormatSettings.class);
-		CarpetServer.settingsManager.registerRuleObserver(DoormatServer::amendKeysMapsForRule);
+		CarpetServer.settingsManager.registerRuleObserver(DoormatServer::amendKeyMapsForRule);
 	}
 
 	@Override
@@ -64,7 +67,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	/**
 	 * Removes "barrel" from the /quasiconnectivity and /updatetype key hashmaps when redstoneOpensBarrels is disabled, and adds it back when enabled.
 	 */
-	public static void amendKeysMapsForRule(ServerCommandSource serverCommandSource, CarpetRule<?> currentRuleState, String originalUserTest) {
+	public static void amendKeyMapsForRule(ServerCommandSource serverCommandSource, CarpetRule<?> currentRuleState, String originalUserTest) {
 		boolean settingState = currentRuleState.settingsManager().getCarpetRule("redstoneOpensBarrels").value().equals(true);
 		String key = RedstoneRule.BARREL.getKey();
 		if (settingState) {

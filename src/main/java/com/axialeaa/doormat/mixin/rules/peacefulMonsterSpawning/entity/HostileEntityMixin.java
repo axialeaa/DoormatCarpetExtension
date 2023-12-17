@@ -21,19 +21,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public class HostileEntityMixin {
 
     /**
-     * <h2>SPAWN CONDITION ADDERS</h2>
-     * @return the normal return values of these methods with an additional check based on the rule.
-     */
-    @ModifyReturnValue(method = "canSpawnInDark", at = @At("RETURN"))
-    private static boolean addSpawnConditionInDark(boolean original, EntityType<? extends HostileEntity> type, ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return PeacefulSpawningHelper.addSpawningCondition(world, spawnReason, pos, original);
-    }
-    @ModifyReturnValue(method = "canSpawnIgnoreLightLevel", at = @At("RETURN"))
-    private static boolean addSpawnConditionIgnoreLightLevel(boolean original, EntityType<? extends HostileEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return PeacefulSpawningHelper.addSpawningCondition(world, spawnReason, pos, original);
-    }
-
-    /**
      * <h2>CHECK BYPASSES</h2>
      * @return the normal return values of these methods without the Difficulty.PEACEFUL check.
      */
@@ -44,6 +31,19 @@ public class HostileEntityMixin {
     @WrapOperation(method = "canSpawnIgnoreLightLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty allowPeacefulSpawnsIgnoreLightLevel(WorldAccess world, Operation<Difficulty> original) {
         return PeacefulSpawningHelper.bypassCheck(world, original);
+    }
+
+    /**
+     * <h2>SPAWN CONDITION ADDERS</h2>
+     * @return the normal return values of these methods with an additional check based on the rule.
+     */
+    @ModifyReturnValue(method = "canSpawnInDark", at = @At("RETURN"))
+    private static boolean addSpawnConditionInDark(boolean original, EntityType<? extends HostileEntity> type, ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
+        return PeacefulSpawningHelper.addSpawningCondition(world, spawnReason, pos, original);
+    }
+    @ModifyReturnValue(method = "canSpawnIgnoreLightLevel", at = @At("RETURN"))
+    private static boolean addSpawnConditionIgnoreLightLevel(boolean original, EntityType<? extends HostileEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
+        return PeacefulSpawningHelper.addSpawningCondition(world, spawnReason, pos, original);
     }
 
     /**

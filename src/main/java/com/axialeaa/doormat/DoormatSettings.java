@@ -103,6 +103,9 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean accurateAzaleaLeafDistribution = false;
 
+    @Rule( categories = { CREATIVE, DOORMAT } )
+    public static boolean alwaysHalloween = false;
+
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean azaleaLeavesGrowFlowers = false;
 
@@ -183,6 +186,9 @@ public class DoormatSettings {
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean huskWashing = false; // technically renewable sand; renamed to avoid conflict with other carpet mods
+
+    @Rule( categories = { EXPERIMENTAL, DOORMAT } )
+    public static boolean incrediblySecretSetting = false;
 
     @Rule( options = { "3", "7" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int insomniaDayCount = 3;

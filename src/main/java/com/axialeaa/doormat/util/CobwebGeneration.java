@@ -1,11 +1,13 @@
 package com.axialeaa.doormat.util;
 
+import com.axialeaa.doormat.DoormatServer;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.CaveSpiderEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
 public class CobwebGeneration {
@@ -15,15 +17,25 @@ public class CobwebGeneration {
      */
     public static void forBox(ServerWorld world, BlockPos pos, Entity storedEntity, int h, int v, int rarity) {
         Random random = world.getRandom();
-        if (storedEntity instanceof CaveSpiderEntity)
+        if (storedEntity instanceof CaveSpiderEntity) {
             for (BlockPos blockPos : BlockPos.iterate(pos.add(-h, -v, -h), pos.add(h, v, h))) {
                 int i = 0;
                 for (Direction direction : Direction.values())
-                    if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, pos, direction.getOpposite()))
+                    if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, pos, direction.getOpposite())) {
                         i++;
-                if (i >= 2 && random.nextInt(i + rarity) > rarity)
-                    world.setBlockState(blockPos, Blocks.COBWEB.getDefaultState());
+                        if (DoormatServer.IS_DEBUG)
+                            RenderHandler.addCuboidFilled(Vec3d.ofCenter(blockPos).offset(direction, 0.5), 0.02, 0xFFFFFFFF, 0xFFFFFFFF, 10000);
+                    }
+                if (i >= 2) {
+                    if (random.nextInt(i + rarity) > rarity)
+                        world.setBlockState(blockPos, Blocks.COBWEB.getDefaultState());
+                    if (DoormatServer.IS_DEBUG)
+                        RenderHandler.addCuboidFilled(Vec3d.ofCenter(blockPos), 0.5, 0x2030FF30, 0xFF30FF30, 10000);
+                }
             }
+            if (DoormatServer.IS_DEBUG)
+                RenderHandler.addCuboidWireFrame(pos.getX() - h, pos.getY() - v, pos.getZ() - h, pos.getX() + h + 1, pos.getY() + v + 1, pos.getZ() + h + 1, 0xFFA230FF, 10000);
+        }
     }
 
     public static void forBox(ServerWorld world, BlockPos pos, Entity storedEntity, int spread, int rarity) {

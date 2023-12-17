@@ -1,6 +1,5 @@
 package com.axialeaa.doormat.mixin.rules.peacefulMonsterSpawning.world;
 
-import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.helpers.PeacefulSpawningHelper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.village.raid.Raid;

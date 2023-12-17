@@ -16,7 +16,7 @@ import java.util.UUID;
  */
 public class ConfigFile {
 
-    private static final String FILE_NAME = DoormatServer.MOD_ID + ".json";
+    public static final String FILE_NAME = DoormatServer.MOD_ID + ".json";
 
     private static File getWorldDirectory(MinecraftServer server) {
         return server.getSavePath(WorldSavePath.ROOT).toFile();

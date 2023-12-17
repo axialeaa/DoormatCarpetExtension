@@ -1,6 +1,8 @@
 {
   "carpet.rule.accurateAzaleaLeafDistribution.desc": "The distribution of azalea leaf types matches the azalea bush the tree is grown from",
   "carpet.rule.accurateAzaleaLeafDistribution.extra.0": "These features are controlled through doormat/worldgen/configured_feature/azalea_tree_many_flowers.json and azalea_tree_no_flowers.json respectively.",
+  "carpet.rule.alwaysHalloween.desc": "Mobs will always have a chance to wear carved pumpkins, regardless of the time of year",
+  "carpet.rule.alwaysHalloween.extra.0": "Mobs will always have a chance to wear carved pumpkins, regardless of the time of year",
   "carpet.rule.azaleaLeavesGrowFlowers.desc": "Azalea leaves grow flowers when fertilized",
   "carpet.rule.barrelItemDumping.desc": "Barrels facing down will eject all of their contained items when opened",
   "carpet.rule.beaconsHealPets.desc": "Beacons with their secondary effect set to regeneration can heal nearby tamed mobs",
@@ -46,6 +48,7 @@
   "carpet.rule.growableSwampOakTrees.desc": "Oak saplings grow into swamp oaks in swamp biomes",
   "carpet.rule.hopperTransferTime.desc": "The length of time it takes for a hopper to transfer an item, in ticks",
   "carpet.rule.huskWashing.desc": "Adult husks drop 1-3 sand when converting into zombies",
+  "carpet.rule.incrediblySecretSetting.desc": "§kblblblbllblblbblblblblblblbl§r :3",
   "carpet.rule.insomniaDayCount.desc": "The number of sleepless nights after which phantoms can spawn around the player",
   "carpet.rule.jukeboxDiscProgressSignal.desc": "Comparators reading from jukeboxes output a signal strength based on how much of the music disc has been played, instead of the disc index",
   "carpet.rule.leavesNoCollision.desc": "Disables the tangibility of leaves, making it easier to traverse areas with lots of trees",

@@ -87,7 +87,7 @@ public enum RedstoneRule {
         NEITHER, BLOCK, SHAPE, BOTH;
 
         public String getKey() {
-            return this.toString().toLowerCase(Locale.ROOT);
+            return toString().toLowerCase(Locale.ROOT);
             // Returns the name of the constant converted to lower snake case (NEITHER -> neither).
         }
 
