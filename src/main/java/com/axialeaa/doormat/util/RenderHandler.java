@@ -4,7 +4,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.HashSet;
@@ -73,59 +72,6 @@ public class RenderHandler {
 
     public static void addCuboidWireFrame(Vec3d pos, double size, int strokeColor, long removalTime) {
         addCuboidWireFrame(pos.getX() + size, pos.getY() + size, pos.getZ() + size, pos.getX() - size, pos.getY() - size, pos.getZ() - size, strokeColor, removalTime);
-    }
-
-    public synchronized static void addCuboidFaceFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Direction direction, int fillColor, int strokeColor, long removalTime) {
-        long l = System.currentTimeMillis() + removalTime;
-        addCuboidWireFrame(minX, minY, minZ, maxX, maxY, maxZ, strokeColor, removalTime);
-        switch (direction) {
-            case NORTH -> QUADS.add(new Quad(
-                minX, minY, minZ,
-                minX, maxY, minZ,
-                maxX, maxY, minZ,
-                maxX, minY, minZ,
-                fillColor, l
-            )); // north side
-            case SOUTH -> QUADS.add(new Quad(
-                minX, minY, maxZ,
-                maxX, minY, maxZ,
-                maxX, maxY, maxZ,
-                minX, maxY, maxZ,
-                fillColor, l
-            )); // south side
-            case WEST -> QUADS.add(new Quad(
-                minX, minY, minZ,
-                minX, minY, maxZ,
-                minX, maxY, maxZ,
-                minX, maxY, minZ,
-                fillColor, l
-            )); // west side
-            case EAST -> QUADS.add(new Quad(
-                maxX, minY, minZ,
-                maxX, maxY, minZ,
-                maxX, maxY, maxZ,
-                maxX, minY, maxZ,
-                fillColor, l
-            )); // east side
-            case DOWN -> QUADS.add(new Quad(
-                minX, minY, minZ,
-                maxX, minY, minZ,
-                maxX, minY, maxZ,
-                minX, minY, maxZ,
-                fillColor, l
-            )); // down side
-            case UP -> QUADS.add(new Quad(
-                minX, maxY, minZ,
-                minX, maxY, maxZ,
-                maxX, maxY, maxZ,
-                maxX, maxY, minZ,
-                fillColor, l
-            )); // up side
-        }
-    }
-
-    public static void addCuboidFaceFilled(Vec3d pos, Direction direction, int fillColor, int strokeColor, long removalTime) {
-        addCuboidFaceFilled(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1, direction, fillColor, strokeColor, removalTime);
     }
 
     public synchronized static void addCuboidFilled(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, int fillColor, int strokeColor, long removalTime) {
