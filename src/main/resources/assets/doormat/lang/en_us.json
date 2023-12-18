@@ -2,7 +2,7 @@
   "carpet.rule.accurateAzaleaLeafDistribution.desc": "The distribution of azalea leaf types matches the azalea bush the tree is grown from",
   "carpet.rule.accurateAzaleaLeafDistribution.extra.0": "These features are controlled through doormat/worldgen/configured_feature/azalea_tree_many_flowers.json and azalea_tree_no_flowers.json respectively.",
   "carpet.rule.alwaysHalloween.desc": "Mobs will always have a chance to wear carved pumpkins, regardless of the time of year",
-  "carpet.rule.alwaysHalloween.extra.0": "Mobs will always have a chance to wear carved pumpkins, regardless of the time of year",
+  "carpet.rule.alwaysHalloween.extra.0": "This also affects bat spawning rates.",
   "carpet.rule.azaleaLeavesGrowFlowers.desc": "Azalea leaves grow flowers when fertilized",
   "carpet.rule.barrelItemDumping.desc": "Barrels facing down will eject all of their contained items when opened",
   "carpet.rule.beaconsHealPets.desc": "Beacons with their secondary effect set to regeneration can heal nearby tamed mobs",
