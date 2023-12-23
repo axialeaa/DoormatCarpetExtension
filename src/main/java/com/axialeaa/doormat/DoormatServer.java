@@ -22,6 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+import static com.axialeaa.doormat.util.RedstoneRule.*;
+
 public class DoormatServer implements ModInitializer, CarpetExtension {
 
 	public static final String MOD_ID = "doormat";
@@ -42,8 +44,22 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	}
 
 	@Override
-	public void onServerLoaded(MinecraftServer server) {
+	public void onServerLoadedWorlds(MinecraftServer server) {
 		ConfigFile.load(server); // Loads all quasi-connectivity and update type values when the server starts.
+
+		for (RedstoneRule component : values()) {
+			if (!DoormatSettings.redstoneOpensBarrels && component == BARREL)
+				continue;
+
+			if (!hasExperimentalDatapack(server) && (component == COPPER_BULB || component == CRAFTER))
+				continue;
+
+			qcKeys.put(component.getKey(), component);
+			if (component.getDefaultUpdateTypeValue() != null)
+				updateTypeKeys.put(component.getKey(), component);
+		}
+		// Go through the list of components in the RedstoneRules enum, and assign their keys to the hashmaps.
+		// This will be useful for command autocompletion later down the line.
 	}
 
 	@Override
@@ -69,14 +85,15 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	 */
 	public static void amendKeyMapsForRule(ServerCommandSource serverCommandSource, CarpetRule<?> currentRuleState, String originalUserTest) {
 		boolean settingState = currentRuleState.settingsManager().getCarpetRule("redstoneOpensBarrels").value().equals(true);
-		String key = RedstoneRule.BARREL.getKey();
+		String key = BARREL.getKey();
+
 		if (settingState) {
-			RedstoneRule.qcKeys.put(key, RedstoneRule.BARREL);
-			RedstoneRule.updateTypeKeys.put(key, RedstoneRule.BARREL);
+			qcKeys.put(key, BARREL);
+			updateTypeKeys.put(key, BARREL);
 		}
 		else {
-			RedstoneRule.qcKeys.remove(key);
-			RedstoneRule.updateTypeKeys.remove(key);
+			qcKeys.remove(key);
+			updateTypeKeys.remove(key);
 		}
 	}
 

@@ -76,18 +76,12 @@ public class ConfigFile {
     }
 
     /**
-     * Sets the quasi-connectivity and update type hashmap values to default if there's no config file or json entry for the component, otherwise the value in the json file.
+     * Sets the quasi-connectivity and update type hashmap values to those stored in the json file, if they exist.
      */
     public static void load(MinecraftServer server) {
         File configFile = new File(getWorldDirectory(server), FILE_NAME);
 
-        if (!configFile.exists()) {
-            for (RedstoneRule component : RedstoneRule.values()) {
-                RedstoneRule.qcValues.put(component, component.getDefaultQCValue());
-                RedstoneRule.updateTypeValues.put(component, component.getDefaultUpdateTypeValue());
-            }
-        }
-        else if (configFile.isFile() && configFile.canRead()) {
+        if (configFile.exists() && configFile.isFile() && configFile.canRead()) {
             JsonElement parseElement = null;
             try (InputStreamReader reader = new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8)) {
                 parseElement = JsonParser.parseReader(reader);
@@ -105,13 +99,13 @@ public class ConfigFile {
                     String key = component.getKey();
 
                     JsonElement qcElement = qcObj.get(key);
-                    boolean qcKeyExists = qcObj.has(key) && qcElement.isJsonPrimitive();
-
                     JsonElement updateTypeElement = updateTypeObj.get(key);
-                    boolean updateTypeKeyExists = updateTypeObj.has(key) && updateTypeElement.isJsonPrimitive();
 
-                    RedstoneRule.qcValues.put(component, qcKeyExists ? qcElement.getAsBoolean() : component.getDefaultQCValue());
-                    RedstoneRule.updateTypeValues.put(component, updateTypeKeyExists ? RedstoneRule.UpdateTypes.keys.get(updateTypeElement.getAsString()) : component.getDefaultUpdateTypeValue());
+                    if (qcObj.has(key) && qcElement.isJsonPrimitive())
+                        RedstoneRule.qcValues.put(component, qcElement.getAsBoolean());
+
+                    if (updateTypeObj.has(key) && updateTypeElement.isJsonPrimitive())
+                        RedstoneRule.updateTypeValues.put(component, RedstoneRule.UpdateTypes.keys.get(updateTypeElement.getAsString()));
                 }
             }
         }
