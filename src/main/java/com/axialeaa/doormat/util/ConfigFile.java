@@ -76,7 +76,7 @@ public class ConfigFile {
     }
 
     /**
-     * Sets the quasi-connectivity and update type hashmap values to those stored in the json file, if they exist.
+     * Sets the quasi-connectivity and update type hashmap values to those stored in the json file, if they exist. Otherwise, they will be set to the default values.
      */
     public static void load(MinecraftServer server) {
         File configFile = new File(getWorldDirectory(server), FILE_NAME);
@@ -103,13 +103,20 @@ public class ConfigFile {
 
                     if (qcObj.has(key) && qcElement.isJsonPrimitive())
                         RedstoneRule.qcValues.put(component, qcElement.getAsBoolean());
+                    else RedstoneRule.qcValues.put(component, component.getDefaultQCValue());
 
                     if (updateTypeObj.has(key) && updateTypeElement.isJsonPrimitive())
                         RedstoneRule.updateTypeValues.put(component, RedstoneRule.UpdateTypes.keys.get(updateTypeElement.getAsString()));
+                    else RedstoneRule.updateTypeValues.put(component, component.getDefaultUpdateTypeValue());
                 }
             }
         }
-        else DoormatServer.LOGGER.warn("Could not read the file at: {}", configFile.getAbsolutePath());
+        else {
+            for (RedstoneRule component : RedstoneRule.values()) {
+                RedstoneRule.qcValues.put(component, component.getDefaultQCValue());
+                RedstoneRule.updateTypeValues.put(component, component.getDefaultUpdateTypeValue());
+            }
+        }
     }
 
 }

@@ -45,8 +45,6 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 
 	@Override
 	public void onServerLoadedWorlds(MinecraftServer server) {
-		ConfigFile.load(server); // Loads all quasi-connectivity and update type values when the server starts.
-
 		for (RedstoneRule component : values()) {
 			if (!DoormatSettings.redstoneOpensBarrels && component == BARREL)
 				continue;
@@ -60,6 +58,8 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 		}
 		// Go through the list of components in the RedstoneRules enum, and assign their keys to the hashmaps.
 		// This will be useful for command autocompletion later down the line.
+
+		ConfigFile.load(server); // Loads all quasi-connectivity and update type values when the server starts.
 	}
 
 	@Override
