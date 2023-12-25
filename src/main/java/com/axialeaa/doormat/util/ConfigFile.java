@@ -53,6 +53,7 @@ public class ConfigFile {
     /**
      * This is pretty much copied from Masa's Malilib. It writes new modifications to a temporary file which then overwrites the old one. This helps to prevent losing your data if the server crashes when changing a value.
      */
+    @SuppressWarnings("UnusedReturnValue")
     private static boolean write(JsonObject root, File configFile) {
         File tempFile = new File(configFile.getParentFile(), configFile.getName() + ".tmp");
 
