@@ -1,5 +1,5 @@
 # Hi there! Thanks for checking out Doormat!
-<img align="right" width="120" src="src/main/resources/assets/doormat/icon.png">
+<img width="120" src="src/main/resources/assets/doormat/icon.png">
 
 [![GitHub downloads](https://img.shields.io/github/downloads/axialeaa/DoormatCarpetExtension/total?label=Github%20downloads&logo=github&style=for-the-badge)](https://github.com/axialeaa/DoormatCarpetExtension/releases)
 [![Modrinth downloads](https://img.shields.io/modrinth/dt/doormat?label=Modrinth%20downloads&logo=modrinth&style=for-the-badge)](https://modrinth.com/mod/doormat)

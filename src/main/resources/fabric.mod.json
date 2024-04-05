@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "doormat",
 	"version": "${version}",
-	"name": "Axia's Doormat",
+	"name": "Doormat",
 	"description": "Welcome to the entrance of my ideas! Wipe your feet please...",
 	"authors": [
 		"axialeaa"

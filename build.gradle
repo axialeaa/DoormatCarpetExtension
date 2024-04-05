@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.4-SNAPSHOT'
+	id 'fabric-loom' version '1.5-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -10,19 +10,13 @@ base {
 	archivesName = project.archives_base_name
 }
 
-repositories {
-	maven {
-		//the maven that carpet resides in
-		name = "masa's maven"
-		url = "https://masa.dy.fi/maven"
-	}
-	maven {
-		url = "https://jitpack.io"
-	}
-}
-
 loom {
 	accessWidenerPath = file("src/main/resources/doormat.accesswidener")
+}
+
+repositories {
+	maven { url = "https://masa.dy.fi/maven" } // Carpet
+	maven { url = "https://jitpack.io" } // MixinSquared
 }
 
 dependencies {
@@ -34,7 +28,10 @@ dependencies {
 	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.1")))
 
 	// Carpet
+	// implementation "com.github.gnembon:fabric-carpet:1.4.132"
 	modImplementation "carpet:fabric-carpet:${project.carpet_mc_dependency}-${project.carpet_core_version}"
+
+	// modCompileOnly "com.github.CaffeineMC:lithium-fabric:${project.lithium_dependency}"
 }
 
 processResources {
