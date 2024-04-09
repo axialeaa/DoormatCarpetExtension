@@ -118,8 +118,6 @@
   "carpet.rule.stickyStickyPistons.desc": "Sticky pistons act like directional slime blocks",
   "carpet.rule.stickyStickyPistons.extra.0": "\"stick_to_all\" causes them to stick omnidirectionally like normal slime blocks.",
   "carpet.rule.stoneGenProduct.desc": "The block produced when lava flows on top of water",
-  "carpet.rule.thornyRoseBush.desc": "Similarly to sweet berry bushes, rose bushes deal damage when you walk inside them",
-  "carpet.rule.thornyRoseBush.extra.0": "This even has a unique death message!",
   "carpet.rule.torchBurnoutFlickerAmount.desc": "The number of times a redstone torch must flicker within the allocated timespan in order to burn out",
   "carpet.rule.torchBurnoutTime.desc": "The allocated time a torch has to reach its flicker count in order to burn out, in ticks",
   "carpet.rule.torchBurnoutTime.extra.0": "40 is the value that matches Bedrock Edition's behavior, assuming the default flicker amount value",

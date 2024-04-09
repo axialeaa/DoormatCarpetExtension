@@ -452,9 +452,6 @@ public class DoormatSettings {
     @Rule( options = "minecraft:stone", validators = BlockIdentifierValidator.class, strict = false, categories = { TINKERING, APRIL_FOOLS, EXPERIMENTAL, DOORMAT } )
     public static String stoneGenProduct = "minecraft:stone";
 
-    @Rule( categories = { SURVIVAL, DOORMAT } )
-    public static boolean thornyRoseBush = false;
-
     @Rule( options = "8", validators = Validators.NonNegativeNumber.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static int torchBurnoutFlickerAmount = 8;
 
