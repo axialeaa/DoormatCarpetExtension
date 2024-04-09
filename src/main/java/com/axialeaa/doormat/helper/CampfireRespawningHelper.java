@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.helper.rule;
+package com.axialeaa.doormat.helper;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.google.common.collect.ImmutableList;
@@ -51,7 +51,7 @@ public class CampfireRespawningHelper {
     );
 
     /**
-     * Constructs a 3x3x3 cube with a 3-block tall hole through the middle, centred on the campfire. This protects the player from burning on the campfire.
+     * Constructs a 3x3x3 cube with a 3-block tall hole through the middle, centred on the campfire. This protects the player from burning on the campfire when respawning.
      */
     private static final ImmutableList<Vec3i> SPAWN_OFFSETS = new ImmutableList.Builder<Vec3i>()
         .addAll(DONUT)

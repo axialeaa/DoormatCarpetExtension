@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.helper.rule;
+package com.axialeaa.doormat.helper;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.entity.SpawnReason;

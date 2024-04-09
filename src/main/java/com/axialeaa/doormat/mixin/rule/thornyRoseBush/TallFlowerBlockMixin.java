@@ -27,7 +27,7 @@ public class TallFlowerBlockMixin extends AbstractBlockMixin {
                 double velocityX = Math.abs(entity.getX() - entity.lastRenderX);
                 double velocityZ = Math.abs(entity.getZ() - entity.lastRenderZ);
                 if (velocityX >= 0.003 || velocityZ >= 0.003)
-                    entity.damage(world.getDamageSources().create(DoormatDamageTypes.ROSE_BUSH), 1.0F);
+                    entity.damage(((DamageSourcesAccessor) world.getDamageSources()).invokeCreate(DoormatDamageTypes.ROSE_BUSH), 1.0F);
             }
     }
 

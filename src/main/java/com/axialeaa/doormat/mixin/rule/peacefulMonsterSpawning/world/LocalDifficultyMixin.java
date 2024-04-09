@@ -1,18 +1,19 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.world;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helper.rule.PeacefulMonsterSpawningHelper;
+import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
+import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
+@Debug(export = true)
 @Mixin(LocalDifficulty.class)
 public class LocalDifficultyMixin {
 
@@ -27,11 +28,9 @@ public class LocalDifficultyMixin {
     /**
      * Injects the same variable reassignment for peaceful mode as this method does for easy, in vanilla.
      */
-    @SuppressWarnings("UnusedAssignment")
-    @Inject(method = "setLocalDifficulty", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;EASY:Lnet/minecraft/world/Difficulty;", shift = At.Shift.BEFORE))
-    private void reassignVarForPeaceful(Difficulty difficulty, long timeOfDay, long inhabitedTime, float moonSize, CallbackInfoReturnable<Float> cir, @Local(ordinal = 3) float h) {
-        if (DoormatSettings.peacefulMonsterSpawning.enabled() && difficulty == Difficulty.PEACEFUL)
-            h *= 0.5F;
+    @ModifyVariable(method = "setLocalDifficulty", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;EASY:Lnet/minecraft/world/Difficulty;", shift = At.Shift.BEFORE), name = "h")
+    private float reassignVarForPeaceful(float value, @Local(argsOnly = true) Difficulty difficulty) {
+        return DoormatSettings.peacefulMonsterSpawning.enabled() && difficulty == Difficulty.PEACEFUL ? value * 0.5F : value;
     }
 
     /**

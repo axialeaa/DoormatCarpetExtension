@@ -2,7 +2,7 @@ package com.axialeaa.doormat.mixin.rule.consistentExplosionImmunity;
 
 import carpet.helpers.OptimizedExplosion;
 import carpet.mixins.ExplosionAccessor;
-import com.axialeaa.doormat.helper.rule.ConsistentExplosionImmunityHelper;
+import com.axialeaa.doormat.helper.ConsistentExplosionImmunityHelper;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;

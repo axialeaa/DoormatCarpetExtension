@@ -1,0 +1,16 @@
+{
+  "carpet.rule.azaleaLeavesGrowFlowers.desc": "Azalea leaves grow flowers when fertilised",
+  "carpet.rule.chiseledBookshelfFullnessSignal.desc": "Comparators measure the number of books in chiselled bookshelves instead of the last slot interacted with",
+  "carpet.rule.consistentWaterlogPushing.extra.0": "Despite the intentional behaviour clearly being for the water to vanish, this rule partly satisfies this open report: https://bugs.mojang.com/browse/MC-130202",
+  "carpet.rule.copperBulbDelay.extra.0": "1 is the value that matches the behaviour of 23w43a-23w45a.",
+  "carpet.rule.fastLeafDecayingChance.extra.0": "0 restores vanilla randomTick behaviour, and 0.075 is the value that matches the behaviour of Vanilla Tweaks' datapack.",
+  "carpet.rule.forceGrassSpreading.desc": "Grass and mycelium can instantly spread to adjacent dirt, when the dirt is fertilised with bonemeal",
+  "carpet.rule.grassAgingChance.extra.0": "0 restores vanilla grass block behaviour, i.e. not growing any short or tall grass naturally.",
+  "carpet.rule.mossSpreadToCobblestone.desc": "Moss can convert nearby cobblestone to mossy cobblestone when fertilised",
+  "carpet.rule.mossSpreadToStoneBricks.desc": "Moss can convert nearby stone bricks to mossy stone bricks when fertilised",
+  "carpet.rule.renewableGildedBlackstone.extra.0": "0 restores vanilla behaviour, i.e. never becoming gilded.",
+  "carpet.rule.renewableSporeBlossoms.desc": "Spore blossoms generate underneath fertilised moss blocks",
+  "carpet.rule.sporeBlossomDuplication.desc": "Spore blossoms drop themselves when fertilised, the same way tall flowers do",
+  "carpet.rule.torchBurnoutTime.extra.0": "40 is the value that matches Bedrock Edition's behaviour, assuming the default flicker amount value",
+  "carpet.rule.zoglinPortalSpawnChance.extra.0": "0 restores vanilla behaviour, i.e. never spawning zoglins."
+}

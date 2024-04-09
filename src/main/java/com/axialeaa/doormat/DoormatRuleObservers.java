@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class DoormatRuleObservers {
 
+    @SuppressWarnings("UnreachableCode")
     public static void moreTimeArgumentUnits(CarpetRule<?> currentRuleState) {
         String name = currentRuleState.name();
         Object value = currentRuleState.value();

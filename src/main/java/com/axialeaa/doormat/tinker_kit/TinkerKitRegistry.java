@@ -31,7 +31,7 @@ public class TinkerKitRegistry {
     }
 
     /**
-     * Must be called from {@link ModInitializer#onInitialize()}.
+     * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
      * @param defaultQCValue the quasi-connectivity range value the <code>block</code> starts out with by default (usually 0).
      * @param block the block to assign <code>defaultQCValue</code> to.
      */
@@ -46,7 +46,7 @@ public class TinkerKitRegistry {
     }
 
     /**
-     * Must be called from {@link ModInitializer#onInitialize()}.
+     * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
      * @param defaultUpdateTypeValue the update type value the <code>block</code> starts out with by default.
      * @param block the block to assign <code>defaultUpdateTypeValue</code> to.
      */
@@ -61,7 +61,7 @@ public class TinkerKitRegistry {
     }
 
     /**
-     * Must be called from {@link ModInitializer#onInitialize()}.
+     * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
      * @param defaultQCValue the quasi-connectivity range value the <code>block</code> starts out with by default (usually 0).
      * @param defaultUpdateTypeValue the update type value the <code>block</code> starts out with by default.
      * @param block the block to assign these values to.
@@ -72,7 +72,7 @@ public class TinkerKitRegistry {
     }
 
     /**
-     * Must be called from {@link ModInitializer#onInitialize()}.
+     * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
      * @param defaultQCValue the quasi-connectivity range value the <code>blocks</code> start out with by default (usually 0).
      * @param blocks a list of blocks to assign <code>defaultQCValue</code> to.
      */
@@ -82,7 +82,7 @@ public class TinkerKitRegistry {
     }
 
     /**
-     * Must be called from {@link ModInitializer#onInitialize()}.
+     * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
      * @param defaultUpdateTypeValue the update type value the <code>blocks</code> start out with by default.
      * @param blocks a list of blocks to assign <code>defaultUpdateTypeValue</code> to.
      */
@@ -92,7 +92,7 @@ public class TinkerKitRegistry {
     }
 
     /**
-     * Must be called from {@link ModInitializer#onInitialize()}.
+     * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
      * @param defaultQCValue the quasi-connectivity range value the <code>blocks</code> start out with by default (usually 0).
      * @param defaultUpdateTypeValue the update type value the <code>blocks</code> start out with by default.
      * @param blocks a list of blocks to assign these values to.

@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.campfireRespawning;
 
-import com.axialeaa.doormat.helper.rule.CampfireRespawningHelper;
+import com.axialeaa.doormat.helper.CampfireRespawningHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.player.PlayerEntity;

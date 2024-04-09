@@ -7,6 +7,7 @@ import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -28,13 +29,13 @@ public abstract class BarrelBlockMixin extends BlockWithEntity implements BlockE
     private static void dumpItems(World world, BlockPos pos, BlockState state, BarrelBlockEntity blockEntity) {
         Direction down = Direction.DOWN;
         if (state.get(BarrelBlock.FACING) == down && !Block.hasTopRim(world, pos.down()))
-            blockEntity.inventory.forEach(stack -> {
+            for (ItemStack stack : ((BarrelBlockEntityAccessor) blockEntity).getInventory()) {
                 if (stack.isEmpty())
                     return;
 
                 stack = stack.split(stack.getCount());
                 ItemDispenserBehavior.spawnItem(world, stack, 0, down, Vec3d.ofCenter(pos).offset(down, 0.7));
-            });
+            }
     }
 
     /**

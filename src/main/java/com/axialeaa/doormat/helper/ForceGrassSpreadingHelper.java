@@ -1,6 +1,7 @@
-package com.axialeaa.doormat.helper.rule;
+package com.axialeaa.doormat.helper;
 
 import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.mixin.rule.forceGrassSpreading.SpreadableBlockAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -20,6 +21,7 @@ public class ForceGrassSpreadingHelper {
     /**
      * Future-proof implementation of what is essentially {@link net.minecraft.block.NetherrackBlock#grow(ServerWorld, Random, BlockPos, BlockState) nylium logic}. Instead of defining new booleans for each instanceof {@link SpreadableBlock}, just create a list of all {@link SpreadableBlock} instances around the target dirt, eliminate duplicate list entries, and pick a random list index. This should comfortably scale with any new {@link SpreadableBlock} types Mojang may or may not decide to add in the future.
      */
+    @SuppressWarnings("UnreachableCode")
     public static boolean onUse(World world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
 
@@ -33,7 +35,7 @@ public class ForceGrassSpreadingHelper {
             }
 
             List<Block> uniqueBlocks = blocks.stream().distinct().toList();
-            if (!uniqueBlocks.isEmpty() && SpreadableBlock.canSpread(state, world, pos)) {
+            if (!uniqueBlocks.isEmpty() && SpreadableBlockAccessor.invokeCanSpread(state, world, pos)) {
                 if (!world.isClient()) {
                     Block randomBlock = uniqueBlocks.get(world.getRandom().nextInt(uniqueBlocks.size()));
                     boolean isSnowAbove = world.getBlockState(pos.up()).isOf(Blocks.SNOW);

@@ -19,9 +19,9 @@ public class JukeboxBlockMixin {
      */
     @ModifyReturnValue(method = "getComparatorOutput", at = @At(value = "RETURN", ordinal = 0))
     private int modifyComparatorOutput(int original, @Local JukeboxBlockEntity jukebox, @Local MusicDiscItem disc) {
-        long timePlaying = jukebox.tickCount - jukebox.recordStartTick;
+        long timePlaying = ((JukeboxBlockEntityAccessor) jukebox).getTickCount() - ((JukeboxBlockEntityAccessor) jukebox).getRecordStartTick();
         return DoormatSettings.jukeboxDiscProgressSignal ?
-            MathHelper.lerpPositive(timePlaying / (float)disc.getSongLengthInTicks(), 0, 15) :
+            MathHelper.lerpPositive(timePlaying / (float) disc.getSongLengthInTicks(), 0, 15) :
             original;
     }
 

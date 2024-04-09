@@ -23,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.awt.*;
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
@@ -47,17 +48,20 @@ public abstract class MinecraftClientMixin {
                 Vec3d startPos = player.getEyePos();
                 Vec3d endPos = player.getRotationVec(1.0F).multiply(player.getBlockInteractionRange()).add(startPos);
                 Optional<Vec3d> optional = new Box(blockPos).raycast(startPos, endPos);
-                int strokeColor = 0xFFFFFFFF;
+                Color strokeColor = RenderHandler.getTrubetskoyColor("white");
 
                 if (optional.isPresent()) {
-                    strokeColor = 0xFF30FF30;
+                    strokeColor = RenderHandler.getTrubetskoyColor("green");
                     crosshairTarget = new BlockHitResult(Vec3d.ofCenter(blockPos), direction, blockPos, false);
                 }
                 if (DoormatServer.IS_DEBUG) {
-                    RenderHandler.addCuboidWireFrame(Vec3d.ofCenter(blockPos), 0.5, 0xFFFFFFFF, 8000);
-                    RenderHandler.addLine(startPos.getX(), startPos.getY(), startPos.getZ(), endPos.getX(), endPos.getY(), endPos.getZ(), strokeColor, 8000);
+                    // Render enclosing box
+                    RenderHandler.addCuboidLines(Vec3d.ofCenter(blockPos), 0.5, RenderHandler.getTrubetskoyColor("white"), 160, true);
+                    // Render facing vector
+                    RenderHandler.addLine(startPos.getX(), startPos.getY(), startPos.getZ(), endPos.getX(), endPos.getY(), endPos.getZ(), strokeColor, 160, false);
                     if (optional.isPresent())
-                        RenderHandler.addCuboidFilled(optional.get(), 0.02, strokeColor, 0x00000000, 8000);
+                        // Render intersection point
+                        RenderHandler.addCuboidQuads(optional.get(), 0.02, strokeColor, 160, true);
                 }
             }
         }

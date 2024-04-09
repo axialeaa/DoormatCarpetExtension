@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.leavesStickToMatchingLogs;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helper.rule.LogLeavesHashmapHelper;
+import com.axialeaa.doormat.helper.LogLeavesHashmapHelper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

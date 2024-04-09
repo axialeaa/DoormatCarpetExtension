@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.helper.rule;
+package com.axialeaa.doormat.helper;
 
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;

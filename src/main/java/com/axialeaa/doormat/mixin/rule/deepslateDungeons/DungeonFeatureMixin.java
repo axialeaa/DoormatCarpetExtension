@@ -18,7 +18,7 @@ public class DungeonFeatureMixin {
         @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;COBBLESTONE:Lnet/minecraft/block/Block;"),
         @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;MOSSY_COBBLESTONE:Lnet/minecraft/block/Block;")
     })
-    private Block replaceRegular(Operation<Block> original, @Local(ordinal = 0) BlockPos pos) {
+    private Block replaceCobblestone(Operation<Block> original, @Local(ordinal = 0) BlockPos pos) {
         return DoormatSettings.deepslateDungeons && pos.getY() < 0 ? Blocks.COBBLED_DEEPSLATE : original.call();
     }
 

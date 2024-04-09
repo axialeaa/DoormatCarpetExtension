@@ -50,14 +50,14 @@ public class RandomTickCommand {
     }
 
     private static int execute(ServerCommandSource source, BlockPos pos, int count) {
-        ServerWorld world = source.getWorld();
-        BlockState state = world.getBlockState(pos);
+        ServerWorld sourceWorld = source.getWorld();
+        BlockState blockState = sourceWorld.getBlockState(pos);
 
-        if (state.hasRandomTicks()) {
+        if (blockState.hasRandomTicks()) {
             for (int i = 0; i < count; i++)
-                state.randomTick(world, pos, world.getRandom());
+                blockState.randomTick(sourceWorld, pos, sourceWorld.getRandom());
 
-            Messenger.m(source, "w Sent " + count + " random tick(s) to the block at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ());
+            Messenger.m(source, "w Sent " + count + " random tick(s) to the block at ", Messenger.tp("c", pos));
             return Command.SINGLE_SUCCESS;
         }
         else {

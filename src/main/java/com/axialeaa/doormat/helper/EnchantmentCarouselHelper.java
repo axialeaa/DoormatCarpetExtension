@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.helper.rule;
+package com.axialeaa.doormat.helper;
 
 import net.minecraft.client.MinecraftClient;
 

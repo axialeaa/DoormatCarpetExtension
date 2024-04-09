@@ -8,15 +8,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.DecoratedPotBlock;
 import net.minecraft.block.entity.Sherds;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.world.BlockView;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -44,7 +41,7 @@ public class DecoratedPotBlockMixin {
      * while totally ignoring bricks if the rule specifies it, otherwise showing them as "Blank".
      */
     @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;of([Ljava/lang/Object;)Ljava/util/stream/Stream;", shift = At.Shift.BEFORE))
-    private void addLines(ItemStack stack, @Nullable BlockView world, List<Text> tooltip, TooltipContext options, @Nullable DynamicRegistryManager registryManager, CallbackInfo ci, @Local Sherds sherds) {
+    private void addLines(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options, CallbackInfo ci, @Local Sherds sherds) {
         if (DoormatSettings.compactPotTooltips.enabled()) {
             Stream<Item> stream = sherds.stream().stream(); // for some reason they named the method to turn the sherds into a list "stream"...
             for (Item sherd : stream.distinct().toList()) { // iterates through a list of distinct items

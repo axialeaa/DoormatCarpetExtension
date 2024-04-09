@@ -50,7 +50,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	@Override
 	public void onInitialize() {
 		CarpetServer.manageExtension(new DoormatServer());
-		LOGGER.info(MOD_NAME + " initialized. Wipe your feet!");
+        LOGGER.info("{} initialized. Wipe your feet!", MOD_NAME);
 
 		TinkerKitRegistry.putBlock(Blocks.ACACIA_DOOR, 					   0, UpdateType.SHAPE);
 		TinkerKitRegistry.putBlock(Blocks.ACACIA_FENCE_GATE, 			   0, UpdateType.SHAPE);
@@ -168,6 +168,11 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 		RandomTickCommand.register(dispatcher);
 		QuasiConnectivityCommand.register(dispatcher, registryAccess);
 		UpdateTypeCommand.register(dispatcher, registryAccess);
+	}
+
+	@Override
+	public void registerLoggers() {
+		DoormatLoggers.register();
 	}
 
 	@Override

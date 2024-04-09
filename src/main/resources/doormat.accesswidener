@@ -1,8 +1,0 @@
-accessWidener	v2	named
-
-accessible method net/minecraft/entity/damage/DamageSources create (Lnet/minecraft/registry/RegistryKey;)Lnet/minecraft/entity/damage/DamageSource;
-accessible method net/minecraft/block/SpreadableBlock canSpread (Lnet/minecraft/block/BlockState;Lnet/minecraft/world/WorldView;Lnet/minecraft/util/math/BlockPos;)Z
-accessible field net/minecraft/block/entity/JukeboxBlockEntity tickCount J
-accessible field net/minecraft/block/entity/JukeboxBlockEntity recordStartTick J
-accessible field net/minecraft/block/entity/BarrelBlockEntity inventory Lnet/minecraft/util/collection/DefaultedList;
-accessible method net/minecraft/block/TntBlock primeTnt (Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/entity/LivingEntity;)V

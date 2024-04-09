@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.consistentExplosionImmunity;
 
-import com.axialeaa.doormat.helper.rule.ConsistentExplosionImmunityHelper;
+import com.axialeaa.doormat.helper.ConsistentExplosionImmunityHelper;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;

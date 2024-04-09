@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.compactEnchantTooltips;
 
-import com.axialeaa.doormat.helper.rule.EnchantmentCarouselHelper;
+import com.axialeaa.doormat.helper.EnchantmentCarouselHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

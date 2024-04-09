@@ -130,13 +130,13 @@ public class ConfigFile {
                     if (qcPrimitive.isNumber())
                         MODIFIED_QC_VALUES.put(block, MathHelper.clamp(qcElement.getAsNumber().intValue(), 0, DoormatServer.MAX_QC_RANGE));
                     else if (qcPrimitive.isBoolean()) {
-                        DoormatServer.LOGGER.info(getTranslatedName(block) + " quasi-connectivity value was written as " + (qcElement.getAsBoolean() ? "true. Attempting to use quasiConnectivity setting." : "false. Attempting to set to 0."));
+                        DoormatServer.LOGGER.info("{} quasi-connectivity value was written as {}", getTranslatedName(block), qcElement.getAsBoolean() ? "true. Attempting to use quasiConnectivity setting." : "false. Attempting to set to 0.");
                         MODIFIED_QC_VALUES.put(block, qcElement.getAsBoolean() ? CarpetSettings.quasiConnectivity : 0);
                     }
                     else throw new Exception();
                 }
                 catch (Exception e) {
-                    DoormatServer.LOGGER.warn(getTranslatedName(block) + " quasi-connectivity json value failed to overwrite the default value (" + getDefaultValue(block, ModificationType.UPDATE_TYPE) + ")!");
+                    DoormatServer.LOGGER.warn("{} quasi-connectivity json value failed to overwrite the default value ({})!", getTranslatedName(block), getDefaultValue(block, ModificationType.UPDATE_TYPE));
                 }
             }
         }
@@ -158,13 +158,13 @@ public class ConfigFile {
                         MODIFIED_UPDATE_TYPE_VALUES.put(block, UpdateType.valueOf(updateTypeElement.getAsString().toUpperCase(Locale.ROOT)));
                     else if (updateTypePrimitive.isNumber()) {
                         int value = MathHelper.clamp(updateTypeElement.getAsInt(), 0, 3);
-                        DoormatServer.LOGGER.info(getTranslatedName(block) + " update type value was written as " + updateTypeElement.getAsNumber() + ". Attempting to set to UpdateType with flags matching " + value + ".");
+                        DoormatServer.LOGGER.info("{} update type value was written as {}. Attempting to set to UpdateType with flags matching {}.", getTranslatedName(block), updateTypeElement.getAsNumber(), value);
                         MODIFIED_UPDATE_TYPE_VALUES.put(block, UpdateType.FLAGS_TO_UPDATE_TYPE.get(value));
                     }
                     else throw new Exception();
                 }
                 catch (Exception e) {
-                    DoormatServer.LOGGER.warn(getTranslatedName(block) + " update type json value failed to overwrite the default value (" + getDefaultValue(block, ModificationType.UPDATE_TYPE) + ")!");
+                    DoormatServer.LOGGER.warn("{} update type json value failed to overwrite the default value ({})!", getTranslatedName(block), getDefaultValue(block, ModificationType.UPDATE_TYPE));
                 }
             }
         }

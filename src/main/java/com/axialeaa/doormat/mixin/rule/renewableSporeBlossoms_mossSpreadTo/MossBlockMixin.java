@@ -39,7 +39,7 @@ public class MossBlockMixin {
     /**
      * Due to the changes in the above handler method, we need to re-add the "air-above" check to the moss patch feature.
      */
-    @SuppressWarnings({"UnresolvedMixinReference", "MixinAnnotationTarget", "OptionalUsedAsFieldOrParameterType"})
+    @SuppressWarnings({ "UnresolvedMixinReference", "OptionalUsedAsFieldOrParameterType" })
     @WrapWithCondition(method = "grow", slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/world/gen/feature/UndergroundConfiguredFeatures;MOSS_PATCH_BONEMEAL:Lnet/minecraft/registry/RegistryKey;")), at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V", ordinal = 0))
     private boolean shouldGenerateVanillaPatch(Optional<?> optional, Consumer<?> consumer, ServerWorld world, Random random, BlockPos pos, BlockState state) {
         return world.getBlockState(pos.up()).isAir();

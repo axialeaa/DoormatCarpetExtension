@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.forceGrassSpreading;
 
-import com.axialeaa.doormat.helper.rule.ForceGrassSpreadingHelper;
+import com.axialeaa.doormat.helper.ForceGrassSpreadingHelper;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;

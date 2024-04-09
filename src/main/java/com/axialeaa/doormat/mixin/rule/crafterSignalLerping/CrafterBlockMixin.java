@@ -18,11 +18,9 @@ public class CrafterBlockMixin {
     @ModifyReturnValue(method = "getComparatorOutput", at = @At("RETURN"))
     private int lerpComparatorOutput(int original, BlockState state, World world, BlockPos pos) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (DoormatSettings.crafterSignalLerping && blockEntity instanceof CrafterBlockEntity crafterBlockEntity) {
-            int output = crafterBlockEntity.getComparatorOutput();
-            return MathHelper.lerpPositive(output / (float) crafterBlockEntity.size(), 0, 15);
-        }
-        return original;
+        return DoormatSettings.crafterSignalLerping && blockEntity instanceof CrafterBlockEntity crafterBlockEntity ?
+            MathHelper.lerpPositive(original / (float) crafterBlockEntity.size(), 0, 15) :
+            original;
     }
 
 }

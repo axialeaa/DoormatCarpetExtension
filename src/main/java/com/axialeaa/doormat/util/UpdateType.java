@@ -11,16 +11,10 @@ import java.util.Map;
  */
 public enum UpdateType implements StringIdentifiable {
 
-    NEITHER (0),
-    BLOCK   (1),
-    SHAPE   (2),
-    BOTH    (3);
-
-    private final int flags;
-
-    UpdateType(int flags) {
-        this.flags = flags;
-    }
+    NEITHER,
+    BLOCK,
+    SHAPE,
+    BOTH;
 
     @Override
     public String asString() {
@@ -28,7 +22,7 @@ public enum UpdateType implements StringIdentifiable {
     }
 
     public int getFlags() {
-        return flags;
+        return ordinal();
     }
 
     public static final Map<Integer, UpdateType> FLAGS_TO_UPDATE_TYPE = new HashMap<>();

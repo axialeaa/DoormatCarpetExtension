@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.block;
 
-import com.axialeaa.doormat.helper.rule.PeacefulMonsterSpawningHelper;
+import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.block.spawner.TrialSpawnerLogic;
 import net.minecraft.world.Difficulty;

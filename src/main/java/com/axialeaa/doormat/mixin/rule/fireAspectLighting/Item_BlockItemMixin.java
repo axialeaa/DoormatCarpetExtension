@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.fireAspectLighting;
 
-import com.axialeaa.doormat.helper.rule.FireAspectLightingHelper;
+import com.axialeaa.doormat.helper.FireAspectLightingHelper;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -17,7 +17,8 @@ public class Item_BlockItemMixin {
 
     @ModifyReturnValue(method = "useOnBlock", at = @At("RETURN"))
     public ActionResult fireAspectLight(ActionResult original, ItemUsageContext ctx) {
-        return FireAspectLightingHelper.onUse(ctx) == ActionResult.PASS ? original : FireAspectLightingHelper.onUse(ctx);
+        ActionResult actionResult = FireAspectLightingHelper.onUse(ctx);
+        return actionResult == ActionResult.PASS ? original : actionResult;
     }
 
 }

@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.spawnersGenerateCobwebs;
 
-import com.axialeaa.doormat.helper.rule.CobwebGenerationHelper;
+import com.axialeaa.doormat.helper.CobwebGenerationHelper;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.spawner.TrialSpawnerLogic;
 import net.minecraft.entity.Entity;

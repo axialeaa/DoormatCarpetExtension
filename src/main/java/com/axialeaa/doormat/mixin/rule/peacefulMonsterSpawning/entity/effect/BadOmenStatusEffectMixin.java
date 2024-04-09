@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.entity.effect;
 
-import com.axialeaa.doormat.helper.rule.PeacefulMonsterSpawningHelper;
+import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.server.world.ServerWorld;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(targets = "net.minecraft.entity.effect.BadOmenStatusEffect")
 public class BadOmenStatusEffectMixin {
 
-    @WrapOperation(method = { "applyUpdateEffect", "method_58613" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;"))
+    @WrapOperation(method = { "applyUpdateEffect", "tryStartRaid" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private Difficulty allowPeacefulEffect(ServerWorld instance, Operation<Difficulty> original) {
         return PeacefulMonsterSpawningHelper.bypassCheck(original.call(instance));
     }

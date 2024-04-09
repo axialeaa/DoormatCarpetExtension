@@ -1,8 +1,8 @@
 package com.axialeaa.doormat.mixin.rule.compactEnchantTooltips;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helper.rule.EnchantmentCarouselHelper;
-import net.minecraft.client.item.TooltipContext;
+import com.axialeaa.doormat.helper.EnchantmentCarouselHelper;
+import net.minecraft.client.item.TooltipType;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -28,7 +28,7 @@ public abstract class ItemEnchantmentsComponentMixin {
      * Cycles the displayed line using the logic in {@link EnchantmentCarouselHelper}.
      */
     @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2IntLinkedOpenHashMap;object2IntEntrySet()Lit/unimi/dsi/fastutil/objects/Object2IntSortedMap$FastSortedEntrySet;", shift = At.Shift.BEFORE), cancellable = true)
-    private void cycleLine(Consumer<Text> textConsumer, TooltipContext context, CallbackInfo ci) {
+    private void cycleLine(Consumer<Text> textConsumer, TooltipType context, CallbackInfo ci) {
         EnchantmentCarouselHelper.LIST_SIZE = this.getSize();
         if (DoormatSettings.compactEnchantTooltips) {
             RegistryEntry<Enchantment> registryEntry = null;

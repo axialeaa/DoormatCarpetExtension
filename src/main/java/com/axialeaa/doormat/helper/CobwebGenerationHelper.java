@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.helper.rule;
+package com.axialeaa.doormat.helper;
 
 import com.axialeaa.doormat.DoormatServer;
 import com.axialeaa.doormat.DoormatSettings;
@@ -9,7 +9,6 @@ import net.minecraft.entity.mob.CaveSpiderEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 
 public class CobwebGenerationHelper {
@@ -21,25 +20,28 @@ public class CobwebGenerationHelper {
         if (DoormatSettings.spawnersGenerateCobwebs && storedEntity instanceof CaveSpiderEntity) {
             Random random = world.getRandom();
 
-            BlockPos.iterate(pos.add(-h, -v, -h), pos.add(h, v, h)).forEach(blockPos -> {
+            for (BlockPos blockPos : BlockPos.iterate(pos.add(-h, -v, -h), pos.add(h, v, h))) {
                 int i = 0;
                 for (Direction direction : Direction.values())
                     if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, pos, direction.getOpposite())) {
                         i++;
                         if (DoormatServer.IS_DEBUG)
-                            RenderHandler.addCuboidFilled(Vec3d.ofCenter(blockPos).offset(direction, 0.5), 0.02, 0xFFFFFFFF, 0xFFFFFFFF, 10000);
+                            // Render supporting faces
+                            RenderHandler.addCuboidQuads(blockPos.toCenterPos().offset(direction, 0.5), 0.02, RenderHandler.getTrubetskoyColor("white"), 200, true);
                     }
                 if (i >= 2) {
                     if (random.nextInt(i + rarity) > rarity)
                         world.setBlockState(blockPos, Blocks.COBWEB.getDefaultState());
 
                     if (DoormatServer.IS_DEBUG)
-                        RenderHandler.addCuboidFilled(Vec3d.ofCenter(blockPos), 0.5, 0x2030FF30, 0xFF30FF30, 10000);
+                        // Render successful placement positions
+                        RenderHandler.addCuboid(blockPos.toCenterPos(), 0.5, RenderHandler.getTrubetskoyColor("green", 40), RenderHandler.getTrubetskoyColor("green"), 200, true);
                 }
-            });
+            }
 
             if (DoormatServer.IS_DEBUG)
-                RenderHandler.addCuboidWireFrame(pos.getX() - h, pos.getY() - v, pos.getZ() - h, pos.getX() + h + 1, pos.getY() + v + 1, pos.getZ() + h + 1, 0xFFA230FF, 10000);
+                // Render enclosing box
+                RenderHandler.addCuboidLines(pos.getX() - h, pos.getY() - v, pos.getZ() - h, pos.getX() + h + 1, pos.getY() + v + 1, pos.getZ() + h + 1, RenderHandler.getTrubetskoyColor("purple"), 200, false);
         }
     }
 

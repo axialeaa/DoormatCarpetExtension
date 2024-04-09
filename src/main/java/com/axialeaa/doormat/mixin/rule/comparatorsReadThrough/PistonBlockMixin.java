@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 public class PistonBlockMixin implements ComparatorBehaviour {
 
     @Override
-    public boolean doormat$canReadThrough(BlockState state) {
+    public boolean canReadThrough(BlockState state) {
         return DoormatSettings.comparatorsReadThroughPistons;
     }
 

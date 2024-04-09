@@ -425,6 +425,9 @@ public class DoormatSettings {
     @Rule( categories = { RETRO, DOORMAT } )
     public static boolean retroRepeaterDelay = false;
 
+    @Rule( categories = { SURVIVAL, DOORMAT } )
+    public static boolean safeSand = false;
+
     @Rule( options = { "5", "20" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static int sculkCatalystXpCount = 5;
 
