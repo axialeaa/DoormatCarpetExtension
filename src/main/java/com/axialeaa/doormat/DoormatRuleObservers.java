@@ -19,10 +19,12 @@ public class DoormatRuleObservers {
             if ((boolean) value) {
                 units.putIfAbsent("m", 1200);
                 units.putIfAbsent("h", 72000);
+                units.putIfAbsent("w", 168000);
             }
             else {
                 units.removeInt("m");
                 units.removeInt("h");
+                units.removeInt("w");
             }
         }
     }

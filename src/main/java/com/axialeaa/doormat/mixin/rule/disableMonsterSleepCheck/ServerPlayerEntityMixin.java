@@ -11,7 +11,7 @@ public class ServerPlayerEntityMixin {
 
     @ModifyExpressionValue(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;isCreative()Z"))
     private boolean shouldBypassMonsterCheck(boolean original) {
-        return DoormatSettings.disableMonsterSleepCheck || original;
+        return original || DoormatSettings.disableMonsterSleepCheck;
     }
 
 }

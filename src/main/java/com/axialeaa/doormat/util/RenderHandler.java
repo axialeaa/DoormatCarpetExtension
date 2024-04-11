@@ -86,44 +86,52 @@ public class RenderHandler {
 
         buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         Iterator<Line> lineIterator = LINES.iterator();
+
         while (lineIterator.hasNext()) {
             Line line = lineIterator.next();
             line.create(buffer, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
             if (WORLD == null || WORLD.getTime() >= line.removalTime)
                 lineIterator.remove();
         }
+
         tessellator.draw();
 
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         Iterator<Quad> quadIterator = QUADS.iterator();
+
         while (quadIterator.hasNext()) {
             Quad quad = quadIterator.next();
             quad.create(buffer, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
             if (WORLD == null || WORLD.getTime() >= quad.removalTime)
                 quadIterator.remove();
         }
+
         tessellator.draw();
 
         RenderSystem.enableDepthTest();
 
         buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         Iterator<Line> depthLineIterator = DEPTH_LINES.iterator();
+        
         while (depthLineIterator.hasNext()) {
             Line line = depthLineIterator.next();
             line.create(buffer, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
             if (WORLD == null || WORLD.getTime() >= line.removalTime)
                 depthLineIterator.remove();
         }
+
         tessellator.draw();
 
         buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         Iterator<Quad> depthQuadIterator = DEPTH_QUADS.iterator();
+
         while (depthQuadIterator.hasNext()) {
             Quad quad = depthQuadIterator.next();
             quad.create(buffer, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
             if (WORLD == null || WORLD.getTime() >= quad.removalTime)
                 depthQuadIterator.remove();
         }
+
         tessellator.draw();
     }
 
@@ -141,7 +149,7 @@ public class RenderHandler {
         else LINES.addAll(lines);
     }
 
-    public synchronized static void addCuboidLines(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color strokeColor, long removalTime, boolean shouldObeyDepthTest) {
+    public static void addCuboidLines(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color strokeColor, long removalTime, boolean shouldObeyDepthTest) {
         addLine(minX, minY, minZ, maxX, minY, minZ, strokeColor, removalTime, shouldObeyDepthTest);
         addLine(maxX, minY, minZ, maxX, maxY, minZ, strokeColor, removalTime, shouldObeyDepthTest);
         addLine(maxX, maxY, minZ, minX, maxY, minZ, strokeColor, removalTime, shouldObeyDepthTest);

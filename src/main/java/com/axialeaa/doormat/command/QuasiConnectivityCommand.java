@@ -120,11 +120,12 @@ public class QuasiConnectivityCommand {
     private static int setAll(ServerCommandSource source, int input) {
         boolean wasModified = false;
 
-        for (Block block : getModifiableBlocks(ModificationType.QC).toList())
+        for (Block block : getModifiableBlocks(ModificationType.QC).toList()) {
             if (MODIFIED_QC_VALUES.get(block) != input) {
                 MODIFIED_QC_VALUES.put(block, input);
                 wasModified = true;
             }
+        }
 
         if (wasModified) {
             Messenger.m(source, "w Set all quasi-connectivity values to " + input);
@@ -162,7 +163,7 @@ public class QuasiConnectivityCommand {
         else
             Messenger.m(source, "bu Quasi-connectivity values:");
 
-        getModifiableBlocks(ModificationType.QC).forEach(block -> {
+        for (Block block : getModifiableBlocks(ModificationType.QC).toList()) {
             String value = getTranslatedName(block) + ": " + MODIFIED_QC_VALUES.get(block);
             String command = "?/" + ALIAS + " reset " + getKey(block);
 
@@ -170,7 +171,8 @@ public class QuasiConnectivityCommand {
                 Messenger.m(source, "g - " + value + " (default value)");
             else
                 Messenger.m(source, "w - ", "wi " + value + " (modified value)", command, "^g Restore default value?");
-        });
+        }
+
         return Command.SINGLE_SUCCESS;
     }
 
@@ -202,11 +204,12 @@ public class QuasiConnectivityCommand {
     private static int resetAll(ServerCommandSource source) {
         boolean wasModified = false;
 
-        for (Block block : getModifiableBlocks(ModificationType.QC).toList())
+        for (Block block : getModifiableBlocks(ModificationType.QC).toList()) {
             if (!isDefaultValue(block, ModificationType.QC)) {
                 setDefaultValue(block, ModificationType.QC);
                 wasModified = true;
             }
+        }
 
         if (wasModified) {
             Messenger.m(source, "w Restored default quasi-connectivity value(s)");

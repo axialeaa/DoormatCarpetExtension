@@ -89,6 +89,7 @@ public class CampfireRespawningHelper {
                 return ItemActionResult.SUCCESS;
             }
         }
+
         return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 

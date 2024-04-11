@@ -14,7 +14,7 @@ public class BulbBlockMixin {
 
     @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting(ServerWorld instance, BlockPos pos, Operation<Boolean> original) {
-        return TinkerKit.isReceivingPowerWithinRange(instance, pos) || original.call(instance, pos);
+        return TinkerKit.isReceivingRedstonePower(instance, pos);
     }
 
 }

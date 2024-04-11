@@ -22,13 +22,14 @@ public class CobwebGenerationHelper {
 
             for (BlockPos blockPos : BlockPos.iterate(pos.add(-h, -v, -h), pos.add(h, v, h))) {
                 int i = 0;
-                for (Direction direction : Direction.values())
+                for (Direction direction : Direction.values()) {
                     if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, pos, direction.getOpposite())) {
                         i++;
                         if (DoormatServer.IS_DEBUG)
                             // Render supporting faces
                             RenderHandler.addCuboidQuads(blockPos.toCenterPos().offset(direction, 0.5), 0.02, RenderHandler.getTrubetskoyColor("white"), 200, true);
                     }
+                }
                 if (i >= 2) {
                     if (random.nextInt(i + rarity) > rarity)
                         world.setBlockState(blockPos, Blocks.COBWEB.getDefaultState());

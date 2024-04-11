@@ -16,10 +16,11 @@ public class EnchantmentCarouselHelper {
      */
     public static void onTick(long gameTime) {
         long modTime = gameTime % 20;
-        if (modTime == 0)
+        if (modTime == 0) {
             if (LIST_INDEX < LIST_SIZE - 1)
                 LIST_INDEX++;
             else LIST_INDEX = 0;
+        }
     }
 
 }

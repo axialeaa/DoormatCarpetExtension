@@ -22,12 +22,13 @@ public abstract class LeavesBlockMixin {
      */
     @Inject(method = "scheduledTick", at = @At("TAIL"))
     private void decayOnScheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (DoormatSettings.fastLeafDecayingChance > 0.0 && shouldDecay(state))
+        if (DoormatSettings.fastLeafDecayingChance > 0.0 && shouldDecay(state)) {
             if (random.nextFloat() < DoormatSettings.fastLeafDecayingChance) {
                 LeavesBlock.dropStacks(state, world, pos);
                 world.removeBlock(pos, false);
             }
             else world.scheduleBlockTick(pos, state.getBlock(), 1);
+        }
     }
 
 }

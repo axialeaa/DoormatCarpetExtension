@@ -27,12 +27,12 @@ public class BarrelBlockEntityMixin extends BlockEntity {
      */
     @WrapWithCondition(method = "setOpen", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private boolean shouldChangeState(World world, BlockPos pos, BlockState state, int flags) {
-        return !(DoormatSettings.redstoneOpensBarrels && TinkerKit.isReceivingPowerWithinRange(world, pos));
+        return !(DoormatSettings.redstoneOpensBarrels && TinkerKit.isReceivingRedstonePower(world, pos));
     }
 
     @WrapWithCondition(method = "playSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"))
     private boolean shouldPlaySound(World world, PlayerEntity source, double x, double y, double z, SoundEvent sound, SoundCategory category, float volume, float pitch) {
-        return !(DoormatSettings.redstoneOpensBarrels && TinkerKit.isReceivingPowerWithinRange(world, pos));
+        return !(DoormatSettings.redstoneOpensBarrels && TinkerKit.isReceivingRedstonePower(world, pos));
     }
 
 }

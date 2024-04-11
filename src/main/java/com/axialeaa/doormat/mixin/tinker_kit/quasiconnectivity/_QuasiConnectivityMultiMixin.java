@@ -25,7 +25,7 @@ public class _QuasiConnectivityMultiMixin {
 
     @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnecting(World instance, BlockPos pos, Operation<Boolean> original) {
-        return TinkerKit.isReceivingPowerWithinRange(instance, pos) || original.call(instance, pos);
+        return TinkerKit.isReceivingRedstonePower(instance, pos);
     }
 
 }

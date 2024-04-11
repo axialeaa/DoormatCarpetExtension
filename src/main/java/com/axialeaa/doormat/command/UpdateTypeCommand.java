@@ -103,6 +103,7 @@ public class UpdateTypeCommand {
         }
 
         UpdateType updateType;
+
         try {
             updateType = UpdateType.valueOf(input.toUpperCase(Locale.ROOT));
         }
@@ -129,6 +130,7 @@ public class UpdateTypeCommand {
      */
     private static int setAll(ServerCommandSource source, String input) {
         UpdateType updateType;
+
         try {
             updateType = UpdateType.valueOf(input.toUpperCase(Locale.ROOT));
         }
@@ -168,8 +170,8 @@ public class UpdateTypeCommand {
         }
 
         UpdateType value = MODIFIED_UPDATE_TYPE_VALUES.get(block);
-
         Messenger.m(source, "w " + getTranslatedName(block) + " update type is set to " + value + (isDefaultValue(block, ModificationType.UPDATE_TYPE) ? " (default value)" : " (modified value)"));
+
         return Command.SINGLE_SUCCESS;
     }
 
@@ -183,7 +185,7 @@ public class UpdateTypeCommand {
         else
             Messenger.m(source, "bu Update type values:");
 
-        getModifiableBlocks(ModificationType.UPDATE_TYPE).forEach(block -> {
+        for (Block block : getModifiableBlocks(ModificationType.UPDATE_TYPE).toList()) {
             UpdateType value = MODIFIED_UPDATE_TYPE_VALUES.get(block);
 
             String string = getTranslatedName(block) + ": " + value;
@@ -193,7 +195,8 @@ public class UpdateTypeCommand {
                 Messenger.m(source, "g - " + string + " (default value)");
             else
                 Messenger.m(source, "w - ", "wi " + string + " (modified value)", command, "^g Restore default value?");
-        });
+        }
+
         return Command.SINGLE_SUCCESS;
     }
 

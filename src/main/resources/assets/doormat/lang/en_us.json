@@ -74,7 +74,7 @@
   "carpet.rule.leavesStickToMatchingLogs.desc": "Leaves will only check for logs of their corresponding variants before decaying",
   "carpet.rule.maxMinecartSpeedLand.desc": "The maximum speed minecarts can travel on land in blocks per second",
   "carpet.rule.maxMinecartSpeedWater.desc": "The maximum speed minecarts can travel underwater in blocks per second",
-  "carpet.rule.moreTimeArgumentUnits.desc": "Adds minute (m) and hour (h) units to time arguments in commands",
+  "carpet.rule.moreTimeArgumentUnits.desc": "Adds minute (m), hour (h) and week (w) units to time arguments in commands",
   "carpet.rule.mossSpreadToCobblestone.desc": "Moss can convert nearby cobblestone to mossy cobblestone when fertilized",
   "carpet.rule.mossSpreadToCobblestone.extra.0": "This feature is controlled through doormat/worldgen/configured_feature/mossy_cobblestone_patch.json.",
   "carpet.rule.mossSpreadToStoneBricks.desc": "Moss can convert nearby stone bricks to mossy stone bricks when fertilized",
@@ -158,7 +158,5 @@
   "compact_tooltip.trim.lapis": "Lapis",
   "compact_tooltip.trim.netherite": "Netherite",
   "compact_tooltip.trim.quartz": "Quartz",
-  "compact_tooltip.trim.redstone": "Redstone",
-  "death.attack.roseBush": "%1$s smelled the roses too much",
-  "death.attack.roseBush.player": "%1$s smelled the roses too much whilst trying to escape %2$s"
+  "compact_tooltip.trim.redstone": "Redstone"
 }

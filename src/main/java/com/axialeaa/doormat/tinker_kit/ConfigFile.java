@@ -20,7 +20,7 @@ import java.util.UUID;
 import static com.axialeaa.doormat.tinker_kit.TinkerKit.*;
 
 /**
- * Controls the saving and loading of the doormat.json file, which is used to keep the quasi-connectivity and update type settings persistent on relog.
+ * Controls the saving and loading of the doormat.json file, which is used to keep the quasi-connectivity and update type settings persistent on relog. This should never be mixed into or called from in any other mod than <strong>Doormat</strong>.
  */
 @ApiStatus.Internal
 @ApiStatus.NonExtendable
@@ -49,13 +49,15 @@ public class ConfigFile {
             root.add(UpdateTypeCommand.ALIAS, updateTypeObj);
             // Reuse the command aliases for the object names because why not? It saves writing another string xd
 
-            for (Block block : getModifiableBlocks(ModificationType.QC).toList())
+            for (Block block : getModifiableBlocks(ModificationType.QC).toList()) {
                 if (!isDefaultValue(block, ModificationType.QC))
                     qcObj.add(getKey(block), new JsonPrimitive(MODIFIED_QC_VALUES.get(block)));
+            }
 
-            for (Block block : getModifiableBlocks(ModificationType.UPDATE_TYPE).toList())
+            for (Block block : getModifiableBlocks(ModificationType.UPDATE_TYPE).toList()) {
                 if (!isDefaultValue(block, ModificationType.UPDATE_TYPE))
                     updateTypeObj.add(getKey(block), new JsonPrimitive(MODIFIED_UPDATE_TYPE_VALUES.get(block).asString()));
+            }
             // Saves the value when, and only when, it has been modified from default.
             //  This helps prevent unnecessary bloat, since the default values are already hardcoded.
 
@@ -103,7 +105,7 @@ public class ConfigFile {
                 parseElement = JsonParser.parseReader(reader);
             }
             catch (IOException exception) {
-                DoormatServer.LOGGER.warn("Could not parse the file at: {}", configFile.getAbsolutePath(), exception);
+                DoormatServer.LOGGER.warn("Failed to parse the file at {}!", configFile.getAbsolutePath(), exception);
             }
 
             if (parseElement != null && parseElement.isJsonObject()) {
@@ -136,7 +138,7 @@ public class ConfigFile {
                     else throw new Exception();
                 }
                 catch (Exception e) {
-                    DoormatServer.LOGGER.warn("{} quasi-connectivity json value failed to overwrite the default value ({})!", getTranslatedName(block), getDefaultValue(block, ModificationType.UPDATE_TYPE));
+                    DoormatServer.LOGGER.warn("{} quasi-connectivity value failed to overwrite the default value ({}) from json!", getTranslatedName(block), getDefaultValue(block, ModificationType.UPDATE_TYPE));
                 }
             }
         }
@@ -164,7 +166,7 @@ public class ConfigFile {
                     else throw new Exception();
                 }
                 catch (Exception e) {
-                    DoormatServer.LOGGER.warn("{} update type json value failed to overwrite the default value ({})!", getTranslatedName(block), getDefaultValue(block, ModificationType.UPDATE_TYPE));
+                    DoormatServer.LOGGER.warn("{} update type failed to overwrite the default value ({}) from json!", getTranslatedName(block), getDefaultValue(block, ModificationType.UPDATE_TYPE));
                 }
             }
         }

@@ -20,7 +20,7 @@ public class GhastEntityMixin {
 
     @ModifyReturnValue(method = "canSpawn", at = @At("RETURN"))
     private static boolean addSpawnCondition(boolean original, EntityType<GhastEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return PeacefulMonsterSpawningHelper.addSpawningCondition(world, spawnReason, pos, original);
+        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, spawnReason, pos);
     }
 
     @WrapOperation(method = "canSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))

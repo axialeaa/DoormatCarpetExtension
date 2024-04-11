@@ -55,12 +55,12 @@ public class TinkerKit {
      * This hashmap is a little different to {@link TinkerKitRegistry#DEFAULT_QC_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can and should change at any time during gameplay.
      * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
      */
-    public static Map<Block, Integer> MODIFIED_QC_VALUES = new HashMap<>();
+    public static final Map<Block, Integer> MODIFIED_QC_VALUES = new HashMap<>();
     /**
      * This hashmap is a little different to {@link TinkerKitRegistry#DEFAULT_UPDATE_TYPE_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can and should change at any time during gameplay.
      * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
      */
-    public static Map<Block, UpdateType> MODIFIED_UPDATE_TYPE_VALUES = new HashMap<>();
+    public static final Map<Block, UpdateType> MODIFIED_UPDATE_TYPE_VALUES = new HashMap<>();
 
     static {
         try {
@@ -72,15 +72,6 @@ public class TinkerKit {
         catch (Exception e) {
             throw new RuntimeException("Tinker Kit hashmaps failed to receive default values!", e);
         }
-    }
-
-    /**
-     * Sends a log warning to indicate that the <code>state</code> cannot be modified by the rule <code>type</code>.
-     * @param state The blockstate to suggest is unmodifiable.
-     * @param type The type of rule to send the warning through.
-     */
-    public static void sendUnmodifiableWarning(BlockState state, ModificationType type) {
-        DoormatServer.LOGGER.warn("{} does not support {} modification!", getTranslatedName(state.getBlock()), type.asString());
     }
 
     /**
@@ -153,9 +144,11 @@ public class TinkerKit {
     }
 
     public static boolean isMapModified(ModificationType type) {
-        for (Block block : getModifiableBlocks(type).toList())
+        for (Block block : getModifiableBlocks(type).toList()) {
             if (!isDefaultValue(block, type))
                 return true;
+        }
+
         return false;
     }
 
@@ -176,7 +169,6 @@ public class TinkerKit {
      * Converts a list of all modifiable blocks (by <code>type</code>) into a list of their keys and sorts them alphabetically.
      * @return a sorted array of all modifiable blocks' keys (by <code>type</code>), used for command autocompletion.
      */
-    @ApiStatus.Internal
     public static String[] getModifiableKeys(ModificationType type) {
         List<String> strings = new ArrayList<>(Registries.BLOCK.stream().filter(block -> isModifiable(block, type)).map(TinkerKit::getKey).toList());
         Collections.sort(strings);
@@ -188,7 +180,6 @@ public class TinkerKit {
      * Converts a list of all modifiable blocks (by <code>type</code>) into a list of their keys, sorts them alphabetically, and then re-interprets the blocks from the keys.
      * @return a sorted stream of blocks ordered alphabetically by their keys.
      */
-    @ApiStatus.Internal
     public static Stream<Block> getModifiableBlocks(ModificationType type) {
         List<String> strings = new ArrayList<>(Registries.BLOCK.stream().filter(block -> isModifiable(block, type)).map(TinkerKit::getKey).toList());
         Collections.sort(strings);
@@ -209,15 +200,24 @@ public class TinkerKit {
     }
 
     /**
+     * Sends a log warning to indicate that the <code>state</code> cannot be modified by the rule <code>type</code>.
+     * @param state The blockstate to suggest is unmodifiable.
+     * @param type The type of rule to send the warning through.
+     */
+    private static void sendUnmodifiableWarning(BlockState state, ModificationType type) {
+        DoormatServer.LOGGER.warn("{} does not support {} modification!", getTranslatedName(state.getBlock()), type.asString());
+    }
+
+    /**
      * @param world the world this method is called in.
      * @param pos the block position this method is called at.
      * @param i the number to add onto the range check (useful for doors).
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
-    public static boolean isReceivingPowerWithinRange(RedstoneView world, BlockPos pos, int i) {
+    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, int i) {
         BlockState blockState = world.getBlockState(pos);
 
-        if (isModifiable(blockState.getBlock(), ModificationType.QC))
+        if (isModifiable(blockState.getBlock(), ModificationType.QC)) {
             for (int j = 0; j <= MODIFIED_QC_VALUES.get(blockState.getBlock()) + i; j++) {
                 BlockPos blockPos = pos.up(j);
 
@@ -227,9 +227,10 @@ public class TinkerKit {
                 if (world.isReceivingRedstonePower(blockPos))
                     return true;
             }
+        }
         else sendUnmodifiableWarning(blockState, ModificationType.QC);
 
-        return false;
+        return world.isReceivingRedstonePower(pos);
     }
 
     /**
@@ -237,12 +238,12 @@ public class TinkerKit {
      * @param pos the block position this method is called at.
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
-    public static boolean isReceivingPowerWithinRange(RedstoneView world, BlockPos pos) {
-        return isReceivingPowerWithinRange(world, pos, 0);
+    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos) {
+        return isReceivingRedstonePower(world, pos, 0);
     }
 
     /**
-     * An alternative implementation of {@link #isReceivingPowerWithinRange(RedstoneView, BlockPos, int)} which takes in a direction--used for redstone torches.
+     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, int)} which takes in a direction--used for redstone torches.
      * <p>
      * This has been re-implemented due to the semantic difference between {@link net.minecraft.world.RedstoneView#isEmittingRedstonePower(BlockPos, Direction) isEmittingRedstonePower()} and {@link net.minecraft.world.RedstoneView#isReceivingRedstonePower(BlockPos) isReceivingRedstonePower()}. The second will return true if any of the blocks adjacent to the block position are powered, whereas the first checks for only the block position itself. This makes sense for torches and really nothing else, which unpower when the block they're resting on is sourcing power.
      * @param world the world this method is called in.
@@ -251,12 +252,12 @@ public class TinkerKit {
      * @param i the number to add onto the range check.
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
-    public static boolean isReceivingPowerWithinRange(RedstoneView world, BlockPos pos, Direction direction, int i) {
-        return getEmittedPowerWithinRange(world, pos, direction, i) > 0;
+    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, Direction direction, int i) {
+        return getEmittedRedstonePower(world, pos, direction, i) > 0;
     }
 
     /**
-     * An alternative implementation of {@link #isReceivingPowerWithinRange(RedstoneView, BlockPos)} which takes in a direction--used for redstone torches.
+     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos)} which takes in a direction--used for redstone torches.
      * <p>
      * This has been re-implemented due to the semantic difference between {@link net.minecraft.world.RedstoneView#isEmittingRedstonePower(BlockPos, Direction) isEmittingRedstonePower()} and {@link net.minecraft.world.RedstoneView#isReceivingRedstonePower(BlockPos) isReceivingRedstonePower()}. The second will return true if any of the blocks adjacent to the block position are powered, whereas the first checks for only the block position itself. This makes sense for torches and really nothing else, which unpower when the block they're resting on is sourcing power.
      * @param world the world this method is called in.
@@ -264,12 +265,12 @@ public class TinkerKit {
      * @param direction the direction to check if power is being received.
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
-    public static boolean isReceivingPowerWithinRange(RedstoneView world, BlockPos pos, Direction direction) {
-        return getEmittedPowerWithinRange(world, pos, direction, 0) > 0;
+    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, Direction direction) {
+        return getEmittedRedstonePower(world, pos, direction, 0) > 0;
     }
 
     /**
-     * An alternative implementation of {@link #isReceivingPowerWithinRange(RedstoneView, BlockPos, int)} which instead outputs a signal strength--used for diodes.
+     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, int)} which instead outputs a signal strength--used for diodes.
      * <p>
      * This has been re-implemented due to diodes ({@link AbstractRedstoneGateBlock}<code>s</code>) taking in integer inputs instead of booleans like most other components; they get told <i>if</i> they're powered, not to "what degree".
      * @param world the world this method is called in.
@@ -278,11 +279,11 @@ public class TinkerKit {
      * @param i the number to add onto the range check.
      * @return the largest signal strength within the quasi-connectivity range.
      */
-    public static int getEmittedPowerWithinRange(RedstoneView world, BlockPos pos, Direction direction, int i) {
+    public static int getEmittedRedstonePower(RedstoneView world, BlockPos pos, Direction direction, int i) {
         BlockState blockState = world.getBlockState(pos);
         int power = 0;
 
-        if (isModifiable(blockState.getBlock(), ModificationType.QC))
+        if (isModifiable(blockState.getBlock(), ModificationType.QC)) {
             for (int j = 0; j <= MODIFIED_QC_VALUES.get(blockState.getBlock()) + i; j++) {
                 BlockPos blockPos = pos.offset(direction).up(j);
 
@@ -291,12 +292,14 @@ public class TinkerKit {
 
                 power = Math.max(power, world.getEmittedRedstonePower(blockPos, direction));
             }
+        }
         else sendUnmodifiableWarning(blockState, ModificationType.QC);
-        return power;
+
+        return world.getEmittedRedstonePower(pos, direction);
     }
 
     /**
-     * An alternative implementation of {@link #isReceivingPowerWithinRange(RedstoneView, BlockPos)} which instead outputs a signal strength--used for diodes.
+     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos)} which instead outputs a signal strength--used for diodes.
      * <p>
      * This has been re-implemented due to diodes ({@link AbstractRedstoneGateBlock}<code>s</code>) taking in integer inputs instead of booleans like most other components; they get told <i>if</i> they're powered, not to "what degree".
      * @param world the world this method is called in.
@@ -304,8 +307,8 @@ public class TinkerKit {
      * @param direction the direction to check if power is being received.
      * @return the largest signal strength within the quasi-connectivity range.
      */
-    public static int getEmittedPowerWithinRange(RedstoneView world, BlockPos pos, Direction direction) {
-        return getEmittedPowerWithinRange(world, pos, direction, 0);
+    public static int getEmittedRedstonePower(RedstoneView world, BlockPos pos, Direction direction) {
+        return getEmittedRedstonePower(world, pos, direction, 0);
     }
 
     /**

@@ -20,6 +20,7 @@ import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.world.ServerWorld;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,108 +53,150 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 		CarpetServer.manageExtension(new DoormatServer());
         LOGGER.info("{} initialized. Wipe your feet!", MOD_NAME);
 
-		TinkerKitRegistry.putBlock(Blocks.ACACIA_DOOR, 					   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.ACACIA_FENCE_GATE, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.ACACIA_TRAPDOOR, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.ACTIVATOR_RAIL, 				   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.BAMBOO_DOOR, 					   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.BAMBOO_FENCE_GATE, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.BAMBOO_TRAPDOOR, 				   0, UpdateType.SHAPE);
+		// Wooden Doors
+		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
+			Blocks.ACACIA_DOOR,
+			Blocks.BAMBOO_DOOR,
+			Blocks.BIRCH_DOOR,
+			Blocks.CHERRY_DOOR,
+			Blocks.DARK_OAK_DOOR,
+			Blocks.JUNGLE_DOOR,
+			Blocks.MANGROVE_DOOR,
+			Blocks.OAK_DOOR,
+			Blocks.SPRUCE_DOOR,
+			Blocks.CRIMSON_DOOR,
+			Blocks.WARPED_DOOR
+		);
+		// Metal Doors
+		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
+			Blocks.IRON_DOOR,
+			Blocks.COPPER_DOOR,
+			Blocks.EXPOSED_COPPER_DOOR,
+			Blocks.WEATHERED_COPPER_DOOR,
+			Blocks.OXIDIZED_COPPER_DOOR,
+			Blocks.WAXED_COPPER_DOOR,
+			Blocks.WAXED_EXPOSED_COPPER_DOOR,
+			Blocks.WAXED_WEATHERED_COPPER_DOOR,
+			Blocks.WAXED_OXIDIZED_COPPER_DOOR
+		);
+		// Wooden Trapdoors
+		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
+			Blocks.ACACIA_TRAPDOOR,
+			Blocks.BAMBOO_TRAPDOOR,
+			Blocks.BIRCH_TRAPDOOR,
+			Blocks.CHERRY_TRAPDOOR,
+			Blocks.DARK_OAK_TRAPDOOR,
+			Blocks.JUNGLE_TRAPDOOR,
+			Blocks.MANGROVE_TRAPDOOR,
+			Blocks.OAK_TRAPDOOR,
+			Blocks.SPRUCE_TRAPDOOR,
+			Blocks.CRIMSON_TRAPDOOR,
+			Blocks.WARPED_TRAPDOOR
+		);
+		// Metal Trapdoors
+		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
+			Blocks.IRON_TRAPDOOR,
+			Blocks.COPPER_TRAPDOOR,
+			Blocks.EXPOSED_COPPER_TRAPDOOR,
+			Blocks.WEATHERED_COPPER_TRAPDOOR,
+			Blocks.OXIDIZED_COPPER_TRAPDOOR,
+			Blocks.WAXED_COPPER_TRAPDOOR,
+			Blocks.WAXED_EXPOSED_COPPER_TRAPDOOR,
+			Blocks.WAXED_WEATHERED_COPPER_TRAPDOOR,
+			Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR
+		);
+		// Fence Gates
+		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
+			Blocks.ACACIA_FENCE_GATE,
+			Blocks.BAMBOO_FENCE_GATE,
+			Blocks.BIRCH_FENCE_GATE,
+			Blocks.CHERRY_FENCE_GATE,
+			Blocks.DARK_OAK_FENCE_GATE,
+			Blocks.JUNGLE_FENCE_GATE,
+			Blocks.MANGROVE_FENCE_GATE,
+			Blocks.OAK_FENCE_GATE,
+			Blocks.SPRUCE_FENCE_GATE,
+			Blocks.CRIMSON_FENCE_GATE,
+			Blocks.WARPED_FENCE_GATE
+		);
+		// Heads
+		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
+			Blocks.CREEPER_HEAD,
+			Blocks.DRAGON_HEAD,
+			Blocks.PIGLIN_HEAD,
+			Blocks.PLAYER_HEAD,
+			Blocks.SKELETON_SKULL,
+			Blocks.WITHER_SKELETON_SKULL,
+			Blocks.ZOMBIE_HEAD
+		);
+		// Wall Heads
+		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
+			// Note: wall heads have the same language translations as sitting heads, making them indistinguishable in command output.
+			// I consider this to be out of my control (for now).
+			Blocks.CREEPER_WALL_HEAD,
+			Blocks.DRAGON_WALL_HEAD,
+			Blocks.PIGLIN_WALL_HEAD,
+			Blocks.PLAYER_WALL_HEAD,
+			Blocks.SKELETON_WALL_SKULL,
+			Blocks.WITHER_SKELETON_WALL_SKULL,
+			Blocks.ZOMBIE_WALL_HEAD
+		);
+		// Copper Bulbs
+		TinkerKitRegistry.putBlocks(0, UpdateType.BOTH,
+			Blocks.COPPER_BULB,
+			Blocks.EXPOSED_COPPER_BULB,
+			Blocks.WEATHERED_COPPER_BULB,
+			Blocks.OXIDIZED_COPPER_BULB,
+			Blocks.WAXED_COPPER_BULB,
+			Blocks.WAXED_EXPOSED_COPPER_BULB,
+			Blocks.WAXED_WEATHERED_COPPER_BULB,
+			Blocks.WAXED_OXIDIZED_COPPER_BULB
+		);
+		// Rails
+		TinkerKitRegistry.putBlock(Blocks.RAIL, UpdateType.BOTH);
+		TinkerKitRegistry.putBlocks(0, UpdateType.BOTH,
+			Blocks.ACTIVATOR_RAIL,
+			Blocks.POWERED_RAIL
+		);
+		// Pistons
+		TinkerKitRegistry.putBlocks(1,
+			Blocks.PISTON,
+			Blocks.STICKY_PISTON
+		);
+		// Blocks That Fire Stuff
+		TinkerKitRegistry.putBlock(Blocks.CRAFTER, 0, UpdateType.SHAPE);
+		TinkerKitRegistry.putBlocks(1, UpdateType.SHAPE,
+			Blocks.DISPENSER,
+			Blocks.DROPPER
+		);
+		// Diodes
+		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
+			Blocks.REPEATER,
+			Blocks.COMPARATOR
+		);
+		// Operator Blocks
+		TinkerKitRegistry.putBlocks(0,
+			Blocks.COMMAND_BLOCK,
+			Blocks.REPEATING_COMMAND_BLOCK,
+			Blocks.STRUCTURE_BLOCK
+		);
+		// Uncategorised
 		TinkerKitRegistry.putBlock(Blocks.BARREL, 						   0, UpdateType.SHAPE);
 		TinkerKitRegistry.putBlock(Blocks.BELL, 						   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.BIRCH_DOOR, 					   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.BIRCH_FENCE_GATE, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.BIRCH_TRAPDOOR, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.CHERRY_DOOR, 				       0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.CHERRY_FENCE_GATE, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.CHERRY_TRAPDOOR, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.COMMAND_BLOCK, 				   0);
-		TinkerKitRegistry.putBlock(Blocks.COMPARATOR, 					   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.COPPER_BULB, 					   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.COPPER_DOOR, 					   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.COPPER_TRAPDOOR, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.CRAFTER, 						   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.CREEPER_HEAD, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.CREEPER_WALL_HEAD, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.CRIMSON_DOOR, 			       0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.CRIMSON_FENCE_GATE, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.CRIMSON_TRAPDOOR, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.DARK_OAK_DOOR, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.DARK_OAK_FENCE_GATE, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.DARK_OAK_TRAPDOOR, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.DISPENSER, 					   1, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.DRAGON_HEAD, 					   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.DRAGON_WALL_HEAD, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.DROPPER, 						   1, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.EXPOSED_COPPER_BULB, 			   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.EXPOSED_COPPER_DOOR, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.EXPOSED_COPPER_TRAPDOOR, 		   0, UpdateType.SHAPE);
 		TinkerKitRegistry.putBlock(Blocks.HOPPER, 						   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.IRON_DOOR, 					   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.IRON_TRAPDOOR, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.JUNGLE_DOOR, 					   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.JUNGLE_FENCE_GATE, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.JUNGLE_TRAPDOOR, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.MANGROVE_DOOR, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.MANGROVE_FENCE_GATE, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.MANGROVE_TRAPDOOR, 			   0, UpdateType.SHAPE);
 		TinkerKitRegistry.putBlock(Blocks.NOTE_BLOCK,    				   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.OAK_DOOR, 				       0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.OAK_FENCE_GATE, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.OAK_TRAPDOOR, 			       0, UpdateType.SHAPE);
 		TinkerKitRegistry.putBlock(Blocks.OBSERVER, 					                  UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.OXIDIZED_COPPER_BULB, 		   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.OXIDIZED_COPPER_DOOR, 		   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.OXIDIZED_COPPER_TRAPDOOR, 	   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.PIGLIN_HEAD, 				       0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.PIGLIN_WALL_HEAD, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.PISTON, 						   1);
-		TinkerKitRegistry.putBlock(Blocks.PLAYER_HEAD, 				       0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.PLAYER_WALL_HEAD, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.POWERED_RAIL, 				   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.RAIL, 						        		  UpdateType.BOTH);
 		TinkerKitRegistry.putBlock(Blocks.REDSTONE_LAMP, 				   0, UpdateType.SHAPE);
 		TinkerKitRegistry.putBlock(Blocks.REDSTONE_WALL_TORCH, 			   0);
-		TinkerKitRegistry.putBlock(Blocks.REPEATER, 					   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.REPEATING_COMMAND_BLOCK, 		   0);
-		TinkerKitRegistry.putBlock(Blocks.SKELETON_SKULL, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.SKELETON_WALL_SKULL, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.SPRUCE_DOOR, 				       0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.SPRUCE_FENCE_GATE, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.SPRUCE_TRAPDOOR, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.STICKY_PISTON, 				   1);
-		TinkerKitRegistry.putBlock(Blocks.STRUCTURE_BLOCK, 				   1);
 		TinkerKitRegistry.putBlock(Blocks.TNT, 							   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.WARPED_DOOR, 					   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WARPED_FENCE_GATE, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WARPED_TRAPDOOR, 				   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_COPPER_BULB, 			   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_COPPER_DOOR, 			   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_COPPER_TRAPDOOR, 		   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_EXPOSED_COPPER_BULB, 	   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_EXPOSED_COPPER_DOOR, 	   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_EXPOSED_COPPER_TRAPDOOR,   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_OXIDIZED_COPPER_BULB,	   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_OXIDIZED_COPPER_DOOR, 	   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR,  0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_WEATHERED_COPPER_BULB,     0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_WEATHERED_COPPER_DOOR,     0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WAXED_WEATHERED_COPPER_TRAPDOOR, 0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WEATHERED_COPPER_BULB,           0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.WEATHERED_COPPER_DOOR, 		   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WEATHERED_COPPER_TRAPDOOR,       0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WITHER_SKELETON_SKULL, 		   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.WITHER_SKELETON_WALL_SKULL,	   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.ZOMBIE_HEAD, 				       0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.ZOMBIE_WALL_HEAD, 			   0, UpdateType.SHAPE);
 	}
 
 	@Override
 	public void onServerLoadedWorlds(MinecraftServer server) {
-		server.getWorlds().forEach(world ->
-			MAX_QC_RANGE = Math.max(MAX_QC_RANGE, world.getHeight() - 1));
+        for (ServerWorld world : server.getWorlds())
+            MAX_QC_RANGE = Math.max(MAX_QC_RANGE, world.getHeight() - 1);
 
-		ConfigFile.loadFromFile(server); // Loads all quasi-connectivity and update type values when the server starts.
+        ConfigFile.loadFromFile(server); // Loads all quasi-connectivity and update type values when the server starts.
 		ConfigFile.updateFile(server); // Updates the config file when the server starts. Not technically necessary, but keeps things unambiguous.
 	}
 

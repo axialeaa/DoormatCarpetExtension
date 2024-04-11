@@ -15,7 +15,7 @@ public class AbstractRedstoneGateBlockMixin {
 
     @ModifyReturnValue(method = "getPower", at = @At(value = "RETURN", ordinal = 1))
     private int getQuasiPower(int original, World world, BlockPos pos, BlockState state) {
-        return Math.max(TinkerKit.getEmittedPowerWithinRange(world, pos, state.get(HorizontalFacingBlock.FACING)), original);
+        return TinkerKit.getEmittedRedstonePower(world, pos, state.get(HorizontalFacingBlock.FACING));
     }
 
 }

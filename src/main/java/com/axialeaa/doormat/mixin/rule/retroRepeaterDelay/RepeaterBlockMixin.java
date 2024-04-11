@@ -12,12 +12,16 @@ public class RepeaterBlockMixin {
 
     @ModifyReturnValue(method = "getUpdateDelayInternal", at = @At("RETURN"))
     private int modifyUpdateDelay(int original, BlockState state) {
-        return DoormatSettings.retroRepeaterDelay ?
-            switch (state.get(RepeaterBlock.DELAY)) {
-                case 3 -> 10;
-                case 4 -> 14;
-                default -> original;
-            } : original;
+        if (!DoormatSettings.retroRepeaterDelay)
+            return original;
+
+        return switch (state.get(RepeaterBlock.DELAY)) {
+            case 1 -> 2;
+            case 2 -> 3;
+            case 3 -> 10;
+            case 4 -> 14;
+            default -> throw new IllegalStateException("Unexpected value: " + state.get(RepeaterBlock.DELAY));
+        };
     }
 
 }

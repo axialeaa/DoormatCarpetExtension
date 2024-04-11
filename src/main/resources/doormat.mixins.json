@@ -122,8 +122,6 @@
     "rule.sporeBlossomDuplication.BoneMealItemMixin",
     "rule.stickyPillarBlocks.PillarBlockMixin",
     "rule.stickyStickyPistons.PistonBlockMixin",
-    "rule.thornyRoseBush.DamageSourcesAccessor",
-    "rule.thornyRoseBush.TallFlowerBlockMixin",
     "rule.torchBurnout.RedstoneTorchBlockMixin",
     "rule.trialSpawnerEntityRequirement.TrialSpawnerBlockEntityMixin",
     "rule.villagersAlwaysInheritBiome.VillagerEntityMixin",

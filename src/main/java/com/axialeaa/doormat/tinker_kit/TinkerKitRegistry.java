@@ -22,11 +22,11 @@ public class TinkerKitRegistry {
      */
     private static final Map<Block, UpdateType> DEFAULT_UPDATE_TYPE_VALUES = new HashMap<>();
 
-    public static Map<Block, Integer> getDefaultQCValues() {
+    static Map<Block, Integer> getDefaultQCValues() {
         return DEFAULT_QC_VALUES;
     }
 
-    public static Map<Block, UpdateType> getDefaultUpdateTypeValues() {
+    static Map<Block, UpdateType> getDefaultUpdateTypeValues() {
         return DEFAULT_UPDATE_TYPE_VALUES;
     }
 
@@ -77,6 +77,9 @@ public class TinkerKitRegistry {
      * @param blocks a list of blocks to assign <code>defaultQCValue</code> to.
      */
     public static void putBlocks(Integer defaultQCValue, Block... blocks) {
+        if (blocks.length == 0)
+            throw new IllegalArgumentException("No blocks found in variable argument list!");
+
         for (Block block : blocks)
             putBlock(block, defaultQCValue);
     }
@@ -87,6 +90,9 @@ public class TinkerKitRegistry {
      * @param blocks a list of blocks to assign <code>defaultUpdateTypeValue</code> to.
      */
     public static void putBlocks(UpdateType defaultUpdateTypeValue, Block... blocks) {
+        if (blocks.length == 0)
+            throw new IllegalArgumentException("No blocks found in variable argument list!");
+
         for (Block block : blocks)
             putBlock(block, defaultUpdateTypeValue);
     }

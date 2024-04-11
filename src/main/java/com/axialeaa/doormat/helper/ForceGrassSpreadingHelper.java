@@ -21,7 +21,7 @@ public class ForceGrassSpreadingHelper {
     /**
      * Future-proof implementation of what is essentially {@link net.minecraft.block.NetherrackBlock#grow(ServerWorld, Random, BlockPos, BlockState) nylium logic}. Instead of defining new booleans for each instanceof {@link SpreadableBlock}, just create a list of all {@link SpreadableBlock} instances around the target dirt, eliminate duplicate list entries, and pick a random list index. This should comfortably scale with any new {@link SpreadableBlock} types Mojang may or may not decide to add in the future.
      */
-    @SuppressWarnings("UnreachableCode")
+    @SuppressWarnings("ConstantValue")
     public static boolean onUse(World world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
 
@@ -46,6 +46,7 @@ public class ForceGrassSpreadingHelper {
                 return true;
             }
         }
+
         return false;
     }
 

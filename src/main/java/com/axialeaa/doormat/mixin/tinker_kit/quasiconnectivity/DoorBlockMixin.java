@@ -22,7 +22,7 @@ public class DoorBlockMixin {
         BlockState blockState = instance.getBlockState(pos);
         boolean isLowerHalf = blockState.get(DoorBlock.HALF) == DoubleBlockHalf.LOWER;
 
-        return TinkerKit.isReceivingPowerWithinRange(instance, pos, isLowerHalf ? 1 : 0) || original.call(instance, pos);
+        return TinkerKit.isReceivingRedstonePower(instance, pos, isLowerHalf ? 1 : 0);
     }
 
 }

@@ -16,7 +16,7 @@ public class MagmaCubeEntityMixin {
 
     @ModifyReturnValue(method = "canMagmaCubeSpawn", at = @At("RETURN"))
     private static boolean addSpawnCondition(boolean original, EntityType<MagmaCubeEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return PeacefulMonsterSpawningHelper.addSpawningCondition(world, spawnReason, pos, original);
+        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, spawnReason, pos);
     }
 
 }

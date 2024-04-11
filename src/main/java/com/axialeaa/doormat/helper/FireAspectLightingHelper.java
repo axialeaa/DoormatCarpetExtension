@@ -45,6 +45,7 @@ public class FireAspectLightingHelper {
                 return ActionResult.success(world.isClient());
             }
         }
+
         return ActionResult.PASS;
     }
 

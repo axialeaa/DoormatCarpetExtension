@@ -32,10 +32,12 @@ public abstract class ItemEnchantmentsComponentMixin {
         EnchantmentCarouselHelper.LIST_SIZE = this.getSize();
         if (DoormatSettings.compactEnchantTooltips) {
             RegistryEntry<Enchantment> registryEntry = null;
+
             try {
                 registryEntry = this.getEnchantments().stream().toList().get(EnchantmentCarouselHelper.LIST_INDEX);
             }
             catch (ArrayIndexOutOfBoundsException ignored) {}
+
             if (registryEntry != null) {
                 Enchantment enchantment = registryEntry.value();
                 textConsumer.accept(enchantment.getName(this.getLevel(enchantment)));
