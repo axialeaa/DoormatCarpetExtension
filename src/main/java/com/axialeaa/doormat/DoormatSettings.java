@@ -113,20 +113,6 @@ public class DoormatSettings {
 
     }
 
-    private static class MovableBERuleEnabledValidator<T> extends Validator<T> {
-
-        @Override
-        public T validate(ServerCommandSource source, CarpetRule<T> currentRule, T newValue, String string) {
-            return CarpetSettings.movableBlockEntities || currentRule.defaultValue().equals(newValue) ? newValue : null;
-        }
-
-        @Override
-        public String description() {
-            return "movableBlockEntities must be enabled";
-        }
-
-    }
-
     /**<h1>ENUMS</h1>*/
 
     public enum PetAttackMode {
@@ -353,10 +339,10 @@ public class DoormatSettings {
     @Rule( categories = { CREATIVE, EXPERIMENTAL, DOORMAT } )
     public static boolean moreTimeArgumentUnits = false;
 
-    @Rule(  validators = MovableBERuleEnabledValidator.class, categories = { FEATURE, DOORMAT } )
+    @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean movableEnchantingTables = false;
 
-    @Rule( validators = MovableBERuleEnabledValidator.class, categories = { FEATURE, DOORMAT } )
+    @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean movableEnderChests = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
