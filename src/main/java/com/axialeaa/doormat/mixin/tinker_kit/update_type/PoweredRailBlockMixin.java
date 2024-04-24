@@ -16,7 +16,7 @@ public class PoweredRailBlockMixin {
 
     @ModifyArg(method = "updateBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int changeUpdateType(int flags, @Local(argsOnly = true) World world, @Local(argsOnly = true) BlockPos pos) {
-        return TinkerKit.getUpdateFlags(world.getBlockState(pos), flags);
+        return TinkerKit.getFlags(world.getBlockState(pos), flags);
     }
 
     @WrapWithCondition(method = "updateBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))

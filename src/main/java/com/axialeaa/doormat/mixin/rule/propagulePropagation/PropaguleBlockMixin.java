@@ -25,7 +25,7 @@ public class PropaguleBlockMixin {
      * Creates a falling block entity of a fully-grown, hanging propagule state next randomTick.
      */
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/PropaguleBlock;isFullyGrown(Lnet/minecraft/block/BlockState;)Z"))
-    private void dropOnFullyGrown(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
+    private void fallOnFullyGrown(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         if (DoormatSettings.propagulePropagation && state.get(AGE) == 4) {
             BlockPos.Mutable mutable = pos.mutableCopy();
             FallingBlockEntity.spawnFromBlock(world, mutable, state);

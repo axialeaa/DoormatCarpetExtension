@@ -8,7 +8,10 @@ import net.minecraft.world.Difficulty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin({ PigEntity.class, VillagerEntity.class })
+@Mixin({
+    PigEntity.class,
+    VillagerEntity.class
+})
 public class Pig_VillagerEntityMixin {
 
     /**

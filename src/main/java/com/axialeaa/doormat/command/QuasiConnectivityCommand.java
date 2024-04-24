@@ -43,7 +43,7 @@ public class QuasiConnectivityCommand {
             )
             .then(literal("get")
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                    .suggests((ctx, builder) -> suggestMatching(getModifiableKeys(ModificationType.QC), builder))
+                    .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.QC), builder))
                     .executes(ctx -> get(
                         ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
@@ -63,7 +63,7 @@ public class QuasiConnectivityCommand {
                         ))
                     )
                     .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                        .suggests((ctx, builder) -> suggestMatching(getModifiableKeys(ModificationType.QC), builder))
+                        .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.QC), builder))
                         .executes(ctx -> set(
                             ctx.getSource(),
                             RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value(),
@@ -77,7 +77,7 @@ public class QuasiConnectivityCommand {
                     .executes(ctx -> resetAll(ctx.getSource()))
                 )
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                    .suggests((ctx, builder) -> suggestMatching(getModifiableKeys(ModificationType.QC), builder))
+                    .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.QC), builder))
                     .executes(ctx -> reset(
                         ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
@@ -212,7 +212,7 @@ public class QuasiConnectivityCommand {
         }
 
         if (wasModified) {
-            Messenger.m(source, "w Restored default quasi-connectivity value(s)");
+            Messenger.m(source, "w Restored default quasi-connectivity values");
             ConfigFile.updateFile(source.getServer());
 
             return Command.SINGLE_SUCCESS;

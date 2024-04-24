@@ -161,7 +161,7 @@ public class ConfigFile {
                     else if (updateTypePrimitive.isNumber()) {
                         int value = MathHelper.clamp(updateTypeElement.getAsInt(), 0, 3);
                         DoormatServer.LOGGER.info("{} update type value was written as {}. Attempting to set to UpdateType with flags matching {}.", getTranslatedName(block), updateTypeElement.getAsNumber(), value);
-                        MODIFIED_UPDATE_TYPE_VALUES.put(block, UpdateType.FLAGS_TO_UPDATE_TYPE.get(value));
+                        MODIFIED_UPDATE_TYPE_VALUES.put(block, UpdateType.getFromFlags(value));
                     }
                     else throw new Exception();
                 }

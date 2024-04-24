@@ -20,7 +20,7 @@ public class FallingBlockEntityMixin {
      * As long as the rule is enabled, sets falling, hanging mangrove propagule entities to standing variants, allowing them to plant themselves on landing.
      */
     @Inject(method = "tick", at = @At(value = "HEAD"))
-    private void modifyMangrovePropagule(CallbackInfo ci) {
+    private void setStandingVariant(CallbackInfo ci) {
         if (DoormatSettings.propagulePropagation && this.block.isOf(Blocks.MANGROVE_PROPAGULE) && this.block.get(PropaguleBlock.HANGING) && this.block.get(PropaguleBlock.AGE) == 4)
             this.block = Blocks.MANGROVE_PROPAGULE.getDefaultState();
     }

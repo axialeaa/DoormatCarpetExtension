@@ -39,11 +39,11 @@ public class HostileEntityMixin {
      */
     @ModifyReturnValue(method = "canSpawnInDark", at = @At("RETURN"))
     private static boolean addSpawnConditionInDark(boolean original, EntityType<? extends HostileEntity> type, ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, spawnReason, pos);
+        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, pos, spawnReason);
     }
     @ModifyReturnValue(method = "canSpawnIgnoreLightLevel", at = @At("RETURN"))
     private static boolean addSpawnConditionIgnoreLightLevel(boolean original, EntityType<? extends HostileEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, spawnReason, pos);
+        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, pos, spawnReason);
     }
 
     /**

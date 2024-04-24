@@ -13,7 +13,7 @@ public class BarrelBlockEntityMixin {
 
     @ModifyArg(method = "setOpen", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int changeUpdateType(BlockPos pos, BlockState state, int flags) {
-        return TinkerKit.getUpdateFlags(state, flags);
+        return TinkerKit.getFlags(state, flags);
     }
 
 }

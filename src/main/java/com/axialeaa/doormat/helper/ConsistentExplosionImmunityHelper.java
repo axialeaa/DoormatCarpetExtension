@@ -25,6 +25,7 @@ public class ConsistentExplosionImmunityHelper {
                 return power * 1.3 > (blastRes + 0.3) * 0.3;
             }
         }
+
         return true;
     }
 

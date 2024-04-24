@@ -13,7 +13,7 @@ public class AbstractRedstoneGateBlockMixin {
 
     @ModifyArg(method = "scheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int changeUpdateType(BlockPos pos, BlockState state, int flags) {
-        return TinkerKit.getUpdateFlags(state, flags);
+        return TinkerKit.getFlags(state, flags);
     }
 
 }

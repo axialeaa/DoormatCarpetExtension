@@ -17,7 +17,7 @@ public class RepeaterBlockMixin {
 
         return switch (state.get(RepeaterBlock.DELAY)) {
             case 1 -> 2;
-            case 2 -> 3;
+            case 2 -> 4;
             case 3 -> 10;
             case 4 -> 14;
             default -> throw new IllegalStateException("Unexpected value: " + state.get(RepeaterBlock.DELAY));

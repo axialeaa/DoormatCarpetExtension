@@ -12,7 +12,10 @@ import net.minecraft.world.WorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin({ FallingBlock.class, BrushableBlock.class})
+@Mixin({
+    FallingBlock.class,
+    BrushableBlock.class
+})
 public class Falling_BrushableBlockMixin {
 
     @WrapWithCondition(method = "getStateForNeighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))

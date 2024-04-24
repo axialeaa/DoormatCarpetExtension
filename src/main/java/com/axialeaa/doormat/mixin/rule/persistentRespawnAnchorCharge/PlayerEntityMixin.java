@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class PlayerEntityMixin {
 
     @ModifyExpressionValue(method = "findRespawnPosition", at = @At(value = "INVOKE", target = "Ljava/util/Optional;isPresent()Z"))
-    private static boolean decrementChargeOnRespawn(boolean original) {
+    private static boolean shouldDecrementCharge(boolean original) {
         return original && !DoormatSettings.persistentRespawnAnchorCharge;
     }
 

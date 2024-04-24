@@ -20,6 +20,7 @@ public class WorldRendererMixin {
     private Heightmap.Type modifyRenderHeightmap(Heightmap.Type heightmap, @Local Biome biome, @Local BlockPos.Mutable mutable) {
         if (DoormatSettings.snowFormsUnderLeaves && biome.getPrecipitation(mutable) == Biome.Precipitation.SNOW)
             return Heightmap.Type.MOTION_BLOCKING_NO_LEAVES;
+
         return heightmap;
     }
 

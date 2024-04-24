@@ -18,7 +18,7 @@ public class SlimeEntityMixin {
 
     @ModifyReturnValue(method = "canSpawn", at = {@At(value = "RETURN", ordinal = 0), @At(value = "RETURN", ordinal = 2)})
     private static boolean addSpawnCondition(boolean original, EntityType<SlimeEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, spawnReason, pos);
+        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, pos, spawnReason);
     }
 
     @ModifyExpressionValue(method = "canSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))

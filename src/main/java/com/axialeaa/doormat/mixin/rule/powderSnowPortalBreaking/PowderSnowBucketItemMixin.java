@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class PowderSnowBucketItemMixin {
 
     @ModifyExpressionValue(method = "placeFluid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isAir(Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean addPortalBreakingCondition(boolean original, @Nullable PlayerEntity player, World world, BlockPos pos, @Nullable BlockHitResult hitResult) {
+    private boolean shouldReplaceBlockAtPos(boolean original, @Nullable PlayerEntity player, World world, BlockPos pos, @Nullable BlockHitResult hitResult) {
         return original || DoormatSettings.powderSnowPortalBreaking && world.getBlockState(pos).isOf(Blocks.NETHER_PORTAL);
     }
 

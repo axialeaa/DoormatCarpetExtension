@@ -11,6 +11,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 
+import java.awt.*;
+
 public class CobwebGenerationHelper {
 
     /**
@@ -23,26 +25,30 @@ public class CobwebGenerationHelper {
             for (BlockPos blockPos : BlockPos.iterate(pos.add(-h, -v, -h), pos.add(h, v, h))) {
                 int i = 0;
                 for (Direction direction : Direction.values()) {
-                    if (world.getBlockState(blockPos).isAir() && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, pos, direction.getOpposite())) {
+                    if (world.getBlockState(blockPos).isReplaceable() && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, pos, direction.getOpposite())) {
                         i++;
                         if (DoormatServer.IS_DEBUG)
-                            // Render supporting faces
-                            RenderHandler.addCuboidQuads(blockPos.toCenterPos().offset(direction, 0.5), 0.02, RenderHandler.getTrubetskoyColor("white"), 200, true);
+                            // Supporting faces
+                            RenderHandler.addCuboidFaceQuad(blockPos.offset(direction).toCenterPos(), 0.5001, RenderHandler.getTrubetskoyColor("white", 40), 200, true, direction);
                     }
                 }
                 if (i >= 2) {
-                    if (random.nextInt(i + rarity) > rarity)
+                    Color color = RenderHandler.getTrubetskoyColor("white");
+
+                    if (random.nextInt(i + rarity) > rarity) {
                         world.setBlockState(blockPos, Blocks.COBWEB.getDefaultState());
+                        color = RenderHandler.getTrubetskoyColor("green");
+                    }
 
                     if (DoormatServer.IS_DEBUG)
-                        // Render successful placement positions
-                        RenderHandler.addCuboid(blockPos.toCenterPos(), 0.5, RenderHandler.getTrubetskoyColor("green", 40), RenderHandler.getTrubetskoyColor("green"), 200, true);
+                        // Satisfactory placement spots
+                        RenderHandler.addCuboidLines(blockPos.toCenterPos(), 0.5, color, 200, true);
                 }
             }
 
             if (DoormatServer.IS_DEBUG)
-                // Render enclosing box
-                RenderHandler.addCuboidLines(pos.getX() - h, pos.getY() - v, pos.getZ() - h, pos.getX() + h + 1, pos.getY() + v + 1, pos.getZ() + h + 1, RenderHandler.getTrubetskoyColor("purple"), 200, false);
+                // Enclosing box
+                RenderHandler.addCuboidLines(pos.getX() - h, pos.getY() - v, pos.getZ() - h, pos.getX() + h + 1, pos.getY() + v + 1, pos.getZ() + h + 1, RenderHandler.getTrubetskoyColor("purple"), 200, true);
         }
     }
 

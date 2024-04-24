@@ -262,6 +262,12 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean deepslateDungeons = false;
 
+    @Rule( categories = { SURVIVAL, DOORMAT } )
+    public static boolean disableBedTooFarWarning = false;
+
+    @Rule( categories = { SURVIVAL, DOORMAT } )
+    public static boolean disableBedUnsafeWarning = false;
+
     @Rule( categories = { CREATIVE, DOORMAT } )
     public static boolean disableDragonEggTeleportation = false;
 
@@ -273,9 +279,6 @@ public class DoormatSettings {
 
     @Rule( categories = { CREATIVE, DOORMAT } )
     public static boolean disableMaceKnockback = false;
-
-    @Rule( categories = { SURVIVAL, DOORMAT } )
-    public static boolean disableMonsterSleepCheck = false;
 
     @Rule( categories = { CREATIVE, DOORMAT } )
     public static boolean disableNetherPortalCrossing = false;
@@ -339,9 +342,6 @@ public class DoormatSettings {
 
     @Rule( categories = { CREATIVE, DOORMAT } )
     public static boolean leavesNoCollision = false;
-
-    @Rule( categories = { FEATURE, DOORMAT } )
-    public static boolean leavesStickToMatchingLogs = false;
 
     @Rule( options = { "8.0", "16.0" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static double maxMinecartSpeedLand = 8.0;

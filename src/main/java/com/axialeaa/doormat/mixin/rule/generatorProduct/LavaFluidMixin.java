@@ -14,7 +14,7 @@ public class LavaFluidMixin {
 
     @WrapOperation(method = "flow", at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;STONE:Lnet/minecraft/block/Block;"))
     private Block modifyStoneGenProduct(Operation<Block> original) {
-        return BlockIdentifierRuleHelper.getBlock(DoormatSettings.stoneGenProduct).orElse(original.call());
+        return BlockIdentifierRuleHelper.getBlockFromId(DoormatSettings.stoneGenProduct).orElse(original.call());
     }
 
 }

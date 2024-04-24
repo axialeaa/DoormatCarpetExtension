@@ -17,7 +17,11 @@ public class PistonBlockMixin {
     /**
      * This needs to be different because of carpet's modified quasi-connectivity logic.
      */
-    @SuppressWarnings({ "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidMemberReference" })
+    @SuppressWarnings({
+        "UnresolvedMixinReference",
+        "MixinAnnotationTarget",
+        "InvalidMemberReference"
+    })
     @TargetHandler(mixin = "carpet.mixins.PistonBaseBlock_qcMixin", name = "carpet_checkQuasiSignal")
     @WrapOperation(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target =  "Lcarpet/helpers/QuasiConnectivity;hasQuasiSignal(Lnet/minecraft/world/RedstoneView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean shouldQC(RedstoneView instance, BlockPos pos, Operation<Boolean> original) {

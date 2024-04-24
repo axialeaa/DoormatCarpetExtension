@@ -12,7 +12,10 @@ import org.spongepowered.asm.mixin.injection.At;
 /**
  * Mixing into {@link Item} and {@link BlockItem} accommodates using cheats or nbt editing to put fire aspect on non-tool items.
  */
-@Mixin({ Item.class, BlockItem.class })
+@Mixin({
+    Item.class,
+    BlockItem.class
+})
 public class Item_BlockItemMixin {
 
     @ModifyReturnValue(method = "useOnBlock", at = @At("RETURN"))

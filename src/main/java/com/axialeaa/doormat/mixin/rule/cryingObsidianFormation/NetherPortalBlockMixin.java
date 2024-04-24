@@ -27,6 +27,7 @@ public class NetherPortalBlockMixin {
             for (Direction direction : Direction.values()) {
                 if (direction.getAxis().isVertical() || state.get(AXIS) == direction.getAxis()) {
                     BlockPos blockPos = pos.offset(direction);
+
                     if (world.getBlockState(blockPos).isOf(Blocks.OBSIDIAN) && random.nextFloat() < DoormatSettings.obsidianFrameConversionChance)
                         world.setBlockState(blockPos, Blocks.CRYING_OBSIDIAN.getDefaultState());
                 }

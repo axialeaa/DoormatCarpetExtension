@@ -14,17 +14,17 @@ public class FluidBlockMixin {
 
     @WrapOperation(method = "receiveNeighborFluids", at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;OBSIDIAN:Lnet/minecraft/block/Block;"))
     private Block modifyObsidianGenProduct(Operation<Block> original) {
-        return BlockIdentifierRuleHelper.getBlock(DoormatSettings.obsidianGenProduct).orElse(original.call());
+        return BlockIdentifierRuleHelper.getBlockFromId(DoormatSettings.obsidianGenProduct).orElse(original.call());
     }
 
     @WrapOperation(method = "receiveNeighborFluids", at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;COBBLESTONE:Lnet/minecraft/block/Block;"))
     private Block modifyCobbleGenProduct(Operation<Block> original) {
-        return BlockIdentifierRuleHelper.getBlock(DoormatSettings.cobblestoneGenProduct).orElse(original.call());
+        return BlockIdentifierRuleHelper.getBlockFromId(DoormatSettings.cobblestoneGenProduct).orElse(original.call());
     }
 
     @WrapOperation(method = "receiveNeighborFluids", at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;BASALT:Lnet/minecraft/block/Block;"))
     private Block modifyBasaltGenProduct(Operation<Block> original) {
-        return BlockIdentifierRuleHelper.getBlock(DoormatSettings.basaltGenProduct).orElse(original.call());
+        return BlockIdentifierRuleHelper.getBlockFromId(DoormatSettings.basaltGenProduct).orElse(original.call());
     }
 
 }

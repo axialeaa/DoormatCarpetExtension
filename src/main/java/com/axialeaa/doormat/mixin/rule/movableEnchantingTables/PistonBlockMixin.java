@@ -12,7 +12,11 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = PistonBlock.class, priority = 1500)
 public class PistonBlockMixin {
 
-    @SuppressWarnings({ "UnresolvedMixinReference", "MixinAnnotationTarget", "InvalidMemberReference" })
+    @SuppressWarnings({
+        "UnresolvedMixinReference",
+        "MixinAnnotationTarget",
+        "InvalidMemberReference"
+    })
     @TargetHandler(mixin = "carpet.mixins.PistonBaseBlock_movableBEMixin", name = "isPushableBlockEntity")
     @WrapOperation(method = "@MixinSquared:Handler", at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;ENCHANTING_TABLE:Lnet/minecraft/block/Block;"))
     private static Block bypassEnchantingTableCheck(Operation<Block> original) {

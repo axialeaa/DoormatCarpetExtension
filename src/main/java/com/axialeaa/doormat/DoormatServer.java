@@ -14,7 +14,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.resource.featuretoggle.FeatureSet;
@@ -53,142 +53,36 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 		CarpetServer.manageExtension(new DoormatServer());
         LOGGER.info("{} initialized. Wipe your feet!", MOD_NAME);
 
-		// Wooden Doors
-		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
-			Blocks.ACACIA_DOOR,
-			Blocks.BAMBOO_DOOR,
-			Blocks.BIRCH_DOOR,
-			Blocks.CHERRY_DOOR,
-			Blocks.DARK_OAK_DOOR,
-			Blocks.JUNGLE_DOOR,
-			Blocks.MANGROVE_DOOR,
-			Blocks.OAK_DOOR,
-			Blocks.SPRUCE_DOOR,
-			Blocks.CRIMSON_DOOR,
-			Blocks.WARPED_DOOR
-		);
-		// Metal Doors
-		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
-			Blocks.IRON_DOOR,
-			Blocks.COPPER_DOOR,
-			Blocks.EXPOSED_COPPER_DOOR,
-			Blocks.WEATHERED_COPPER_DOOR,
-			Blocks.OXIDIZED_COPPER_DOOR,
-			Blocks.WAXED_COPPER_DOOR,
-			Blocks.WAXED_EXPOSED_COPPER_DOOR,
-			Blocks.WAXED_WEATHERED_COPPER_DOOR,
-			Blocks.WAXED_OXIDIZED_COPPER_DOOR
-		);
-		// Wooden Trapdoors
-		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
-			Blocks.ACACIA_TRAPDOOR,
-			Blocks.BAMBOO_TRAPDOOR,
-			Blocks.BIRCH_TRAPDOOR,
-			Blocks.CHERRY_TRAPDOOR,
-			Blocks.DARK_OAK_TRAPDOOR,
-			Blocks.JUNGLE_TRAPDOOR,
-			Blocks.MANGROVE_TRAPDOOR,
-			Blocks.OAK_TRAPDOOR,
-			Blocks.SPRUCE_TRAPDOOR,
-			Blocks.CRIMSON_TRAPDOOR,
-			Blocks.WARPED_TRAPDOOR
-		);
-		// Metal Trapdoors
-		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
-			Blocks.IRON_TRAPDOOR,
-			Blocks.COPPER_TRAPDOOR,
-			Blocks.EXPOSED_COPPER_TRAPDOOR,
-			Blocks.WEATHERED_COPPER_TRAPDOOR,
-			Blocks.OXIDIZED_COPPER_TRAPDOOR,
-			Blocks.WAXED_COPPER_TRAPDOOR,
-			Blocks.WAXED_EXPOSED_COPPER_TRAPDOOR,
-			Blocks.WAXED_WEATHERED_COPPER_TRAPDOOR,
-			Blocks.WAXED_OXIDIZED_COPPER_TRAPDOOR
-		);
-		// Fence Gates
-		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
-			Blocks.ACACIA_FENCE_GATE,
-			Blocks.BAMBOO_FENCE_GATE,
-			Blocks.BIRCH_FENCE_GATE,
-			Blocks.CHERRY_FENCE_GATE,
-			Blocks.DARK_OAK_FENCE_GATE,
-			Blocks.JUNGLE_FENCE_GATE,
-			Blocks.MANGROVE_FENCE_GATE,
-			Blocks.OAK_FENCE_GATE,
-			Blocks.SPRUCE_FENCE_GATE,
-			Blocks.CRIMSON_FENCE_GATE,
-			Blocks.WARPED_FENCE_GATE
-		);
-		// Heads
-		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
-			Blocks.CREEPER_HEAD,
-			Blocks.DRAGON_HEAD,
-			Blocks.PIGLIN_HEAD,
-			Blocks.PLAYER_HEAD,
-			Blocks.SKELETON_SKULL,
-			Blocks.WITHER_SKELETON_SKULL,
-			Blocks.ZOMBIE_HEAD
-		);
-		// Wall Heads
-		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
-			// Note: wall heads have the same language translations as sitting heads, making them indistinguishable in command output.
-			// I consider this to be out of my control (for now).
-			Blocks.CREEPER_WALL_HEAD,
-			Blocks.DRAGON_WALL_HEAD,
-			Blocks.PIGLIN_WALL_HEAD,
-			Blocks.PLAYER_WALL_HEAD,
-			Blocks.SKELETON_WALL_SKULL,
-			Blocks.WITHER_SKELETON_WALL_SKULL,
-			Blocks.ZOMBIE_WALL_HEAD
-		);
-		// Copper Bulbs
-		TinkerKitRegistry.putBlocks(0, UpdateType.BOTH,
-			Blocks.COPPER_BULB,
-			Blocks.EXPOSED_COPPER_BULB,
-			Blocks.WEATHERED_COPPER_BULB,
-			Blocks.OXIDIZED_COPPER_BULB,
-			Blocks.WAXED_COPPER_BULB,
-			Blocks.WAXED_EXPOSED_COPPER_BULB,
-			Blocks.WAXED_WEATHERED_COPPER_BULB,
-			Blocks.WAXED_OXIDIZED_COPPER_BULB
-		);
-		// Rails
+		// Handles all instances of most blocks for automatic inter-mod compatibility.
+		// Modders should not need to add their own variants manually if the block in question extends any of these classes.
+		TinkerKitRegistry.putBlocksByClass(DoorBlock.class, 0, UpdateType.SHAPE);
+		TinkerKitRegistry.putBlocksByClass(TrapdoorBlock.class, 0, UpdateType.SHAPE);
+		TinkerKitRegistry.putBlocksByClass(FenceGateBlock.class, 0, UpdateType.SHAPE);
+		TinkerKitRegistry.putBlocksByClass(AbstractSkullBlock.class, 0, UpdateType.SHAPE);
+		TinkerKitRegistry.putBlocksByClass(AbstractRedstoneGateBlock.class, 0, UpdateType.SHAPE);
+		TinkerKitRegistry.putBlocksByClass(DispenserBlock.class, 1, UpdateType.SHAPE);
+		TinkerKitRegistry.putBlocksByClass(RedstoneLampBlock.class, 0, UpdateType.SHAPE);
+		TinkerKitRegistry.putBlocksByClass(BulbBlock.class, 0, UpdateType.BOTH);
+		TinkerKitRegistry.putBlocksByClass(PistonBlock.class, 1);
+		TinkerKitRegistry.putBlocksByClass(TntBlock.class, 0, UpdateType.BOTH);
+		TinkerKitRegistry.putBlocksByClass(NoteBlock.class, 0, UpdateType.BOTH);
+		TinkerKitRegistry.putBlocksByClass(BellBlock.class, 0, UpdateType.BOTH);
+		TinkerKitRegistry.putBlocksByClass(HopperBlock.class, 0, UpdateType.SHAPE);
+		TinkerKitRegistry.putBlocksByClass(CommandBlock.class, 0);
+		TinkerKitRegistry.putBlocksByClass(StructureBlock.class, 0);
+		TinkerKitRegistry.putBlocksByClass(BarrelBlock.class, 0, UpdateType.SHAPE);
+
 		TinkerKitRegistry.putBlock(Blocks.RAIL, UpdateType.BOTH);
 		TinkerKitRegistry.putBlocks(0, UpdateType.BOTH,
 			Blocks.ACTIVATOR_RAIL,
 			Blocks.POWERED_RAIL
 		);
-		// Pistons
-		TinkerKitRegistry.putBlocks(1,
-			Blocks.PISTON,
-			Blocks.STICKY_PISTON
-		);
-		// Blocks That Fire Stuff
 		TinkerKitRegistry.putBlock(Blocks.CRAFTER, 0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlocks(1, UpdateType.SHAPE,
-			Blocks.DISPENSER,
-			Blocks.DROPPER
-		);
-		// Diodes
-		TinkerKitRegistry.putBlocks(0, UpdateType.SHAPE,
-			Blocks.REPEATER,
-			Blocks.COMPARATOR
-		);
-		// Operator Blocks
-		TinkerKitRegistry.putBlocks(0,
-			Blocks.COMMAND_BLOCK,
-			Blocks.REPEATING_COMMAND_BLOCK,
-			Blocks.STRUCTURE_BLOCK
-		);
-		// Uncategorised
-		TinkerKitRegistry.putBlock(Blocks.BARREL, 						   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.BELL, 						   0, UpdateType.BOTH);
-		TinkerKitRegistry.putBlock(Blocks.HOPPER, 						   0, UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.NOTE_BLOCK,    				   0, UpdateType.BOTH);
+
 		TinkerKitRegistry.putBlock(Blocks.OBSERVER, 					                  UpdateType.SHAPE);
-		TinkerKitRegistry.putBlock(Blocks.REDSTONE_LAMP, 				   0, UpdateType.SHAPE);
 		TinkerKitRegistry.putBlock(Blocks.REDSTONE_WALL_TORCH, 			   0);
-		TinkerKitRegistry.putBlock(Blocks.TNT, 							   0, UpdateType.BOTH);
+		TinkerKitRegistry.putBlock(Blocks.BIG_DRIPLEAF, 				   0, UpdateType.SHAPE);
+		TinkerKitRegistry.putBlock(Blocks.BARREL, 						   0, UpdateType.SHAPE);
 	}
 
 	@Override

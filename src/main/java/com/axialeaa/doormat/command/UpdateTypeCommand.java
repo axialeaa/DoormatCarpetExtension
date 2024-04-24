@@ -47,7 +47,7 @@ public class UpdateTypeCommand {
             )
             .then(literal("get")
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                    .suggests((ctx, builder) -> suggestMatching(getModifiableKeys(ModificationType.UPDATE_TYPE), builder))
+                    .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.UPDATE_TYPE), builder))
                     .executes(ctx -> get(
                         ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
@@ -64,7 +64,7 @@ public class UpdateTypeCommand {
                         ))
                     )
                     .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                        .suggests((ctx, builder) -> suggestMatching(getModifiableKeys(ModificationType.UPDATE_TYPE), builder))
+                        .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.UPDATE_TYPE), builder))
                         .executes(ctx -> set(
                             ctx.getSource(),
                             RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value(),
@@ -78,7 +78,7 @@ public class UpdateTypeCommand {
                     .executes(ctx -> resetAll(ctx.getSource()))
                 )
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                    .suggests((ctx, builder) -> suggestMatching(getModifiableKeys(ModificationType.UPDATE_TYPE), builder))
+                    .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.UPDATE_TYPE), builder))
                     .executes(ctx -> reset(
                         ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
@@ -236,7 +236,7 @@ public class UpdateTypeCommand {
         }
 
         if (wasModified) {
-            Messenger.m(source, "w Restored default update type value(s)");
+            Messenger.m(source, "w Restored default update type values");
             ConfigFile.updateFile(source.getServer());
 
             return Command.SINGLE_SUCCESS;

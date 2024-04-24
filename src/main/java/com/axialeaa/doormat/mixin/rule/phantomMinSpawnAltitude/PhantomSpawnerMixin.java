@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.*;
 public class PhantomSpawnerMixin {
 
     @WrapOperation(method = "spawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getSeaLevel()I"))
-    private int modifyAltitude(ServerWorld instance, Operation<Integer> original) {
+    private int modifySpawnAltitude(ServerWorld instance, Operation<Integer> original) {
         return DoormatSettings.phantomMinSpawnAltitude;
     }
 

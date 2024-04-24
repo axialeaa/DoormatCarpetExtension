@@ -8,9 +8,12 @@ import java.util.Optional;
 
 public class BlockIdentifierRuleHelper {
 
-    public static Optional<Block> getBlock(String id) {
-        Identifier id2 = Identifier.tryParse(id);
-        return id2 == null ? Optional.empty() : Optional.of(Registries.BLOCK.get(id2));
+    /**
+     * @return the block with the given namespace ID, or {@link Optional#empty()} if no such block exists.
+     */
+    public static Optional<Block> getBlockFromId(String id) {
+        Identifier parsedId = Identifier.tryParse(id);
+        return parsedId == null ? Optional.empty() : Optional.of(Registries.BLOCK.get(parsedId));
     }
 
 }

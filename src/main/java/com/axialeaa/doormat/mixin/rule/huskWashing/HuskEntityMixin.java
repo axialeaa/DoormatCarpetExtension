@@ -23,7 +23,7 @@ public class HuskEntityMixin extends ZombieEntity {
      * If both the rule and mob loot are enabled and the husk is an adult, drops between 1 and 3 sand.
      */
     @Inject(method = "convertInWater", at = @At("HEAD"))
-    private void dropSandOnConvert(CallbackInfo info) {
+    private void onConvertInWater(CallbackInfo info) {
         if (DoormatSettings.huskWashing && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_LOOT) && !this.isBaby())
             dropStack(new ItemStack(Items.SAND, random.nextBetween(1, 3)));
     }

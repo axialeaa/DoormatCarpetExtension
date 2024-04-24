@@ -8,12 +8,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.LocalDifficulty;
-import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Debug(export = true)
 @Mixin(LocalDifficulty.class)
 public class LocalDifficultyMixin {
 
@@ -26,11 +23,35 @@ public class LocalDifficultyMixin {
     }
 
     /**
-     * Injects the same variable reassignment for peaceful mode as this method does for easy, in vanilla.
+     * Reassigns the local variable "h" for peaceful mode as well as easy. This is how it looks in vanilla:
+     * <pre>
+     * {@code
+     * if (difficulty == Difficulty.EASY) {
+     *     h *= 0.5F;
+     * }
+     * }
+     * </pre>
+     * Changing {@code Difficulty.EASY} to {@code difficulty} results in the condition always returning true:
+     * <pre>
+     * {@code
+     * if (difficulty == difficulty) {
+     *     h *= 0.5F;
+     * }
+     * }
+     * </pre>
+     * The new condition is wrapped around the above modification, like this:
+     * <pre>
+     * {@code
+     * if (difficulty == DoormatSettings.peacefulMonsterSpawning.enabled() && (difficulty == Difficulty.PEACEFUL || difficulty == Difficulty.EASY) ? difficulty : Difficulty.EASY) {
+     *     h *= 0.5F;
+     * }
+     * }
+     * </pre>
      */
-    @ModifyVariable(method = "setLocalDifficulty", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;EASY:Lnet/minecraft/world/Difficulty;", shift = At.Shift.BEFORE), name = "h")
-    private float reassignVarForPeaceful(float value, @Local(argsOnly = true) Difficulty difficulty) {
-        return DoormatSettings.peacefulMonsterSpawning.enabled() && difficulty == Difficulty.PEACEFUL ? value * 0.5F : value;
+    @ModifyExpressionValue(method = "setLocalDifficulty", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;EASY:Lnet/minecraft/world/Difficulty;"))
+    private Difficulty modifyReassignment(Difficulty original, @Local(argsOnly = true) Difficulty difficulty) {
+        return DoormatSettings.peacefulMonsterSpawning.enabled() && (difficulty == Difficulty.PEACEFUL || difficulty == Difficulty.EASY) ?
+            difficulty : original;
     }
 
     /**

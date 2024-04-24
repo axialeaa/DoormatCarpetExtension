@@ -14,12 +14,12 @@ public class DoorBlockMixin {
 
     @ModifyArg(method = { "onUse", "setOpen" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int changeUpdateType_onUse(BlockPos pos, BlockState state, int flags) {
-        return TinkerKit.getUpdateFlags(state, flags) | Block.REDRAW_ON_MAIN_THREAD;
+        return TinkerKit.getFlags(state, flags) | Block.REDRAW_ON_MAIN_THREAD;
     }
 
     @ModifyArg(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int changeUpdateType_neighborUpdate(BlockPos pos, BlockState state, int flags) {
-        return TinkerKit.getUpdateFlags(state, flags);
+        return TinkerKit.getFlags(state, flags);
     }
 
 }

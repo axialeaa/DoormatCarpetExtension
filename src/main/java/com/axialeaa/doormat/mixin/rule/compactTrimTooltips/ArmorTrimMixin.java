@@ -3,7 +3,6 @@ package com.axialeaa.doormat.mixin.rule.compactTrimTooltips;
 import carpet.utils.Translations;
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.trim.ArmorTrim;
@@ -34,7 +33,7 @@ public abstract class ArmorTrimMixin {
      * <pre>Upgrade: <br> Coast Armor Trim <br> Amethyst Material</pre>
      */
     @ModifyArg(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V", ordinal = 0))
-    private Object modifyUpgradeText(Object o, @Local(argsOnly = true) Consumer<Text> textConsumer) {
+    private Object modifyUpgradeText(Object object) {
         if (DoormatSettings.compactTrimTooltips.enabled()) {
             ArmorTrimMaterial material = this.getMaterial().value();
             ArmorTrimPattern pattern = this.getPattern().value();
@@ -47,7 +46,7 @@ public abstract class ArmorTrimMixin {
                     .append(onlyPattern ? Text.empty() : ScreenTexts.space())
                     .append(pattern.description());
         }
-        return o;
+        return object;
     }
 
     @WrapWithCondition(method = "appendTooltip", slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenTexts;space()Lnet/minecraft/text/MutableText;", ordinal = 1)), at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V"))

@@ -7,11 +7,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 import java.awt.*;
-import java.util.List;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 
 public class RenderHandler {
 
@@ -56,11 +58,7 @@ public class RenderHandler {
 
         Color color = TRUBETSKOY_COLORS.get(key);
 
-        int r = color.getRed();
-        int g = color.getGreen();
-        int b = color.getBlue();
-
-        return new Color(r, g, b, alpha);
+        return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
     }
 
     public static Color getTrubetskoyColor(String key) {
@@ -135,47 +133,100 @@ public class RenderHandler {
         tessellator.draw();
     }
 
-    public synchronized static void addLine(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color strokeColor, long removalTime, boolean shouldObeyDepthTest) {
+    public synchronized static void addLine(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color strokeColor, long removalTime, boolean shouldRenderBehindBlocks) {
         if (WORLD == null || strokeColor.getAlpha() == 0)
             return;
 
         long l = WORLD.getTime() + removalTime;
-        List<Line> lines = new ArrayList<>();
+        HashSet<Line> lines = shouldRenderBehindBlocks ? DEPTH_LINES : LINES;
 
         lines.add(new Line(minX, minY, minZ, maxX, maxY, maxZ, strokeColor, l));
-
-        if (shouldObeyDepthTest)
-            DEPTH_LINES.addAll(lines);
-        else LINES.addAll(lines);
     }
 
-    public static void addCuboidLines(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color strokeColor, long removalTime, boolean shouldObeyDepthTest) {
-        addLine(minX, minY, minZ, maxX, minY, minZ, strokeColor, removalTime, shouldObeyDepthTest);
-        addLine(maxX, minY, minZ, maxX, maxY, minZ, strokeColor, removalTime, shouldObeyDepthTest);
-        addLine(maxX, maxY, minZ, minX, maxY, minZ, strokeColor, removalTime, shouldObeyDepthTest);
-        addLine(minX, maxY, minZ, minX, minY, minZ, strokeColor, removalTime, shouldObeyDepthTest);
+    public static void addCuboidLines(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color strokeColor, long removalTime, boolean shouldRenderBehindBlocks) {
+        addLine(minX, minY, minZ, maxX, minY, minZ, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addLine(maxX, minY, minZ, maxX, maxY, minZ, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addLine(maxX, maxY, minZ, minX, maxY, minZ, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addLine(minX, maxY, minZ, minX, minY, minZ, strokeColor, removalTime, shouldRenderBehindBlocks);
 
-        addLine(minX, minY, minZ, minX, minY, maxZ, strokeColor, removalTime, shouldObeyDepthTest);
-        addLine(maxX, minY, minZ, maxX, minY, maxZ, strokeColor, removalTime, shouldObeyDepthTest);
-        addLine(minX, maxY, minZ, minX, maxY, maxZ, strokeColor, removalTime, shouldObeyDepthTest);
-        addLine(maxX, maxY, minZ, maxX, maxY, maxZ, strokeColor, removalTime, shouldObeyDepthTest);
+        addLine(minX, minY, minZ, minX, minY, maxZ, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addLine(maxX, minY, minZ, maxX, minY, maxZ, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addLine(minX, maxY, minZ, minX, maxY, maxZ, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addLine(maxX, maxY, minZ, maxX, maxY, maxZ, strokeColor, removalTime, shouldRenderBehindBlocks);
 
-        addLine(minX, minY, maxZ, maxX, minY, maxZ, strokeColor, removalTime, shouldObeyDepthTest);
-        addLine(maxX, minY, maxZ, maxX, maxY, maxZ, strokeColor, removalTime, shouldObeyDepthTest);
-        addLine(maxX, maxY, maxZ, minX, maxY, maxZ, strokeColor, removalTime, shouldObeyDepthTest);
-        addLine(minX, maxY, maxZ, minX, minY, maxZ, strokeColor, removalTime, shouldObeyDepthTest);
+        addLine(minX, minY, maxZ, maxX, minY, maxZ, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addLine(maxX, minY, maxZ, maxX, maxY, maxZ, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addLine(maxX, maxY, maxZ, minX, maxY, maxZ, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addLine(minX, maxY, maxZ, minX, minY, maxZ, strokeColor, removalTime, shouldRenderBehindBlocks);
     }
 
-    public static void addCuboidLines(Vec3d pos, double size, Color strokeColor, long removalTime, boolean shouldObeyDepthTest) {
-        addCuboidLines(pos.getX() + size, pos.getY() + size, pos.getZ() + size, pos.getX() - size, pos.getY() - size, pos.getZ() - size, strokeColor, removalTime, shouldObeyDepthTest);
+    public static void addCuboidLines(Vec3d pos, double size, Color strokeColor, long removalTime, boolean shouldRenderBehindBlocks) {
+        addCuboidLines(pos.getX() + size, pos.getY() + size, pos.getZ() + size, pos.getX() - size, pos.getY() - size, pos.getZ() - size, strokeColor, removalTime, shouldRenderBehindBlocks);
     }
 
-    public synchronized static void addCuboidQuads(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color fillColor, long removalTime, boolean shouldObeyDepthTest) {
+    public synchronized static void addCuboidFaceQuad(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color fillColor, long removalTime, boolean shouldRenderBehindBlocks, Direction direction) {
         if (WORLD == null || fillColor.getAlpha() == 0)
             return;
 
         long l = WORLD.getTime() + removalTime;
-        List<Quad> quads = new ArrayList<>();
+        HashSet<Quad> quads = shouldRenderBehindBlocks ? DEPTH_QUADS : QUADS;
+
+        quads.add(switch (direction) {
+            case NORTH -> new Quad(
+                minX, minY, minZ,
+                maxX, minY, minZ,
+                maxX, maxY, minZ,
+                minX, maxY, minZ,
+                fillColor, l
+            );
+            case SOUTH -> new Quad(
+                minX, minY, maxZ,
+                minX, maxY, maxZ,
+                maxX, maxY, maxZ,
+                maxX, minY, maxZ,
+                fillColor, l
+            );
+            case WEST -> new Quad(
+                minX, minY, minZ,
+                minX, maxY, minZ,
+                minX, maxY, maxZ,
+                minX, minY, maxZ,
+                fillColor, l
+            );
+            case EAST -> new Quad(
+                maxX, minY, minZ,
+                maxX, minY, maxZ,
+                maxX, maxY, maxZ,
+                maxX, maxY, minZ,
+                fillColor, l
+            );
+            case DOWN -> new Quad(
+                minX, minY, minZ,
+                minX, minY, maxZ,
+                maxX, minY, maxZ,
+                maxX, minY, minZ,
+                fillColor, l
+            );
+            case UP -> new Quad(
+                minX, maxY, minZ,
+                maxX, maxY, minZ,
+                maxX, maxY, maxZ,
+                minX, maxY, maxZ,
+                fillColor, l
+            );
+        });
+    }
+
+    public static void addCuboidFaceQuad(Vec3d pos, double size, Color fillColor, long removalTime, boolean shouldRenderBehindBlocks, Direction direction) {
+        addCuboidFaceQuad(pos.getX() + size, pos.getY() + size, pos.getZ() + size, pos.getX() - size, pos.getY() - size, pos.getZ() - size, fillColor, removalTime, shouldRenderBehindBlocks, direction);
+    }
+
+    public synchronized static void addCuboidQuads(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color fillColor, long removalTime, boolean shouldRenderBehindBlocks) {
+        if (WORLD == null || fillColor.getAlpha() == 0)
+            return;
+
+        long l = WORLD.getTime() + removalTime;
+        HashSet<Quad> quads = shouldRenderBehindBlocks ? DEPTH_QUADS : QUADS;
 
         quads.add(new Quad(
             minX, minY, minZ,
@@ -219,24 +270,20 @@ public class RenderHandler {
             minX, maxY, maxZ,
             fillColor, l
         )); // up side
-
-        if (shouldObeyDepthTest)
-            DEPTH_QUADS.addAll(quads);
-        else QUADS.addAll(quads);
     }
 
-    public static void addCuboidQuads(Vec3d pos, double size, Color fillColor, long removalTime, boolean shouldObeyDepthTest) {
-        addCuboidQuads(pos.getX() + size, pos.getY() + size, pos.getZ() + size, pos.getX() - size, pos.getY() - size, pos.getZ() - size, fillColor, removalTime, shouldObeyDepthTest);
+    public static void addCuboidQuads(Vec3d pos, double size, Color fillColor, long removalTime, boolean shouldRenderBehindBlocks) {
+        addCuboidQuads(pos.getX() + size, pos.getY() + size, pos.getZ() + size, pos.getX() - size, pos.getY() - size, pos.getZ() - size, fillColor, removalTime, shouldRenderBehindBlocks);
     }
 
-    public static void addCuboid(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color fillColor, Color strokeColor, long removalTime, boolean shouldObeyDepthTest) {
-        addCuboidLines(minX, minY, minZ, maxX, maxY, maxZ, strokeColor, removalTime, shouldObeyDepthTest);
-        addCuboidQuads(minX, minY, minZ, maxX, maxY, maxZ, fillColor, removalTime, shouldObeyDepthTest);
+    public static void addCuboid(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color fillColor, Color strokeColor, long removalTime, boolean shouldRenderBehindBlocks) {
+        addCuboidLines(minX, minY, minZ, maxX, maxY, maxZ, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addCuboidQuads(minX, minY, minZ, maxX, maxY, maxZ, fillColor, removalTime, shouldRenderBehindBlocks);
     }
 
-    public static void addCuboid(Vec3d pos, double size, Color fillColor, Color strokeColor, long removalTime, boolean shouldObeyDepthTest) {
-        addCuboidLines(pos, size, strokeColor, removalTime, shouldObeyDepthTest);
-        addCuboidQuads(pos, size, fillColor, removalTime, shouldObeyDepthTest);
+    public static void addCuboid(Vec3d pos, double size, Color fillColor, Color strokeColor, long removalTime, boolean shouldRenderBehindBlocks) {
+        addCuboidLines(pos, size, strokeColor, removalTime, shouldRenderBehindBlocks);
+        addCuboidQuads(pos, size, fillColor, removalTime, shouldRenderBehindBlocks);
     }
 
     private record Line(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color strokeColor, long removalTime) {

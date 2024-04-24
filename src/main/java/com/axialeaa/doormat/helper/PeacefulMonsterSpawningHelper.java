@@ -22,11 +22,11 @@ public class PeacefulMonsterSpawningHelper {
      * Establishes conditional behaviour based on the selected rule.
      */
     @SuppressWarnings("deprecation")
-    public static boolean getSpawningCondition(WorldAccess world, SpawnReason spawnReason, BlockPos pos) {
+    public static boolean getSpawningCondition(WorldAccess world, BlockPos pos, SpawnReason reason) {
         return switch (DoormatSettings.peacefulMonsterSpawning) {
             case BELOW_SURFACE -> pos.getY() < world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos).getY();
             case BELOW_SEA -> pos.getY() < world.getSeaLevel();
-            case UNNATURAL -> spawnReason != SpawnReason.NATURAL && spawnReason != SpawnReason.CHUNK_GENERATION;
+            case UNNATURAL -> reason != SpawnReason.NATURAL && reason != SpawnReason.CHUNK_GENERATION;
             default -> true;
         };
     }

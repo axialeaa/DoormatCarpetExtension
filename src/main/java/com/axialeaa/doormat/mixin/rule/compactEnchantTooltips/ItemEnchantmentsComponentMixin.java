@@ -5,6 +5,7 @@ import com.axialeaa.doormat.helper.EnchantmentCarouselHelper;
 import net.minecraft.client.item.TooltipType;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.Item;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,8 +28,8 @@ public abstract class ItemEnchantmentsComponentMixin {
     /**
      * Cycles the displayed line using the logic in {@link EnchantmentCarouselHelper}.
      */
-    @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2IntLinkedOpenHashMap;object2IntEntrySet()Lit/unimi/dsi/fastutil/objects/Object2IntSortedMap$FastSortedEntrySet;", shift = At.Shift.BEFORE), cancellable = true)
-    private void cycleLine(Consumer<Text> textConsumer, TooltipType context, CallbackInfo ci) {
+    @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Lit/unimi/dsi/fastutil/objects/Object2IntOpenHashMap;object2IntEntrySet()Lit/unimi/dsi/fastutil/objects/Object2IntMap$FastEntrySet;", shift = At.Shift.BEFORE), cancellable = true, remap = false)
+    private void cycleLine(Item.TooltipContext context, Consumer<Text> tooltip, TooltipType type, CallbackInfo ci) {
         EnchantmentCarouselHelper.LIST_SIZE = this.getSize();
         if (DoormatSettings.compactEnchantTooltips) {
             RegistryEntry<Enchantment> registryEntry = null;
@@ -40,7 +41,7 @@ public abstract class ItemEnchantmentsComponentMixin {
 
             if (registryEntry != null) {
                 Enchantment enchantment = registryEntry.value();
-                textConsumer.accept(enchantment.getName(this.getLevel(enchantment)));
+                tooltip.accept(enchantment.getName(this.getLevel(enchantment)));
                 ci.cancel();
             }
         }

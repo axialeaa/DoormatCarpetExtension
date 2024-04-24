@@ -24,7 +24,6 @@ dependencies {
 	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.1.1")))
 
 	// Carpet
-	// implementation "com.github.gnembon:fabric-carpet:1.4.132"
 	modImplementation "carpet:fabric-carpet:${project.carpet_mc_dependency}-${project.carpet_core_version}"
 
 	// modCompileOnly "com.github.CaffeineMC:lithium-fabric:${project.lithium_dependency}"
