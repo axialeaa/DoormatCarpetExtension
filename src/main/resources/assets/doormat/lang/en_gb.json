@@ -10,6 +10,7 @@
   "carpet.rule.mossSpreadToStoneBricks.desc": "Moss can convert nearby stone bricks to mossy stone bricks when fertilised",
   "carpet.rule.renewableGildedBlackstone.extra.0": "0 restores vanilla behaviour, i.e. never becoming gilded.",
   "carpet.rule.renewableSporeBlossoms.desc": "Spore blossoms generate underneath fertilised moss blocks",
+  "carpet.rule.sculkCatalystXpCount.extra.0": "20 is the value that matches the behaviour from before 1.19.1pre6.",
   "carpet.rule.sporeBlossomDuplication.desc": "Spore blossoms drop themselves when fertilised, the same way tall flowers do",
   "carpet.rule.torchBurnoutTime.extra.0": "40 is the value that matches Bedrock Edition's behaviour, assuming the default flicker amount value",
   "carpet.rule.zoglinPortalSpawnChance.extra.0": "0 restores vanilla behaviour, i.e. never spawning zoglins."

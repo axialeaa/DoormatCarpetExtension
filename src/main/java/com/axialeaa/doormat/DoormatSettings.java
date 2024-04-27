@@ -248,10 +248,10 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean deepslateDungeons = false;
 
-    @Rule( categories = { SURVIVAL, DOORMAT } )
+    @Rule( categories = { CREATIVE, SURVIVAL, DOORMAT } )
     public static boolean disableBedTooFarWarning = false;
 
-    @Rule( categories = { SURVIVAL, DOORMAT } )
+    @Rule( categories = { CREATIVE, SURVIVAL, DOORMAT } )
     public static boolean disableBedUnsafeWarning = false;
 
     @Rule( categories = { CREATIVE, DOORMAT } )
@@ -317,14 +317,14 @@ public class DoormatSettings {
     @Rule( categories = { TINKERING, DOORMAT } )
     public static boolean jukeboxDiscProgressSignal = false;
 
-    @Rule( categories = { PARITY, DOORMAT } )
-    public static boolean lazyLoadedShearSuppression = false;
-
-    @Rule( options = "30", validators = TimeFromOneValidator.class, strict = false, categories = { FEATURE, DOORMAT } )
+    @Rule( options = "30", validators = TimeFromOneValidator.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static int lavaFlowSpeedDefault = 30;
 
-    @Rule( options = "10", validators = TimeFromOneValidator.class, strict = false, categories = { FEATURE, DOORMAT } )
+    @Rule( options = "10", validators = TimeFromOneValidator.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static int lavaFlowSpeedNether = 10;
+
+    @Rule( categories = { PARITY, DOORMAT } )
+    public static boolean lazyLoadedShearSuppression = false;
 
     @Rule( categories = { CREATIVE, DOORMAT } )
     public static boolean leavesNoCollision = false;
@@ -354,7 +354,7 @@ public class DoormatSettings {
     @Rule( categories = { CREATIVE, DOORMAT } )
     public static boolean observerHalfDelay = false;
 
-    @Rule( options = { "0.0", "0.01", "1.0" }, validators = { Validators.Probablity.class, CryingObsidianRuleEnabledValidator.class}, strict = false, categories = { FEATURE, DOORMAT } )
+    @Rule( options = { "0.0", "0.01", "1.0" }, validators = { Validators.Probablity.class, CryingObsidianRuleEnabledValidator.class }, strict = false, categories = { FEATURE, DOORMAT } )
     public static double obsidianFrameConversionChance = 0.0;
 
     @Rule( options = "minecraft:obsidian", validators = BlockIdentifierValidator.class, strict = false, categories = { TINKERING, APRIL_FOOLS, EXPERIMENTAL, DOORMAT } )
@@ -384,7 +384,7 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean propagulePropagation = false;
 
-    @Rule( categories = { FEATURE, DOORMAT } )
+    @Rule( categories = { CREATIVE, DOORMAT } )
     public static boolean qcSuppressor = false;
 
     @Rule( categories = { PARITY, DOORMAT } )
@@ -414,7 +414,7 @@ public class DoormatSettings {
     @Rule( categories = { SURVIVAL, DOORMAT } )
     public static boolean safeSand = false;
 
-    @Rule( options = { "5", "20" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { TINKERING, DOORMAT } )
+    @Rule( options = { "5", "20" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { RETRO, DOORMAT } )
     public static int sculkCatalystXpCount = 5;
 
     @Rule( categories = { PARITY, DOORMAT } )
@@ -450,7 +450,7 @@ public class DoormatSettings {
     @Rule( categories = { SURVIVAL, DOORMAT } )
     public static boolean villagersAlwaysInheritBiome = false;
 
-    @Rule( options = "5", validators = TimeFromOneValidator.class, strict = false, categories = { FEATURE, DOORMAT } )
+    @Rule( options = "5", validators = TimeFromOneValidator.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static int waterFlowSpeed = 5;
 
     @Rule( categories = { RETRO, DOORMAT } )
