@@ -32,7 +32,7 @@ import static net.minecraft.server.command.CommandManager.literal;
  * <code>/updatetype set &lt;value&gt; &lt;component&gt;</code> - Sets the <code>component</code>'s update type value to <code>value</code>.<br>
  * <code>/updatetype reset all</code> - Resets all update type values to default.<br>
  * <code>/updatetype reset &lt;component&gt;</code> - Resets the <code>component</code>'s update type value to default.<br>
- * <code>/updatetype file load</code> - Loads all quasi-connectivity and update type values from the config file.
+ * <code>/updatetype file load</code> - Loads all quasi-connectivity and update type values from the config file.<br>
  * <code>/updatetype file update</code> - Updates the config file with any new quasi-connectivity or update type value modifications.
  */
 public class UpdateTypeCommand {

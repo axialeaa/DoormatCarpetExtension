@@ -1,6 +1,5 @@
 package com.axialeaa.doormat.tinker_kit;
 
-import carpet.CarpetSettings;
 import com.axialeaa.doormat.DoormatServer;
 import com.axialeaa.doormat.command.QuasiConnectivityCommand;
 import com.axialeaa.doormat.command.UpdateTypeCommand;
@@ -133,7 +132,7 @@ public class ConfigFile {
                         MODIFIED_QC_VALUES.put(block, MathHelper.clamp(qcElement.getAsNumber().intValue(), 0, DoormatServer.MAX_QC_RANGE));
                     else if (qcPrimitive.isBoolean()) {
                         DoormatServer.LOGGER.info("{} quasi-connectivity value was written as {}", getTranslatedName(block), qcElement.getAsBoolean() ? "true. Attempting to use quasiConnectivity setting." : "false. Attempting to set to 0.");
-                        MODIFIED_QC_VALUES.put(block, qcElement.getAsBoolean() ? CarpetSettings.quasiConnectivity : 0);
+                        MODIFIED_QC_VALUES.put(block, qcElement.getAsBoolean() ? 1 : 0);
                     }
                     else throw new Exception();
                 }

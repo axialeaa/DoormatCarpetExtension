@@ -1,6 +1,5 @@
 package com.axialeaa.doormat.command;
 
-import carpet.CarpetSettings;
 import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
 import com.axialeaa.doormat.DoormatServer;
@@ -26,9 +25,9 @@ import static net.minecraft.server.command.CommandManager.literal;
  * <code>/quasiconnectivity get &lt;component&gt;</code> - Finds and displays the <code>component</code>'s quasi-connectivity value.<br>
  * <code>/quasiconnectivity set &lt;value&gt; all</code> - Sets all quasi-connectivity values to <code>value</code>.<br>
  * <code>/quasiconnectivity set &lt;value&gt; &lt;component&gt;</code> - Sets the <code>component</code>'s quasi-connectivity value to <code>value</code>.<br>
- * <code>/quasiconnectivity reset</code> all - Resets all quasi-connectivity values to default.<br>
+ * <code>/quasiconnectivity reset all</code> - Resets all quasi-connectivity values to default.<br>
  * <code>/quasiconnectivity reset &lt;component&gt;</code> - Resets the <code>component</code>'s quasi-connectivity value to default.<br>
- * <code>/quasiconnectivity file load</code> - Loads all quasi-connectivity and update type values from the config file.
+ * <code>/quasiconnectivity file load</code> - Loads all quasi-connectivity and update type values from the config file.<br>
  * <code>/quasiconnectivity file update</code> - Updates the config file with any new quasi-connectivity or update type value modifications.
  */
 public class QuasiConnectivityCommand {
@@ -54,7 +53,7 @@ public class QuasiConnectivityCommand {
                 .then(argument("value", IntegerArgumentType.integer(0))
                     .suggests((ctx, builder) -> suggestMatching(new String[]{
                         String.valueOf(0),
-                        String.valueOf(CarpetSettings.quasiConnectivity)
+                        String.valueOf(1)
                     }, builder))
                     .then(literal("all")
                         .executes(ctx -> setAll(

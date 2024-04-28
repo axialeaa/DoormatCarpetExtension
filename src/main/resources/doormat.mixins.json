@@ -132,6 +132,7 @@
     "tinker_kit.quasiconnectivity.AbstractRedstoneGateBlockMixin",
     "tinker_kit.quasiconnectivity.BigDripleafBlockMixin",
     "tinker_kit.quasiconnectivity.BulbBlockMixin",
+    "tinker_kit.quasiconnectivity.CarpetSettingsMixin",
     "tinker_kit.quasiconnectivity.DispenserBlockMixin",
     "tinker_kit.quasiconnectivity.DoorBlockMixin",
     "tinker_kit.quasiconnectivity.HopperBlockMixin",
