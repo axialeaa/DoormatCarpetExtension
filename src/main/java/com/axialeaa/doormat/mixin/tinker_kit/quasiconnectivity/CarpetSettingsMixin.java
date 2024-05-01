@@ -18,7 +18,7 @@ import java.util.Arrays;
 public class CarpetSettingsMixin {
 
     @ModifyExpressionValue(method = "parseSettingsClass", at = @At(value = "INVOKE", target = "Ljava/lang/Class;getDeclaredFields()[Ljava/lang/reflect/Field;"), remap = false)
-    private Field[] removeSettings(Field[] original, @Local(argsOnly = true) Class<?> settingsClass) {
+    private Field[] removeQuasiConnectivityRule(Field[] original, @Local(argsOnly = true) Class<?> settingsClass) {
         if (settingsClass != CarpetSettings.class)
             return original;
 
