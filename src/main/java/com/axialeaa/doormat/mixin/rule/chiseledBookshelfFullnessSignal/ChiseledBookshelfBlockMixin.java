@@ -19,7 +19,7 @@ public class ChiseledBookshelfBlockMixin {
      */
     @ModifyReturnValue(method = "getComparatorOutput", at = @At(value = "RETURN", ordinal = 1))
     private int modifyComparatorOutput(int original, @Local ChiseledBookshelfBlockEntity chiseledBookshelfBlockEntity) {
-        int bookCount = chiseledBookshelfBlockEntity.getOpenSlotCount();
+        int bookCount = chiseledBookshelfBlockEntity.getFilledSlotCount();
         return switch (DoormatSettings.chiseledBookshelfFullnessSignal) {
             case TRUE -> bookCount;
             case LERPED -> MathHelper.lerpPositive(bookCount / (float)chiseledBookshelfBlockEntity.size(), 0, 15);
