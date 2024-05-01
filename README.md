@@ -53,7 +53,6 @@ Check out [the wiki][wiki] for a more in-depth overview of **Doormat**'s feature
 
 ### More Extensions
 There are a lot of other Carpet extensions out there, adding countless new rules and functionality! You can find a list of them in the [Carpet wiki][carpet-extensions].
-***
 
 [wiki]: https://github.com/axialeaa/DoormatCarpetExtension/wiki
 [carpet-extensions]: https://github.com/gnembon/fabric-carpet/wiki/List-of-Carpet-extensions
