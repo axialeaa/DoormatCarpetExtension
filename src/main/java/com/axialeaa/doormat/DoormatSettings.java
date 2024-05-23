@@ -99,20 +99,6 @@ public class DoormatSettings {
 
     }
 
-    private static class CryingObsidianRuleEnabledValidator<T> extends Validator<T> {
-
-        @Override
-        public T validate(ServerCommandSource source, CarpetRule<T> currentRule, T newValue, String string) {
-            return cryingObsidianPortalFrames || currentRule.defaultValue().equals(newValue) ? newValue : null;
-        }
-
-        @Override
-        public String description() {
-            return "cryingObsidianPortalFrames must be enabled";
-        }
-
-    }
-
     /**<h1>ENUMS</h1>*/
 
     public enum PetAttackMode {
@@ -193,6 +179,9 @@ public class DoormatSettings {
 
     @Rule( options = "2", validators = TimeFromZeroValidator.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static int blockFallingDelay = 2;
+
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean biomeDependentDungeonMobs = false;
 
     @Rule( categories = { SURVIVAL, DOORMAT } )
     public static boolean campfireRespawning = false;
@@ -281,6 +270,9 @@ public class DoormatSettings {
     @Rule( options = "5", validators = TimeFromZeroValidator.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static int dragonEggFallingDelay = 5;
 
+    @Rule( categories = { DISPENSER, DOORMAT } )
+    public static boolean dispensersBuryItems = false;
+
     @Rule( categories = { BUGFIX, DOORMAT } )
     public static boolean endExitIgnoreLeaves = true;
 
@@ -354,7 +346,7 @@ public class DoormatSettings {
     @Rule( categories = { CREATIVE, DOORMAT } )
     public static boolean observerHalfDelay = false;
 
-    @Rule( options = { "0.0", "0.01", "1.0" }, validators = { Validators.Probablity.class, CryingObsidianRuleEnabledValidator.class }, strict = false, categories = { FEATURE, DOORMAT } )
+    @Rule( options = { "0.0", "0.01", "1.0" }, validators = Validators.Probablity.class, strict = false, categories = { FEATURE, DOORMAT } )
     public static double obsidianFrameConversionChance = 0.0;
 
     @Rule( options = "minecraft:obsidian", validators = BlockIdentifierValidator.class, strict = false, categories = { TINKERING, APRIL_FOOLS, EXPERIMENTAL, DOORMAT } )
@@ -437,6 +429,12 @@ public class DoormatSettings {
 
     @Rule( options = "minecraft:stone", validators = BlockIdentifierValidator.class, strict = false, categories = { TINKERING, APRIL_FOOLS, EXPERIMENTAL, DOORMAT } )
     public static String stoneGenProduct = "minecraft:stone";
+
+    @Rule( categories = { BUGFIX, DOORMAT } )
+    public static boolean suspiciousLootAmountFix = false;
+
+    @Rule( categories = { BUGFIX, DOORMAT } )
+    public static boolean suspiciousLootDropPosFix = false;
 
     @Rule( options = "8", validators = Validators.NonNegativeNumber.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static int torchBurnoutFlickerAmount = 8;

@@ -196,7 +196,6 @@ public class TinkerKit {
                     return true;
             }
         }
-        else sendUnmodifiableWarning(blockState, ModificationType.QC);
 
         return world.isReceivingRedstonePower(pos);
     }
@@ -264,7 +263,6 @@ public class TinkerKit {
 
             return power;
         }
-        else sendUnmodifiableWarning(blockState, ModificationType.QC);
 
         return world.getEmittedRedstonePower(pos, direction);
     }
@@ -288,10 +286,8 @@ public class TinkerKit {
      * @return the update type flag(s) for the given blockstate.
      */
     public static int getFlags(BlockState state, int fallback) {
-        if (!isModifiable(state.getBlock(), ModificationType.UPDATE_TYPE)) {
-            sendUnmodifiableWarning(state, ModificationType.UPDATE_TYPE);
+        if (!isModifiable(state.getBlock(), ModificationType.UPDATE_TYPE))
             return fallback;
-        }
 
         return getDefaultValue(state.getBlock(), ModificationType.UPDATE_TYPE) == null ? fallback : MODIFIED_UPDATE_TYPE_VALUES.get(state.getBlock()).getFlags();
     }
@@ -336,15 +332,6 @@ public class TinkerKit {
             return this.name;
         }
 
-    }
-
-    /**
-     * Sends a log warning to indicate that the <code>state</code> cannot be modified by the rule <code>type</code>.
-     * @param state The blockstate to suggest is unmodifiable.
-     * @param type The type of rule to send the warning through.
-     */
-    private static void sendUnmodifiableWarning(BlockState state, ModificationType type) {
-        DoormatServer.LOGGER.warn("{} does not support {} modification! Returning fallback argument.", getTranslatedName(state.getBlock()), type.asString());
     }
 
 }

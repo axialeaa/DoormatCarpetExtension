@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ServerPlayerEntity.class)
 public abstract class ServerPlayerEntityMixin {
 
-    @ModifyExpressionValue(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;isBedTooFarAway(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"))
+    @ModifyExpressionValue(method = "trySleep", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;isBedWithinRange(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/Direction;)Z"))
     private boolean shouldBypassWarning(boolean original) {
         return original || DoormatSettings.disableBedTooFarWarning;
     }

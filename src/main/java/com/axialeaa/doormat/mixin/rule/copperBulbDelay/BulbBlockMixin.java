@@ -31,7 +31,8 @@ public abstract class BulbBlockMixin extends AbstractBlockMixin {
 
     @Override
     public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        update(state, world, pos);
+        if (DoormatSettings.copperBulbDelay > 0)
+            update(state, world, pos);
     }
 
 }

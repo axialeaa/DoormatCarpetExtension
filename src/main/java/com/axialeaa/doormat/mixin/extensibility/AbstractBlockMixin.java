@@ -5,12 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
@@ -27,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * Instead, create an empty injection for each method, and extend + override the handler methods from this mixin.
  * That way, method calls are instantiated without clunky instanceof checks and without incompatibility.
  */
-@SuppressWarnings({ "CancellableInjectionUsage", "EmptyMethod" })
+@SuppressWarnings("CancellableInjectionUsage")
 @Mixin(AbstractBlock.class)
 public abstract class AbstractBlockMixin {
 
@@ -48,8 +43,5 @@ public abstract class AbstractBlockMixin {
 
     @Inject(method = "scheduledTick", at = @At("HEAD"))
     public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {}
-
-    @Inject(method = "onUseWithItem", at = @At("HEAD"), cancellable = true)
-    public void onUseWithItemImpl(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ItemActionResult> cir) {}
 
 }

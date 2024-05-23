@@ -112,7 +112,11 @@ public class CampfireRespawningHelper {
     }
 
     public static void sendSoundPacket(ServerWorld world, BlockPos pos, ServerPlayerEntity player) {
+        if (pos == null || world.isOutOfHeightLimit(pos))
+            return;
+
         BlockState blockState = world.getBlockState(pos);
+
         if (DoormatSettings.campfireRespawning && blockState.isIn(BlockTags.CAMPFIRES) && !blockState.isOf(Blocks.SOUL_CAMPFIRE)) {
             Random random = world.getRandom();
             double x = pos.getX(), y = pos.getY(), z = pos.getZ();
