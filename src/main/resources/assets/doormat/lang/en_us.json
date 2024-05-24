@@ -8,7 +8,7 @@
   "carpet.rule.basaltGenProduct.desc": "The block produced when lava flows between soul soil and blue ice",
   "carpet.rule.beaconsHealPets.desc": "Beacons with their secondary effect set to regeneration can heal nearby tamed mobs",
   "carpet.rule.biomeDependentDungeonMobs.desc": "The mobs that spawn inside dungeons will represent the biome the dungeon generated in",
-  "carpet.rule.biomeDependentDungeonMobs.extra.0": "Zombies get replaced by husks in warm biomes and drowned in water biomes, and skeletons get replaced by strays in cold biomes and bogged in swamp biomes.",
+  "carpet.rule.biomeDependentDungeonMobs.extra.0": "Zombies get replaced by husks in warm biomes, and skeletons get replaced by strays in cold biomes and bogged in swamp biomes.",
   "carpet.rule.biomeDependentDungeonMobs.extra.1": "This will not affect previously-generated chunks, so if you intend to feature this modification on a long-term survival world, it's best to enable the setting right away.",
   "carpet.rule.blockFallingDelay.desc": "The time it takes for gravity-affected blocks to fall after receiving a shape update, in ticks",
   "carpet.rule.campfireRespawning.desc": "Lit campfires can be set as respawn points when clicking on them with an empty hand, while sneaking",
