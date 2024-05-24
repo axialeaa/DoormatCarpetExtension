@@ -7,6 +7,7 @@ import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -46,9 +47,10 @@ public abstract class ItemEnchantmentsComponentMixin {
                 int numerator = EnchantmentCarouselHelper.LIST_INDEX + 1; // Requires adding 1 because the index is zero-based
                 int denominator = this.getSize();
 
+                MutableText fraction = (MutableText) Text.of(numerator + "/" + denominator);
+
                 if (DoormatSettings.compactEnchantTooltips == DoormatSettings.EnchantTooltipMode.TRUE) {
-                    MutableText fraction = (MutableText) Text.of(numerator + "/" + denominator + ": ");
-                    MutableText result = fraction.formatted(Formatting.DARK_GRAY);
+                    MutableText result = fraction.append(":").formatted(Formatting.DARK_GRAY).append(ScreenTexts.SPACE);
 
                     tooltip.accept(result.append(name));
                 }
@@ -64,10 +66,10 @@ public abstract class ItemEnchantmentsComponentMixin {
                         Enchantment barValue = barEntry.value();
                         String dot = i == numerator ? "■" : "□";
 
-                        mutableText.append(((MutableText) Text.of(dot)).formatted(barValue.isCursed() ? Formatting.DARK_RED : Formatting.DARK_GRAY));
+                        mutableText.append(Text.literal(dot).formatted(barValue.isCursed() ? Formatting.DARK_RED : Formatting.DARK_GRAY));
                     }
 
-                    tooltip.accept(mutableText);
+                    tooltip.accept(mutableText.append(ScreenTexts.SPACE).append("(" + fraction.getString() + ")").formatted(Formatting.DARK_GRAY));
                 }
             }
 
