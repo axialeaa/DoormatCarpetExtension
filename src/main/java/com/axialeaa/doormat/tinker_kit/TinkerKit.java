@@ -59,7 +59,7 @@ public class TinkerKit {
     }
 
     /**
-     * @param block the block to getFromFlags the translated name of.
+     * @param block the block to get the translated name of.
      * @return the name of the block translated via the lang file on the server side, thanks to {@link Translations}.
      */
     public static String getTranslatedName(Block block) {

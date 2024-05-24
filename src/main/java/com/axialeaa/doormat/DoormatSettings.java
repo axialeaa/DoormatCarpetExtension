@@ -141,6 +141,16 @@ public class DoormatSettings {
 
     }
 
+    public enum EnchantTooltipMode {
+
+        FALSE, TRUE, BAR;
+
+        public boolean enabled() {
+            return this != FALSE;
+        }
+
+    }
+
     public enum ChiseledBookshelfSignalMode {
 
         FALSE, TRUE, LERPED;
@@ -193,7 +203,7 @@ public class DoormatSettings {
     public static String cobblestoneGenProduct = "minecraft:cobblestone";
 
     @Rule( categories = { CLIENT, TOOLTIP, DOORMAT } )
-    public static boolean compactEnchantTooltips = false;
+    public static EnchantTooltipMode compactEnchantTooltips = EnchantTooltipMode.FALSE;
 
     @Rule( categories = { CLIENT, TOOLTIP, DOORMAT } )
     public static PotTooltipMode compactPotTooltips = PotTooltipMode.FALSE;
