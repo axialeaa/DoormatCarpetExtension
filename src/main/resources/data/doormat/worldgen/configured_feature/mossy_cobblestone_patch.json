@@ -9,10 +9,8 @@
     "vegetation_chance": 0,
     "xz_radius": {
       "type": "minecraft:uniform",
-      "value": {
-        "min_inclusive": 1,
-        "max_inclusive": 2
-      }
+      "min_inclusive": 1,
+      "max_inclusive": 2
     },
     "replaceable": "#doormat:mossy_cobblestone_patch_replaceables",
     "ground_state": {

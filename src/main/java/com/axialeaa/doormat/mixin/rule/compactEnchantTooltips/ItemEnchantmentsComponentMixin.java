@@ -47,10 +47,10 @@ public abstract class ItemEnchantmentsComponentMixin {
                 int numerator = EnchantmentCarouselHelper.LIST_INDEX + 1; // Requires adding 1 because the index is zero-based
                 int denominator = this.getSize();
 
-                MutableText fraction = (MutableText) Text.of(numerator + "/" + denominator);
+                String fraction = numerator + "/" + denominator;
 
                 if (DoormatSettings.compactEnchantTooltips == DoormatSettings.EnchantTooltipMode.TRUE) {
-                    MutableText result = fraction.append(":").formatted(Formatting.DARK_GRAY).append(ScreenTexts.SPACE);
+                    MutableText result = Text.literal(fraction).append(":").formatted(Formatting.DARK_GRAY).append(ScreenTexts.SPACE);
 
                     tooltip.accept(result.append(name));
                 }
@@ -69,7 +69,7 @@ public abstract class ItemEnchantmentsComponentMixin {
                         mutableText.append(Text.literal(dot).formatted(barValue.isCursed() ? Formatting.DARK_RED : Formatting.DARK_GRAY));
                     }
 
-                    tooltip.accept(mutableText.append(ScreenTexts.SPACE).append("(" + fraction.getString() + ")").formatted(Formatting.DARK_GRAY));
+                    tooltip.accept(mutableText.append(ScreenTexts.SPACE).append("(" + fraction + ")").formatted(Formatting.DARK_GRAY));
                 }
             }
 
