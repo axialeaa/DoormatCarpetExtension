@@ -33,9 +33,9 @@ public abstract class ItemEnchantmentsComponentMixin {
      */
     @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item$TooltipContext;getRegistryLookup()Lnet/minecraft/registry/RegistryWrapper$WrapperLookup;", shift = At.Shift.BEFORE), cancellable = true)
     private void cycleLine(Item.TooltipContext context, Consumer<Text> tooltip, TooltipType type, CallbackInfo ci) {
-        EnchantmentCarouselHelper.LIST_SIZE = this.getSize();
-
         if (DoormatSettings.compactEnchantTooltips.enabled() && this.getSize() > 0) {
+            EnchantmentCarouselHelper.LIST_SIZE = this.getSize();
+
             RegistryEntry<Enchantment> registryEntry = this.getEnchantments().stream().toList().get(EnchantmentCarouselHelper.LIST_INDEX);
 
             Enchantment enchantment = registryEntry.value();
