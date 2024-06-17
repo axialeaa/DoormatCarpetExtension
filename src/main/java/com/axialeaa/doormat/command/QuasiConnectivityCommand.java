@@ -42,7 +42,7 @@ public class QuasiConnectivityCommand {
             )
             .then(literal("get")
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                    .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.QC), builder))
+                    .suggests((ctx, builder) -> suggestMatching(Type.QC.getBlockKeys(), builder))
                     .executes(ctx -> get(
                         ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
@@ -62,7 +62,7 @@ public class QuasiConnectivityCommand {
                         ))
                     )
                     .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                        .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.QC), builder))
+                        .suggests((ctx, builder) -> suggestMatching(Type.QC.getBlockKeys(), builder))
                         .executes(ctx -> set(
                             ctx.getSource(),
                             RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value(),
@@ -76,7 +76,7 @@ public class QuasiConnectivityCommand {
                     .executes(ctx -> resetAll(ctx.getSource()))
                 )
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                    .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.QC), builder))
+                    .suggests((ctx, builder) -> suggestMatching(Type.QC.getBlockKeys(), builder))
                     .executes(ctx -> reset(
                         ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
@@ -95,17 +95,18 @@ public class QuasiConnectivityCommand {
      * Assigns the inputted value to the entered-in redstone component via {@link TinkerKit#MODIFIED_QC_VALUES}.
      */
     private static int set(ServerCommandSource source, Block block, int input) {
-        if (!isModifiable(block, ModificationType.QC)) {
+        if (!Type.QC.canModify(block)) {
             Messenger.m(source, "r " + getTranslatedName(block) + " is not a valid component!");
             return 0;
         }
 
-        if (MODIFIED_QC_VALUES.get(block) == input) {
+        if ((int) Type.QC.getModifiedValue(block) == input) {
             Messenger.m(source, "r " + getTranslatedName(block) + " quasi-connectivity range is already set to " + input);
             return 0;
         }
         else {
-            MODIFIED_QC_VALUES.put(block, input);
+            Type.QC.set(block, input);
+
             Messenger.m(source, "w Set " + getTranslatedName(block) + " quasi-connectivity range to " + input);
             ConfigFile.updateFile(source.getServer());
 
@@ -119,9 +120,9 @@ public class QuasiConnectivityCommand {
     private static int setAll(ServerCommandSource source, int input) {
         boolean wasModified = false;
 
-        for (Block block : getModifiableBlocks(ModificationType.QC).toList()) {
-            if (MODIFIED_QC_VALUES.get(block) != input) {
-                MODIFIED_QC_VALUES.put(block, input);
+        for (Block block : Type.QC.getBlocks().toList()) {
+            if ((int) Type.QC.getModifiedValue(block) != input) {
+                Type.QC.set(block, input);
                 wasModified = true;
             }
         }
@@ -141,13 +142,13 @@ public class QuasiConnectivityCommand {
      * Finds and prints the quasi-connectivity value assigned to the inputted redstone component via {@link TinkerKit#MODIFIED_QC_VALUES}.
      */
     private static int get(ServerCommandSource source, Block block) {
-        if (!isModifiable(block, ModificationType.QC)) {
+        if (!Type.QC.canModify(block)) {
             Messenger.m(source, "r " + getTranslatedName(block) + " is not a valid component!");
             return 0;
         }
 
-        int value = MODIFIED_QC_VALUES.get(block);
-        Messenger.m(source, "w " + getTranslatedName(block) + " quasi-connectivity range is set to " + value + (isDefaultValue(block, ModificationType.QC) ? " (default value)" : " (modified value)"));
+        int value = (int) Type.QC.getModifiedValue(block);
+        Messenger.m(source, "w " + getTranslatedName(block) + " quasi-connectivity range is set to " + value + (Type.QC.isDefaultValue(block) ? " (default value)" : " (modified value)"));
 
         return Command.SINGLE_SUCCESS;
     }
@@ -157,16 +158,16 @@ public class QuasiConnectivityCommand {
      */
     private static int list(ServerCommandSource source) {
         Messenger.m(source, "");
-        if (isMapModified(ModificationType.QC))
+        if (Type.QC.isMapModified())
             Messenger.m(source, "bui Quasi-connectivity values:", "?/" + ALIAS + " reset all", "^g Restore default values?");
         else
             Messenger.m(source, "bu Quasi-connectivity values:");
 
-        for (Block block : getModifiableBlocks(ModificationType.QC).toList()) {
-            String value = getTranslatedName(block) + ": " + MODIFIED_QC_VALUES.get(block);
+        for (Block block : Type.QC.getBlocks().toList()) {
+            String value = getTranslatedName(block) + ": " + Type.QC.getModifiedValue(block);
             String command = "?/" + ALIAS + " reset " + getKey(block);
 
-            if (isDefaultValue(block, ModificationType.QC))
+            if (Type.QC.isDefaultValue(block))
                 Messenger.m(source, "g - " + value + " (default value)");
             else
                 Messenger.m(source, "w - ", "wi " + value + " (modified value)", command, "^g Restore default value?");
@@ -179,17 +180,17 @@ public class QuasiConnectivityCommand {
      * Sets the inputted redstone component's quasi-connectivity value to default.
      */
     private static int reset(ServerCommandSource source, Block block) {
-        if (!isModifiable(block, ModificationType.QC)) {
+        if (!Type.QC.canModify(block)) {
             Messenger.m(source, "r " + getTranslatedName(block) + " is not a valid component!");
             return 0;
         }
 
-        if (isDefaultValue(block, ModificationType.QC)) {
+        if (Type.QC.isDefaultValue(block)) {
             Messenger.m(source, "r " + getTranslatedName(block) + " quasi-connectivity value is already set to default!");
             return 0;
         }
         else {
-            setDefaultValue(block, ModificationType.QC);
+            Type.QC.reset(block);
             Messenger.m(source, "w Restored default " + getTranslatedName(block) + " quasi-connectivity value");
             ConfigFile.updateFile(source.getServer());
 
@@ -203,9 +204,9 @@ public class QuasiConnectivityCommand {
     private static int resetAll(ServerCommandSource source) {
         boolean wasModified = false;
 
-        for (Block block : getModifiableBlocks(ModificationType.QC).toList()) {
-            if (!isDefaultValue(block, ModificationType.QC)) {
-                setDefaultValue(block, ModificationType.QC);
+        for (Block block : Type.QC.getBlocks().toList()) {
+            if (!Type.QC.isDefaultValue(block)) {
+                Type.QC.reset(block);
                 wasModified = true;
             }
         }

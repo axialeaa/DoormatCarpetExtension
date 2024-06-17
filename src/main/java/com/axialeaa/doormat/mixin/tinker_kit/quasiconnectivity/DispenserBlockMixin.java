@@ -17,23 +17,21 @@ public class DispenserBlockMixin {
     /**
      * This needs to be different because of carpet's modified quasi-connectivity logic.
      */
-    @SuppressWarnings({
-        "UnresolvedMixinReference",
-        "MixinAnnotationTarget",
-        "InvalidMemberReference"
-    })
+    @SuppressWarnings("UnresolvedMixinReference")
     @TargetHandler(mixin = "carpet.mixins.DispenserBlock_qcMixin", name = "carpet_hasQuasiSignal")
     @WrapOperation(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target =  "Lcarpet/helpers/QuasiConnectivity;hasQuasiSignal(Lnet/minecraft/world/RedstoneView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean shouldQC(RedstoneView instance, BlockPos pos, Operation<Boolean> original) {
         BlockState blockState = instance.getBlockState(pos);
 
-        if (!TinkerKit.isModifiable(blockState.getBlock(), TinkerKit.ModificationType.QC))
+        if (!TinkerKit.Type.QC.canModify(blockState.getBlock()))
             return original.call(instance, pos);
 
-        if (TinkerKit.MODIFIED_QC_VALUES.get(blockState.getBlock()) < 1)
+        int qcValue = (int) TinkerKit.Type.QC.getModifiedValue(blockState.getBlock());
+
+        if (qcValue < 1)
             return false;
 
-        for (int i = 1; i <= TinkerKit.MODIFIED_QC_VALUES.get(blockState.getBlock()); i++) {
+        for (int i = 1; i <= qcValue; i++) {
             BlockPos blockPos = pos.up(i);
 
             if (TinkerKit.cannotQC(instance, blockPos))
@@ -42,6 +40,7 @@ public class DispenserBlockMixin {
             if (instance.isReceivingRedstonePower(blockPos))
                 return true;
         }
+
         return false;
     }
 

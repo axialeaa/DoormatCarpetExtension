@@ -19,7 +19,7 @@ import java.util.UUID;
 import static com.axialeaa.doormat.tinker_kit.TinkerKit.*;
 
 /**
- * Controls the saving and loading of the doormat.json file, which is used to keep the quasi-connectivity and update type settings persistent on relog. This should never be mixed into or called from in any other mod than <strong>Doormat</strong>.
+ * Controls the saving and loading of the doormat.json file, which is used to keep the quasi-connectivity and update type settings persistent on relog. This should never be mixed into or called from in any other mod than <b>Doormat</b>.
  */
 @ApiStatus.Internal
 @ApiStatus.NonExtendable
@@ -48,14 +48,14 @@ public class ConfigFile {
             root.add(UpdateTypeCommand.ALIAS, updateTypeObj);
             // Reuse the command aliases for the object names because why not? It saves writing another string xd
 
-            for (Block block : getModifiableBlocks(ModificationType.QC).toList()) {
-                if (!isDefaultValue(block, ModificationType.QC))
-                    qcObj.add(getKey(block), new JsonPrimitive(MODIFIED_QC_VALUES.get(block)));
+            for (Block block : Type.QC.getBlocks().toList()) {
+                if (!Type.QC.isDefaultValue(block))
+                    qcObj.add(getKey(block), new JsonPrimitive((int) Type.QC.getModifiedValue(block)));
             }
 
-            for (Block block : getModifiableBlocks(ModificationType.UPDATE_TYPE).toList()) {
-                if (!isDefaultValue(block, ModificationType.UPDATE_TYPE))
-                    updateTypeObj.add(getKey(block), new JsonPrimitive(MODIFIED_UPDATE_TYPE_VALUES.get(block).asString()));
+            for (Block block : Type.UPDATE_TYPE.getBlocks().toList()) {
+                if (!Type.UPDATE_TYPE.isDefaultValue(block))
+                    updateTypeObj.add(getKey(block), new JsonPrimitive(((UpdateType) Type.UPDATE_TYPE.getModifiedValue(block)).toString()));
             }
             // Saves the value when, and only when, it has been modified from default.
             //  This helps prevent unnecessary bloat, since the default values are already hardcoded.
@@ -119,7 +119,7 @@ public class ConfigFile {
     private static void putQCValues(JsonObject root) {
         JsonObject qcObject = root.get(QuasiConnectivityCommand.ALIAS).getAsJsonObject();
 
-        for (Block block : getModifiableBlocks(ModificationType.QC).toList()) {
+        for (Block block : Type.QC.getBlocks().toList()) {
             String key = getKey(block);
 
             JsonElement qcElement = qcObject.get(key);
@@ -129,15 +129,15 @@ public class ConfigFile {
 
                 try {
                     if (qcPrimitive.isNumber())
-                        MODIFIED_QC_VALUES.put(block, MathHelper.clamp(qcElement.getAsNumber().intValue(), 0, DoormatServer.MAX_QC_RANGE));
+                        Type.QC.set(block, MathHelper.clamp(qcElement.getAsNumber().intValue(), 0, DoormatServer.MAX_QC_RANGE));
                     else if (qcPrimitive.isBoolean()) {
                         DoormatServer.LOGGER.info("{} quasi-connectivity value was written as {}", getTranslatedName(block), qcElement.getAsBoolean() ? "true. Attempting to use quasiConnectivity setting." : "false. Attempting to set to 0.");
-                        MODIFIED_QC_VALUES.put(block, qcElement.getAsBoolean() ? 1 : 0);
+                        Type.QC.set(block, qcElement.getAsBoolean() ? 1 : 0);
                     }
                     else throw new Exception();
                 }
                 catch (Exception e) {
-                    DoormatServer.LOGGER.warn("{} quasi-connectivity value failed to overwrite the default value ({}) from json!", getTranslatedName(block), getDefaultValue(block, ModificationType.UPDATE_TYPE));
+                    DoormatServer.LOGGER.warn("{} quasi-connectivity value failed to overwrite the default value ({}) from json!", getTranslatedName(block), Type.UPDATE_TYPE.getDefaultValue(block));
                 }
             }
         }
@@ -146,7 +146,7 @@ public class ConfigFile {
     private static void putUpdateTypeValues(JsonObject root) {
         JsonObject updateTypeObj = root.get(UpdateTypeCommand.ALIAS).getAsJsonObject();
 
-        for (Block block : getModifiableBlocks(ModificationType.UPDATE_TYPE).toList()) {
+        for (Block block : Type.UPDATE_TYPE.getBlocks().toList()) {
             String key = getKey(block);
 
             JsonElement updateTypeElement = updateTypeObj.get(key);
@@ -156,16 +156,17 @@ public class ConfigFile {
 
                 try {
                     if (updateTypePrimitive.isString())
-                        MODIFIED_UPDATE_TYPE_VALUES.put(block, UpdateType.valueOf(updateTypeElement.getAsString().toUpperCase(Locale.ROOT)));
+                        Type.UPDATE_TYPE.set(block, UpdateType.valueOf(updateTypeElement.getAsString().toUpperCase(Locale.ROOT)));
                     else if (updateTypePrimitive.isNumber()) {
                         int value = MathHelper.clamp(updateTypeElement.getAsInt(), 0, 3);
+
                         DoormatServer.LOGGER.info("{} update type value was written as {}. Attempting to set to UpdateType with flags matching {}.", getTranslatedName(block), updateTypeElement.getAsNumber(), value);
-                        MODIFIED_UPDATE_TYPE_VALUES.put(block, UpdateType.getFromFlags(value));
+                        Type.UPDATE_TYPE.set(block, UpdateType.getFromFlags(value));
                     }
                     else throw new Exception();
                 }
                 catch (Exception e) {
-                    DoormatServer.LOGGER.warn("{} update type failed to overwrite the default value ({}) from json!", getTranslatedName(block), getDefaultValue(block, ModificationType.UPDATE_TYPE));
+                    DoormatServer.LOGGER.warn("{} update type failed to overwrite the default value ({}) from json!", getTranslatedName(block), Type.UPDATE_TYPE.getDefaultValue(block));
                 }
             }
         }

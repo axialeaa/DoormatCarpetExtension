@@ -2,16 +2,16 @@ package com.axialeaa.doormat.mixin.rule.disableCrossing;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.block.NetherPortalBlock;
+import net.minecraft.block.EndGatewayBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(NetherPortalBlock.class)
-public class NetherPortalBlockMixin {
+@Mixin(EndGatewayBlock.class)
+public class EndGatewayBlockMixin {
 
     @ModifyExpressionValue(method = "onEntityCollision", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;canUsePortals(Z)Z"))
     private boolean shouldTeleport(boolean original) {
-        return original && !DoormatSettings.disableNetherPortalCrossing;
+        return original && !DoormatSettings.disableEndGatewayCrossing;
     }
 
 }

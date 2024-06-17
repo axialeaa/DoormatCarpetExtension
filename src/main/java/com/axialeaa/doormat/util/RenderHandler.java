@@ -15,12 +15,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
+@Deprecated(forRemoval = true)
 public class RenderHandler {
 
     private static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     private static final ClientWorld WORLD = CLIENT.world;
+
     private static final HashSet<Line> LINES = new HashSet<>();
     private static final HashSet<Quad> QUADS = new HashSet<>();
+
     private static final HashSet<Line> DEPTH_LINES = new HashSet<>();
     private static final HashSet<Quad> DEPTH_QUADS = new HashSet<>();
 
@@ -52,17 +55,13 @@ public class RenderHandler {
         map.put("white",    Color.WHITE);                       // 100
     });
 
-    public static Color getTrubetskoyColor(String key, int alpha) {
+    public static Color getTrubetskoyColor(String key) {
         if (!TRUBETSKOY_COLORS.containsKey(key))
             throw new NullPointerException("No Trubetskoy color of key " + key + "was found.");
 
         Color color = TRUBETSKOY_COLORS.get(key);
 
-        return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
-    }
-
-    public static Color getTrubetskoyColor(String key) {
-        return getTrubetskoyColor(key, 255);
+        return new Color(color.getRed(), color.getGreen(), color.getBlue(), 255);
     }
 
     public static Color getColorWithAlpha(Color color, int alpha) {
@@ -78,59 +77,46 @@ public class RenderHandler {
         RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
 
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder buffer = tessellator.getBuffer();
 
         RenderSystem.disableDepthTest();
 
-        buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         Iterator<Line> lineIterator = LINES.iterator();
 
         while (lineIterator.hasNext()) {
             Line line = lineIterator.next();
-            line.create(buffer, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
+            line.create(tessellator, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
             if (WORLD == null || WORLD.getTime() >= line.removalTime)
                 lineIterator.remove();
         }
 
-        tessellator.draw();
-
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         Iterator<Quad> quadIterator = QUADS.iterator();
 
         while (quadIterator.hasNext()) {
             Quad quad = quadIterator.next();
-            quad.create(buffer, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
+            quad.create(tessellator, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
             if (WORLD == null || WORLD.getTime() >= quad.removalTime)
                 quadIterator.remove();
         }
 
-        tessellator.draw();
-
         RenderSystem.enableDepthTest();
 
-        buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
         Iterator<Line> depthLineIterator = DEPTH_LINES.iterator();
         
         while (depthLineIterator.hasNext()) {
             Line line = depthLineIterator.next();
-            line.create(buffer, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
+            line.create(tessellator, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
             if (WORLD == null || WORLD.getTime() >= line.removalTime)
                 depthLineIterator.remove();
         }
 
-        tessellator.draw();
-
-        buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
         Iterator<Quad> depthQuadIterator = DEPTH_QUADS.iterator();
 
         while (depthQuadIterator.hasNext()) {
             Quad quad = depthQuadIterator.next();
-            quad.create(buffer, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
+            quad.create(tessellator, cameraPos.getX(), cameraPos.getY(), cameraPos.getZ());
             if (WORLD == null || WORLD.getTime() >= quad.removalTime)
                 depthQuadIterator.remove();
         }
-
-        tessellator.draw();
     }
 
     public synchronized static void addLine(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color strokeColor, long removalTime, boolean shouldRenderBehindBlocks) {
@@ -288,30 +274,38 @@ public class RenderHandler {
 
     private record Line(double minX, double minY, double minZ, double maxX, double maxY, double maxZ, Color strokeColor, long removalTime) {
 
-        public void create(BufferBuilder buffer, double cameraX, double cameraY, double cameraZ) {
+        public void create(Tessellator tessellator, double cameraX, double cameraY, double cameraZ) {
             float r = strokeColor.getRed() / 255f;
             float g = strokeColor.getGreen() / 255f;
             float b = strokeColor.getBlue() / 255f;
             float a = strokeColor.getAlpha() / 255f;
 
-            buffer.vertex(minX - cameraX, minY - cameraY, minZ - cameraZ).color(r, g, b, a).next();
-            buffer.vertex(maxX - cameraX, maxY - cameraY, maxZ - cameraZ).color(r, g, b, a).next();
+            BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+
+            buffer.vertex((float) (minX - cameraX), (float) (minY - cameraY), (float) (minZ - cameraZ)).color(r, g, b, a);
+            buffer.vertex((float) (maxX - cameraX), (float) (maxY - cameraY), (float) (maxZ - cameraZ)).color(r, g, b, a);
+
+            BufferRenderer.drawWithGlobalProgram(buffer.end());
         }
 
     }
     
     private record Quad(double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3, double x4, double y4, double z4, Color fillColor, long removalTime) {
         
-        public void create(BufferBuilder buffer, double cameraX, double cameraY, double cameraZ) {
+        public void create(Tessellator tessellator, double cameraX, double cameraY, double cameraZ) {
             float r = fillColor.getRed() / 255f;
             float g = fillColor.getGreen() / 255f;
             float b = fillColor.getBlue() / 255f;
             float a = fillColor.getAlpha() / 255f;
 
-            buffer.vertex(x1 - cameraX, y1 - cameraY, z1 - cameraZ).color(r, g, b, a).next();
-            buffer.vertex(x2 - cameraX, y2 - cameraY, z2 - cameraZ).color(r, g, b, a).next();
-            buffer.vertex(x3 - cameraX, y3 - cameraY, z3 - cameraZ).color(r, g, b, a).next();
-            buffer.vertex(x4 - cameraX, y4 - cameraY, z4 - cameraZ).color(r, g, b, a).next();
+            BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+
+            buffer.vertex((float) (x1 - cameraX), (float) (y1 - cameraY), (float) (z1 - cameraZ)).color(r, g, b, a);
+            buffer.vertex((float) (x2 - cameraX), (float) (y2 - cameraY), (float) (z2 - cameraZ)).color(r, g, b, a);
+            buffer.vertex((float) (x3 - cameraX), (float) (y3 - cameraY), (float) (z3 - cameraZ)).color(r, g, b, a);
+            buffer.vertex((float) (x4 - cameraX), (float) (y4 - cameraY), (float) (z4 - cameraZ)).color(r, g, b, a);
+
+            BufferRenderer.drawWithGlobalProgram(buffer.end());
         }
         
     }

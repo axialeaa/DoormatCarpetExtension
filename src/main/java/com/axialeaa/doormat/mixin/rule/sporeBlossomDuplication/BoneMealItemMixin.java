@@ -4,7 +4,7 @@ import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.util.ParticleUtil;
+import net.minecraft.particle.ParticleUtil;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.compactTemplateTooltips;
+package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;

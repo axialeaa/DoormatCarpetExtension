@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.compactTrimTooltips;
+package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
 import carpet.utils.Translations;
 import com.axialeaa.doormat.DoormatSettings;

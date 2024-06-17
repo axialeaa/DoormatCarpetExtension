@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.compactPotTooltips;
+package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
 import carpet.utils.Translations;
 import com.axialeaa.doormat.DoormatSettings;
@@ -8,10 +8,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.DecoratedPotBlock;
 import net.minecraft.block.entity.Sherds;
-import net.minecraft.client.item.TooltipType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,18 +42,20 @@ public class DecoratedPotBlockMixin {
      */
     @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;of([Ljava/lang/Object;)Ljava/util/stream/Stream;", shift = At.Shift.BEFORE))
     private void addLines(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options, CallbackInfo ci, @Local Sherds sherds) {
-        if (DoormatSettings.compactPotTooltips.enabled()) {
-            Stream<Item> stream = sherds.stream().stream(); // for some reason they named the method to turn the sherds into a list "stream"...
-            for (Item sherd : stream.distinct().toList()) { // iterates through a list of distinct items
-                int count = Collections.frequency(sherds.stream(), sherd); // and finds the quantity of this item in the original list
+        if (!DoormatSettings.compactPotTooltips.enabled())
+            return;
 
-                if (DoormatSettings.compactPotTooltips == DoormatSettings.PotTooltipMode.IGNORE_BRICKS && sherd == Items.BRICK)
-                    return;
+        Stream<Item> stream = sherds.stream().stream(); // for some reason they named the method to turn the sherds into a list "stream"...
 
-                String translate = Translations.tr("compact_tooltip.pot." + sherd.getTranslationKey().replace("item.minecraft.", ""));
-                tooltip.add(Text.literal(count > 1 ? translate + " x" + count : translate) // add a numerical tag at the end if there are more than 1 of this type
-                    .formatted(Formatting.GRAY));
-            }
+        for (Item sherd : stream.distinct().toList()) { // iterates through a list of distinct items
+            int count = Collections.frequency(sherds.stream(), sherd); // and finds the quantity of this item in the original list
+
+            if (DoormatSettings.compactPotTooltips == DoormatSettings.PotTooltipMode.IGNORE_BRICKS && sherd == Items.BRICK)
+                return;
+
+            String translate = Translations.tr("compact_tooltip.pot." + sherd.getTranslationKey().replace("item.minecraft.", ""));
+            tooltip.add(Text.literal(count > 1 ? translate + " x" + count : translate) // add a numerical tag at the end if there are more than 1 of this type
+                .formatted(Formatting.GRAY));
         }
     }
 

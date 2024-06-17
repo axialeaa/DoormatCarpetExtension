@@ -4,16 +4,22 @@ import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.mixin.rule.fireAspectLighting.TntBlockAccessor;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import net.minecraft.block.*;
-import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.registry.RegistryEntryLookup;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
+
+import java.util.Optional;
 
 public class FireAspectLightingHelper {
 
@@ -28,7 +34,7 @@ public class FireAspectLightingHelper {
             BlockPos blockPos = ctx.getBlockPos();
             BlockState blockState = world.getBlockState(blockPos);
 
-            if (EnchantmentHelper.getFireAspect(player) > 0) {
+            if (hasFireAspect(world, stack)) {
                 if (blockState.getBlock() instanceof TntBlock) {
                     TntBlockAccessor.invokePrimeTnt(world, blockPos, player);
                     world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), TinkerKit.getFlags(blockState, Block.NOTIFY_ALL) | Block.REDRAW_ON_MAIN_THREAD);
@@ -47,6 +53,13 @@ public class FireAspectLightingHelper {
         }
 
         return ActionResult.PASS;
+    }
+
+    private static boolean hasFireAspect(World world, ItemStack stack) {
+        RegistryEntryLookup<Enchantment> lookup = world.getRegistryManager().createRegistryLookup().getOrThrow(RegistryKeys.ENCHANTMENT);
+        Optional<RegistryEntry.Reference<Enchantment>> optional = lookup.getOptional(Enchantments.FIRE_ASPECT);
+
+        return optional.filter(ref -> stack.getEnchantments().getLevel(ref) > 0).isPresent();
     }
 
 }

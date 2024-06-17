@@ -47,7 +47,7 @@ public class UpdateTypeCommand {
             )
             .then(literal("get")
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                    .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.UPDATE_TYPE), builder))
+                    .suggests((ctx, builder) -> suggestMatching(Type.UPDATE_TYPE.getBlockKeys(), builder))
                     .executes(ctx -> get(
                         ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
@@ -56,7 +56,7 @@ public class UpdateTypeCommand {
             )
             .then(literal("set")
                 .then(argument("value", StringArgumentType.string())
-                    .suggests((ctx, builder) -> suggestMatching(Arrays.stream(UpdateType.values()).map(UpdateType::asString), builder))
+                    .suggests((ctx, builder) -> suggestMatching(Arrays.stream(UpdateType.values()).map(UpdateType::toString), builder))
                     .then(literal("all")
                         .executes(ctx -> setAll(
                             ctx.getSource(),
@@ -64,7 +64,7 @@ public class UpdateTypeCommand {
                         ))
                     )
                     .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                        .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.UPDATE_TYPE), builder))
+                        .suggests((ctx, builder) -> suggestMatching(Type.UPDATE_TYPE.getBlockKeys(), builder))
                         .executes(ctx -> set(
                             ctx.getSource(),
                             RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value(),
@@ -78,7 +78,7 @@ public class UpdateTypeCommand {
                     .executes(ctx -> resetAll(ctx.getSource()))
                 )
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                    .suggests((ctx, builder) -> suggestMatching(getModifiableBlockKeys(ModificationType.UPDATE_TYPE), builder))
+                    .suggests((ctx, builder) -> suggestMatching(Type.UPDATE_TYPE.getBlockKeys(), builder))
                     .executes(ctx -> reset(
                         ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
@@ -97,7 +97,7 @@ public class UpdateTypeCommand {
      * Assigns the inputted value to the entered-in redstone component via {@link TinkerKit#MODIFIED_UPDATE_TYPE_VALUES}.
      */
     private static int set(ServerCommandSource source, Block block, String input) {
-        if (!isModifiable(block, ModificationType.UPDATE_TYPE)) {
+        if (!Type.UPDATE_TYPE.canModify(block)) {
             Messenger.m(source, "r " + getTranslatedName(block) + " is not a valid component!");
             return 0;
         }
@@ -112,12 +112,13 @@ public class UpdateTypeCommand {
             return 0;
         }
 
-        if (MODIFIED_UPDATE_TYPE_VALUES.get(block) == updateType) {
+        if (Type.UPDATE_TYPE.getModifiedValue(block) == updateType) {
             Messenger.m(source, "r " + getTranslatedName(block) + " update type is already set to " + updateType);
             return 0;
         }
         else {
-            MODIFIED_UPDATE_TYPE_VALUES.put(block, updateType);
+            Type.UPDATE_TYPE.set(block, updateType);
+
             Messenger.m(source, "w Set " + getTranslatedName(block) + " update type to " + updateType);
             ConfigFile.updateFile(source.getServer());
 
@@ -141,9 +142,9 @@ public class UpdateTypeCommand {
 
         boolean wasModified = false;
 
-        for (Block block : getModifiableBlocks(ModificationType.UPDATE_TYPE).toList()) {
-            if (MODIFIED_UPDATE_TYPE_VALUES.get(block) != updateType) {
-                MODIFIED_UPDATE_TYPE_VALUES.put(block, updateType);
+        for (Block block : Type.UPDATE_TYPE.getBlocks().toList()) {
+            if (Type.UPDATE_TYPE.getModifiedValue(block) != updateType) {
+                Type.UPDATE_TYPE.set(block, updateType);
                 wasModified = true;
             }
         }
@@ -164,13 +165,13 @@ public class UpdateTypeCommand {
      * Finds and prints the update type value assigned to the inputted redstone component via {@link TinkerKit#MODIFIED_UPDATE_TYPE_VALUES}.
      */
     private static int get(ServerCommandSource source, Block block) {
-        if (!isModifiable(block, ModificationType.UPDATE_TYPE)) {
+        if (!Type.UPDATE_TYPE.canModify(block)) {
             Messenger.m(source, "r " + getTranslatedName(block) + " is not a valid component!");
             return 0;
         }
 
-        UpdateType value = MODIFIED_UPDATE_TYPE_VALUES.get(block);
-        Messenger.m(source, "w " + getTranslatedName(block) + " update type is set to " + value + (isDefaultValue(block, ModificationType.UPDATE_TYPE) ? " (default value)" : " (modified value)"));
+        UpdateType value = (UpdateType) Type.UPDATE_TYPE.getModifiedValue(block);
+        Messenger.m(source, "w " + getTranslatedName(block) + " update type is set to " + value + (Type.UPDATE_TYPE.isDefaultValue(block) ? " (default value)" : " (modified value)"));
 
         return Command.SINGLE_SUCCESS;
     }
@@ -180,18 +181,18 @@ public class UpdateTypeCommand {
      */
     private static int list(ServerCommandSource source) {
         Messenger.m(source, "");
-        if (isMapModified(ModificationType.UPDATE_TYPE))
+        if (Type.UPDATE_TYPE.isMapModified())
             Messenger.m(source, "bui Update type values:", "?/" + ALIAS + " reset all", "^g Restore default values?");
         else
             Messenger.m(source, "bu Update type values:");
 
-        for (Block block : getModifiableBlocks(ModificationType.UPDATE_TYPE).toList()) {
-            UpdateType value = MODIFIED_UPDATE_TYPE_VALUES.get(block);
+        for (Block block : Type.UPDATE_TYPE.getBlocks().toList()) {
+            UpdateType value = (UpdateType) Type.UPDATE_TYPE.getModifiedValue(block);
 
             String string = getTranslatedName(block) + ": " + value;
             String command = "?/" + ALIAS + " reset " + getKey(block);
 
-            if (isDefaultValue(block, ModificationType.UPDATE_TYPE))
+            if (Type.UPDATE_TYPE.isDefaultValue(block))
                 Messenger.m(source, "g - " + string + " (default value)");
             else
                 Messenger.m(source, "w - ", "wi " + string + " (modified value)", command, "^g Restore default value?");
@@ -204,17 +205,17 @@ public class UpdateTypeCommand {
      * Sets the inputted redstone component's update type value to default.
      */
     private static int reset(ServerCommandSource source, Block block) {
-        if (!isModifiable(block, ModificationType.UPDATE_TYPE)) {
+        if (!Type.UPDATE_TYPE.canModify(block)) {
             Messenger.m(source, "r " + getTranslatedName(block) + " is not a valid component!");
             return 0;
         }
 
-        if (isDefaultValue(block, ModificationType.UPDATE_TYPE)) {
+        if (Type.UPDATE_TYPE.isDefaultValue(block)) {
             Messenger.m(source, "r " + getTranslatedName(block) + " update type value is already set to default!");
             return 0;
         }
         else {
-            setDefaultValue(block, ModificationType.UPDATE_TYPE);
+            Type.UPDATE_TYPE.reset(block);
             Messenger.m(source, "w Restored default " + getTranslatedName(block) + " update type value");
             ConfigFile.updateFile(source.getServer());
 
@@ -228,9 +229,9 @@ public class UpdateTypeCommand {
     private static int resetAll(ServerCommandSource source) {
         boolean wasModified = false;
 
-        for (Block block : getModifiableBlocks(ModificationType.UPDATE_TYPE).toList()) {
-            if (!isDefaultValue(block, ModificationType.UPDATE_TYPE)) {
-                setDefaultValue(block, ModificationType.UPDATE_TYPE);
+        for (Block block : Type.UPDATE_TYPE.getBlocks().toList()) {
+            if (!Type.UPDATE_TYPE.isDefaultValue(block)) {
+                Type.UPDATE_TYPE.reset(block);
                 wasModified = true;
             }
         }

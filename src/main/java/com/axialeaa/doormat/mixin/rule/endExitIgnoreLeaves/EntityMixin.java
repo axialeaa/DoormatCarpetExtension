@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Entity.class)
 public class EntityMixin {
 
-    @WrapOperation(method = "getTeleportTarget", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Heightmap$Type;MOTION_BLOCKING_NO_LEAVES:Lnet/minecraft/world/Heightmap$Type;"))
+    @WrapOperation(method = "getWorldSpawnPos", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Heightmap$Type;MOTION_BLOCKING_NO_LEAVES:Lnet/minecraft/world/Heightmap$Type;"))
     private Heightmap.Type setEndExitHeightmap(Operation<Heightmap.Type> original) {
         return DoormatSettings.endExitIgnoreLeaves ? original.call() : Heightmap.Type.MOTION_BLOCKING;
     }

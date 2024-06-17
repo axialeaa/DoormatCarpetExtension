@@ -27,15 +27,14 @@ public class BrushableBlockEntityMixin extends BlockEntity {
 
     @WrapOperation(method = "spawnItem", at = @At(value = "NEW", target = "(Lnet/minecraft/world/World;DDDLnet/minecraft/item/ItemStack;)Lnet/minecraft/entity/ItemEntity;"))
     private ItemEntity modifyItemSpawnPos(World world, double x, double y, double z, ItemStack stack, Operation<ItemEntity> original, @Local Direction direction) {
-        if (DoormatSettings.suspiciousLootDropPosFix) {
-            Vec3d vec3d = this.pos.toCenterPos()
-                .offset(Direction.DOWN, EntityType.ITEM.getHeight() / 2)
-                .offset(direction, 0.5 + (direction.getAxis().isVertical() ? EntityType.ITEM.getHeight() : EntityType.ITEM.getWidth()) / 2);
+        if (!DoormatSettings.suspiciousLootDropPosFix)
+            return original.call(world, x, y, z, stack);
 
-            return new ItemEntity(world, vec3d.getX(), vec3d.getY(), vec3d.getZ(), stack);
-        }
+        Vec3d vec3d = this.pos.toCenterPos()
+            .offset(Direction.DOWN, EntityType.ITEM.getHeight() / 2)
+            .offset(direction, 0.5 + (direction.getAxis().isVertical() ? EntityType.ITEM.getHeight() : EntityType.ITEM.getWidth()) / 2);
 
-        return original.call(world, x, y, z, stack);
+        return original.call(world, vec3d.getX(), vec3d.getY(), vec3d.getZ(), stack);
     }
 
 }

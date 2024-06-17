@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(EndPortalBlock.class)
 public class EndPortalBlockMixin {
 
-    @ModifyExpressionValue(method = "onEntityCollision", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;canUsePortals()Z"))
+    @ModifyExpressionValue(method = "onEntityCollision", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;canUsePortals(Z)Z"))
     private boolean shouldTeleport(boolean original) {
         return original && !DoormatSettings.disableEndPortalCrossing;
     }

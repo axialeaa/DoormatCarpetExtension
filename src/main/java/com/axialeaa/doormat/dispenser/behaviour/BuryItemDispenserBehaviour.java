@@ -43,6 +43,7 @@ public class BuryItemDispenserBehaviour extends FallibleItemDispenserBehavior {
         }
 
         this.setSuccess(false);
+
         return stack;
     }
 

@@ -16,7 +16,7 @@ public class WallRedstoneTorchBlockMixin {
 
     @ModifyReturnValue(method = "shouldUnpower", at = @At("RETURN"))
     private boolean allowQuasiConnecting(boolean original, World world, BlockPos pos, BlockState state, @Local Direction direction) {
-        return TinkerKit.isReceivingRedstonePower(world, pos, direction);
+        return TinkerKit.isReceivingRedstonePower(world, pos, state, direction);
     }
 
 }

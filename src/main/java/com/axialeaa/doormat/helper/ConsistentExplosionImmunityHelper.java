@@ -1,9 +1,8 @@
 package com.axialeaa.doormat.helper;
 
 import com.axialeaa.doormat.DoormatSettings;
-import net.minecraft.entity.Entity;
+import net.minecraft.block.Block;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 
 /**
@@ -12,18 +11,16 @@ import net.minecraft.item.Item;
 public class ConsistentExplosionImmunityHelper {
 
     /**
-     * @param entity the entity to deal damage to
+     * @param itemEntity the item entity to deal damage to
      * @param power the power/blast radius of the explosion
      * @return whether an explosion created inside this block (if it were placed) would destroy it.
      */
-    public static boolean shouldDamage(Entity entity, float power) {
-        if (DoormatSettings.consistentExplosionImmunity && entity instanceof ItemEntity itemEntity) {
+    public static boolean shouldDamage(ItemEntity itemEntity, float power) {
+        if (DoormatSettings.consistentExplosionImmunity) {
             Item item = itemEntity.getStack().getItem();
+            float blastRes = Block.getBlockFromItem(item).getBlastResistance();
 
-            if (item instanceof BlockItem blockItem) {
-                float blastRes = blockItem.getBlock().getBlastResistance();
-                return power * 1.3 > (blastRes + 0.3) * 0.3;
-            }
+            return power * 1.3 > (blastRes + 0.3) * 0.3;
         }
 
         return true;

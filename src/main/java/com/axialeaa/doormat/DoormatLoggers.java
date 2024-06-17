@@ -8,7 +8,7 @@ public class DoormatLoggers {
     public static boolean __randomTicks;
 
     public static void register() {
-        LoggerRegistry.registerLogger("randomTicks", createLogger("randomTicks", "chat", new String[]{ "chat", "visual", "both" }, true));
+        LoggerRegistry.registerLogger("randomTicks", createLogger("randomTicks", "brief", new String[]{ "brief", "full" }, true));
     }
 
     static Logger createLogger(String logName, String defaultOption, String [] options, boolean strictOptions) {

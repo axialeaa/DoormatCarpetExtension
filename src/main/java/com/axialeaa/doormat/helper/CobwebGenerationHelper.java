@@ -1,8 +1,6 @@
 package com.axialeaa.doormat.helper;
 
-import com.axialeaa.doormat.DoormatServer;
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.util.RenderHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.CaveSpiderEntity;
@@ -10,8 +8,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
-
-import java.awt.*;
 
 public class CobwebGenerationHelper {
 
@@ -27,28 +23,28 @@ public class CobwebGenerationHelper {
                 for (Direction direction : Direction.values()) {
                     if (world.getBlockState(blockPos).isReplaceable() && world.getBlockState(blockPos.offset(direction)).isSideSolidFullSquare(world, pos, direction.getOpposite())) {
                         i++;
-                        if (DoormatServer.IS_DEBUG)
-                            // Supporting faces
-                            RenderHandler.addCuboidFaceQuad(blockPos.offset(direction).toCenterPos(), 0.5001, RenderHandler.getTrubetskoyColor("white", 40), 200, true, direction);
+//                        if (DoormatServer.IS_DEBUG)
+//                            // Supporting faces
+//                            RenderHandler.addCuboidFaceQuad(blockPos.offset(direction).toCenterPos(), 0.5001, RenderHandler.getColorWithAlpha(RenderHandler.getTrubetskoyColor("white"), 40), 200, true, direction);
                     }
                 }
                 if (i >= 2) {
-                    Color color = RenderHandler.getTrubetskoyColor("white");
+//                    Color color = RenderHandler.getTrubetskoyColor("white");
 
                     if (random.nextInt(i + rarity) > rarity) {
                         world.setBlockState(blockPos, Blocks.COBWEB.getDefaultState());
-                        color = RenderHandler.getTrubetskoyColor("green");
+//                        color = RenderHandler.getTrubetskoyColor("green");
                     }
 
-                    if (DoormatServer.IS_DEBUG)
-                        // Satisfactory placement spots
-                        RenderHandler.addCuboidLines(blockPos.toCenterPos(), 0.5, color, 200, true);
+//                    if (DoormatServer.IS_DEBUG)
+//                        // Satisfactory placement spots
+//                        RenderHandler.addCuboidLines(blockPos.toCenterPos(), 0.5, color, 200, true);
                 }
             }
 
-            if (DoormatServer.IS_DEBUG)
-                // Enclosing box
-                RenderHandler.addCuboidLines(pos.getX() - h, pos.getY() - v, pos.getZ() - h, pos.getX() + h + 1, pos.getY() + v + 1, pos.getZ() + h + 1, RenderHandler.getTrubetskoyColor("purple"), 200, true);
+//            if (DoormatServer.IS_DEBUG)
+//                // Enclosing box
+//                RenderHandler.addCuboidLines(pos.getX() - h, pos.getY() - v, pos.getZ() - h, pos.getX() + h + 1, pos.getY() + v + 1, pos.getZ() + h + 1, RenderHandler.getTrubetskoyColor("purple"), 200, true);
         }
     }
 

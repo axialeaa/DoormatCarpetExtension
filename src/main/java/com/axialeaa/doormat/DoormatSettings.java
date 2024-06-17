@@ -5,6 +5,7 @@ import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Rule;
 import carpet.api.settings.Validator;
 import carpet.api.settings.Validators;
+import net.minecraft.block.spawner.EntityDetector;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.world.World;
@@ -14,7 +15,6 @@ import java.util.List;
 
 import static carpet.api.settings.RuleCategory.*;
 
-@SuppressWarnings("CanBeFinal")
 public class DoormatSettings {
 
     /**<h1>CATEGORIES</h1>*/
@@ -141,7 +141,7 @@ public class DoormatSettings {
 
     }
 
-    public enum EnchantTooltipMode {
+    public enum CarouselTooltipMode {
 
         FALSE, TRUE, BAR;
 
@@ -153,17 +153,35 @@ public class DoormatSettings {
 
     public enum ChiseledBookshelfSignalMode {
 
-        FALSE, TRUE, LERPED;
-
-        public boolean enabled() {
-            return this != FALSE;
-        }
+        FALSE, TRUE, LERPED
 
     }
 
     public enum EntityDetectorMode {
 
-        SURVIVAL_PLAYERS, NON_SPECTATOR_PLAYERS, SHEEP
+        SURVIVAL_PLAYERS      (EntityDetector.SURVIVAL_PLAYERS),
+        NON_SPECTATOR_PLAYERS (EntityDetector.NON_SPECTATOR_PLAYERS),
+        SHEEP                 (EntityDetector.SHEEP);
+
+        private final EntityDetector detector;
+
+        EntityDetectorMode(EntityDetector detector) {
+            this.detector = detector;
+        }
+
+        public EntityDetector getDetector() {
+            return detector;
+        }
+
+    }
+
+    public enum SillyStringMode {
+
+        FALSE, TRUE, DELETE_STRING;
+
+        public boolean enabled() {
+            return this != FALSE;
+        }
 
     }
 
@@ -203,7 +221,10 @@ public class DoormatSettings {
     public static String cobblestoneGenProduct = "minecraft:cobblestone";
 
     @Rule( categories = { CLIENT, TOOLTIP, DOORMAT } )
-    public static EnchantTooltipMode compactEnchantTooltips = EnchantTooltipMode.FALSE;
+    public static CarouselTooltipMode compactBannerTooltips = CarouselTooltipMode.FALSE;
+
+    @Rule( categories = { CLIENT, TOOLTIP, DOORMAT } )
+    public static CarouselTooltipMode compactEnchantTooltips = CarouselTooltipMode.FALSE;
 
     @Rule( categories = { CLIENT, TOOLTIP, DOORMAT } )
     public static PotTooltipMode compactPotTooltips = PotTooltipMode.FALSE;
@@ -285,6 +306,9 @@ public class DoormatSettings {
 
     @Rule( categories = { BUGFIX, DOORMAT } )
     public static boolean endExitIgnoreLeaves = true;
+
+    @Rule( categories = { RETRO, DOORMAT } )
+    public static SillyStringMode endPlatformSillyString = SillyStringMode.FALSE;
 
     @Rule( options = { "0.0", "0.075" }, validators = Validators.Probablity.class, strict = false, categories = { FEATURE, DOORMAT } )
     public static double fastLeafDecayingChance = 0.0;
@@ -418,6 +442,9 @@ public class DoormatSettings {
 
     @Rule( options = { "5", "20" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { RETRO, DOORMAT } )
     public static int sculkCatalystXpCount = 5;
+
+    @Rule( options = { "0.0", "0.5", "1.0" }, validators = Validators.Probablity.class, strict = false, categories = { SURVIVAL, DOORMAT } )
+    public static double sneakingRandomTickChance = 0.0;
 
     @Rule( categories = { PARITY, DOORMAT } )
     public static boolean softInversion = false;

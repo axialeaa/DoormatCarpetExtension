@@ -12,12 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 public class TrialSpawnerBlockEntityMixin {
 
     @WrapOperation(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/block/spawner/EntityDetector;SURVIVAL_PLAYERS:Lnet/minecraft/block/spawner/EntityDetector;"))
-    private EntityDetector modifyEntityCheck(Operation<EntityDetector> original) {
-        return switch (DoormatSettings.trialSpawnerEntityRequirement) {
-            case SURVIVAL_PLAYERS -> EntityDetector.SURVIVAL_PLAYERS;
-            case NON_SPECTATOR_PLAYERS -> EntityDetector.NON_SPECTATOR_PLAYERS;
-            case SHEEP -> EntityDetector.SHEEP;
-        };
+    private EntityDetector modifyDetector(Operation<EntityDetector> original) {
+        return DoormatSettings.trialSpawnerEntityRequirement.getDetector();
     }
 
 }

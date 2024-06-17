@@ -2,9 +2,7 @@ package com.axialeaa.doormat.helper;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.CampfireBlock;
 import net.minecraft.entity.Dismounting;
 import net.minecraft.entity.EntityType;
@@ -12,7 +10,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -24,7 +21,6 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.CollisionView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
 
 import java.util.Optional;
 
@@ -93,43 +89,18 @@ public class CampfireRespawningHelper {
         return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
-    public static Optional<Vec3d> respawnAt(ServerWorld world, BlockPos pos, boolean forced, boolean alive) {
-        BlockState blockState = world.getBlockState(pos);
-        Block block = blockState.getBlock();
-
-        if (DoormatSettings.campfireRespawning && CampfireBlock.isLitCampfire(blockState)) {
-            Optional<Vec3d> optional = findRespawnPosition(EntityType.PLAYER, world, pos);
-            if (block != Blocks.SOUL_CAMPFIRE && !forced && !alive && optional.isPresent()) {
-                CampfireBlock.extinguish(null, world, pos, blockState);
-                world.setBlockState(pos, blockState.with(CampfireBlock.LIT, false));
-                world.syncWorldEvent(null, WorldEvents.FIRE_EXTINGUISHED, pos, 0);
-            }
-
-            return optional;
-        }
-
-        return Optional.empty();
-    }
-
     public static void sendSoundPacket(ServerWorld world, BlockPos pos, ServerPlayerEntity player) {
-        if (pos == null || world.isOutOfHeightLimit(pos))
-            return;
+        Random random = world.getRandom();
+        double x = pos.getX(), y = pos.getY(), z = pos.getZ();
 
-        BlockState blockState = world.getBlockState(pos);
-
-        if (DoormatSettings.campfireRespawning && blockState.isIn(BlockTags.CAMPFIRES) && !blockState.isOf(Blocks.SOUL_CAMPFIRE)) {
-            Random random = world.getRandom();
-            double x = pos.getX(), y = pos.getY(), z = pos.getZ();
-
-            player.networkHandler.sendPacket(new PlaySoundS2CPacket(
-                RegistryEntry.of(SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE),
-                SoundCategory.BLOCKS,
-                x, y, z,
-                1.0F,
-                1.0F,
-                random.nextLong()
-            ));
-        }
+        player.networkHandler.sendPacket(new PlaySoundS2CPacket(
+            RegistryEntry.of(SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE),
+            SoundCategory.BLOCKS,
+            x, y, z,
+            1.0F,
+            1.0F,
+            random.nextLong()
+        ));
     }
 
 }

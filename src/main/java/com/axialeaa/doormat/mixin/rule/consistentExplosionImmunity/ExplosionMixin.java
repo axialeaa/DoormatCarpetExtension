@@ -3,6 +3,7 @@ package com.axialeaa.doormat.mixin.rule.consistentExplosionImmunity;
 import com.axialeaa.doormat.helper.ConsistentExplosionImmunityHelper;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.Final;
@@ -17,7 +18,10 @@ public class ExplosionMixin {
 
     @WrapWithCondition(method = "collectBlocksAndDamageEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z"))
     private boolean shouldDamageEntity(Entity entity, DamageSource source, float amount) {
-        return ConsistentExplosionImmunityHelper.shouldDamage(entity, power);
+        if (entity instanceof ItemEntity itemEntity)
+            return ConsistentExplosionImmunityHelper.shouldDamage(itemEntity, power);
+
+        return true;
     }
 
 }

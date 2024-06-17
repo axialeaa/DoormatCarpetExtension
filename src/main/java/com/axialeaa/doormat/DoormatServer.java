@@ -16,11 +16,10 @@ import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.block.*;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,9 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	public static final String MOD_ID = "doormat";
 	public static final String MOD_NAME;
 	public static final Version MOD_VERSION;
+
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
 	public static int MAX_QC_RANGE = 1;
 
 	static {
@@ -42,11 +43,6 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	}
 
 	public static final boolean IS_DEBUG = DoormatSettings.incrediblySecretSetting || FabricLoader.getInstance().isDevelopmentEnvironment();
-
-	public static boolean hasExperimentalDatapack(MinecraftServer server) {
-		FeatureSet enabledFeatures = server.getSaveProperties().getEnabledFeatures();
-		return enabledFeatures.contains(FeatureFlags.UPDATE_1_21);
-	}
 
 	@Override
 	public void onInitialize() {
@@ -114,7 +110,12 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 
 	@Override
 	public Map<String, String> canHasTranslations(String lang) {
-		return Translations.getTranslationFromResourcePath("assets/" + MOD_ID + "/lang/%s.json".formatted(lang));
+		String path = String.format("assets/%s/lang/%s.json", MOD_ID, lang);
+		return Translations.getTranslationFromResourcePath(path);
+	}
+
+	public static Identifier id(String name) {
+		return Identifier.of(MOD_ID, name);
 	}
 
 }

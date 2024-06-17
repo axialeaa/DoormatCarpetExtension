@@ -2,6 +2,7 @@ package com.axialeaa.doormat.mixin.rule.propagulePropagation;
 
 import com.axialeaa.doormat.DoormatSettings;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.PropaguleBlock;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -27,9 +28,13 @@ public class PropaguleBlockMixin {
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/PropaguleBlock;isFullyGrown(Lnet/minecraft/block/BlockState;)Z"))
     private void fallOnFullyGrown(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
         if (DoormatSettings.propagulePropagation && state.get(AGE) == 4) {
-            BlockPos.Mutable mutable = pos.mutableCopy();
-            FallingBlockEntity.spawnFromBlock(world, mutable, state);
-            mutable.move(Direction.DOWN);
+            BlockState upState = world.getBlockState(pos.up());
+
+            if (!upState.getOrEmpty(LeavesBlock.PERSISTENT).orElse(false)) {
+                BlockPos.Mutable mutable = pos.mutableCopy();
+                FallingBlockEntity.spawnFromBlock(world, mutable, state);
+                mutable.move(Direction.DOWN);
+            }
         }
     }
 

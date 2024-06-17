@@ -1,13 +1,11 @@
 package com.axialeaa.doormat.util;
 
-import net.minecraft.util.StringIdentifiable;
-
 import java.util.Locale;
 
 /**
  * This is where the types of updates each redstone component can emit are defined.
  */
-public enum UpdateType implements StringIdentifiable {
+public enum UpdateType {
 
     NEITHER,
     BLOCK,
@@ -15,12 +13,12 @@ public enum UpdateType implements StringIdentifiable {
     BOTH;
 
     @Override
-    public String asString() {
-        return toString().toLowerCase(Locale.ROOT);
+    public String toString() {
+        return this.name().toLowerCase(Locale.ROOT);
     }
 
     public int getFlags() {
-        return ordinal();
+        return this.ordinal();
     }
 
     public static UpdateType getFromFlags(int flags) {

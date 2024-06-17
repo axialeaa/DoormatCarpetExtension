@@ -4,6 +4,7 @@ import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PistonBlock;
 import net.minecraft.util.math.BlockPos;
@@ -17,23 +18,22 @@ public class PistonBlockMixin {
     /**
      * This needs to be different because of carpet's modified quasi-connectivity logic.
      */
-    @SuppressWarnings({
-        "UnresolvedMixinReference",
-        "MixinAnnotationTarget",
-        "InvalidMemberReference"
-    })
+    @SuppressWarnings("UnresolvedMixinReference")
     @TargetHandler(mixin = "carpet.mixins.PistonBaseBlock_qcMixin", name = "carpet_checkQuasiSignal")
     @WrapOperation(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target =  "Lcarpet/helpers/QuasiConnectivity;hasQuasiSignal(Lnet/minecraft/world/RedstoneView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean shouldQC(RedstoneView instance, BlockPos pos, Operation<Boolean> original) {
         BlockState blockState = instance.getBlockState(pos);
+        Block block = blockState.getBlock();
 
-        if (!TinkerKit.isModifiable(blockState.getBlock(), TinkerKit.ModificationType.QC))
+        if (!TinkerKit.Type.QC.canModify(block))
             return original.call(instance, pos);
 
-        if (TinkerKit.MODIFIED_QC_VALUES.get(blockState.getBlock()) < 1)
+        int qcValue = (int) TinkerKit.Type.QC.getModifiedValue(block);
+
+        if (qcValue < 1)
             return false;
 
-        for (int i = 1; i <= TinkerKit.MODIFIED_QC_VALUES.get(blockState.getBlock()); i++) {
+        for (int i = 1; i <= qcValue; i++) {
             BlockPos blockPos = pos.up(i);
 
             if (TinkerKit.cannotQC(instance, blockPos))
@@ -42,6 +42,7 @@ public class PistonBlockMixin {
             if (instance.isReceivingRedstonePower(blockPos))
                 return true;
         }
+
         return false;
     }
 

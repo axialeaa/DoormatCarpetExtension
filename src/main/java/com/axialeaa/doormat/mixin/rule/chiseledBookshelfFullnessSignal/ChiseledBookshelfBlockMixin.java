@@ -14,16 +14,17 @@ public class ChiseledBookshelfBlockMixin {
 
     /**
      * @param original the default behaviour
-     * @param chiseledBookshelfBlockEntity the chiselled bookshelf block entity in question
+     * @param blockEntity the chiselled bookshelf block entity in question
      * @return the number of books in the bookshelf if the rule is set to fullness or the same number interpolated between 1 and 15 if set to fullness_lerped, otherwise vanilla behaviour.
      */
     @ModifyReturnValue(method = "getComparatorOutput", at = @At(value = "RETURN", ordinal = 1))
-    private int modifyComparatorOutput(int original, @Local ChiseledBookshelfBlockEntity chiseledBookshelfBlockEntity) {
-        int bookCount = chiseledBookshelfBlockEntity.getFilledSlotCount();
+    private int modifyComparatorOutput(int original, @Local ChiseledBookshelfBlockEntity blockEntity) {
+        int bookCount = blockEntity.getFilledSlotCount();
+
         return switch (DoormatSettings.chiseledBookshelfFullnessSignal) {
             case TRUE -> bookCount;
-            case LERPED -> MathHelper.lerpPositive(bookCount / (float)chiseledBookshelfBlockEntity.size(), 0, 15);
-            default -> original;
+            case LERPED -> MathHelper.lerpPositive(bookCount / (float) blockEntity.size(), 0, 15);
+            case FALSE -> original;
         };
     }
 

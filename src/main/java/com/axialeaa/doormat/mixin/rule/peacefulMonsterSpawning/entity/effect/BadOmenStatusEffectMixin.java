@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(targets = "net.minecraft.entity.effect.BadOmenStatusEffect")
 public class BadOmenStatusEffectMixin {
 
-    @WrapOperation(method = { "applyUpdateEffect", "tryStartRaid" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;"))
+    @WrapOperation(method = "applyUpdateEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private Difficulty allowPeacefulEffect(ServerWorld instance, Operation<Difficulty> original) {
         return PeacefulMonsterSpawningHelper.bypassCheck(original.call(instance));
     }
