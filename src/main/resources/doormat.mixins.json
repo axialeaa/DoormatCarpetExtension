@@ -3,6 +3,7 @@
   "package": "com.axialeaa.doormat.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "command.ServerWorldMixin",
     "dispenser.DispenserBlockMixin",
     "extensibility.AbstractBlockMixin",
     "extensibility.EntityMixin",

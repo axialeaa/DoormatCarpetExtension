@@ -91,8 +91,7 @@ public class TinkerKit {
                     return true;
             }
         }
-
-        Type.QC.warn(block);
+        else Type.QC.warn(block);
 
         return world.isReceivingRedstonePower(pos);
     }
@@ -160,8 +159,7 @@ public class TinkerKit {
 
             return power;
         }
-
-        Type.QC.warn(block);
+        else Type.QC.warn(block);
 
         return world.getEmittedRedstonePower(pos, direction);
     }
