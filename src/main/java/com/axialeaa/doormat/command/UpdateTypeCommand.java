@@ -26,6 +26,7 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 /**
+ * TODO: improve :3<br>
  * <code>/updatetype list</code> - Finds and displays all update type values.<br>
  * <code>/updatetype get &lt;component&gt;</code> - Finds and displays the <code>component</code>'s update type value.<br>
  * <code>/updatetype set &lt;value&gt; all</code> - Sets all update type values to <code>value</code>.<br>
@@ -42,14 +43,11 @@ public class UpdateTypeCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
         dispatcher.register(literal(ALIAS)
             .requires(player -> CommandHelper.canUseCommand(player, DoormatSettings.commandUpdateType))
-            .then(literal("list")
-                .executes(ctx -> list(ctx.getSource()))
-            )
+            .then(literal("list").executes(ctx -> list(ctx.getSource())))
             .then(literal("get")
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
                     .suggests((ctx, builder) -> suggestMatching(Type.UPDATE_TYPE.getBlockKeys(), builder))
-                    .executes(ctx -> get(
-                        ctx.getSource(),
+                    .executes(ctx -> get(ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
                     ))
                 )
@@ -58,15 +56,13 @@ public class UpdateTypeCommand {
                 .then(argument("value", StringArgumentType.string())
                     .suggests((ctx, builder) -> suggestMatching(Arrays.stream(UpdateType.values()).map(UpdateType::toString), builder))
                     .then(literal("all")
-                        .executes(ctx -> setAll(
-                            ctx.getSource(),
+                        .executes(ctx -> setAll(ctx.getSource(),
                             StringArgumentType.getString(ctx, "value")
                         ))
                     )
                     .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
                         .suggests((ctx, builder) -> suggestMatching(Type.UPDATE_TYPE.getBlockKeys(), builder))
-                        .executes(ctx -> set(
-                            ctx.getSource(),
+                        .executes(ctx -> set(ctx.getSource(),
                             RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value(),
                             StringArgumentType.getString(ctx, "value")
                         ))
@@ -74,13 +70,10 @@ public class UpdateTypeCommand {
                 )
             )
             .then(literal("reset")
-                .then(literal("all")
-                    .executes(ctx -> resetAll(ctx.getSource()))
-                )
+                .then(literal("all").executes(ctx -> resetAll(ctx.getSource())))
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
                     .suggests((ctx, builder) -> suggestMatching(Type.UPDATE_TYPE.getBlockKeys(), builder))
-                    .executes(ctx -> reset(
-                        ctx.getSource(),
+                    .executes(ctx -> reset(ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
                     ))
                 )
@@ -113,7 +106,7 @@ public class UpdateTypeCommand {
         }
 
         if (Type.UPDATE_TYPE.getModifiedValue(block) == updateType) {
-            Messenger.m(source, "r " + getTranslatedName(block) + " update type is already set to " + updateType);
+            Messenger.m(source, "r " + getTranslatedName(block) + " update type is already set to " + updateType + "!");
             return 0;
         }
         else {
@@ -136,7 +129,7 @@ public class UpdateTypeCommand {
             updateType = UpdateType.valueOf(input.toUpperCase(Locale.ROOT));
         }
         catch (IllegalArgumentException e) {
-            Messenger.m(source, "r " + StringUtils.capitalize(input) + " is not a valid update type!");
+            Messenger.m(source, "r " + StringUtils.capitalize(input) + " is not a valid update type");
             return 0;
         }
 

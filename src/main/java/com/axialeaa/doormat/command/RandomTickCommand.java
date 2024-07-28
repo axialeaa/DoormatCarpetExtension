@@ -56,12 +56,12 @@ public class RandomTickCommand {
         BlockState blockState = world.getBlockState(pos);
 
         if (!blockState.hasRandomTicks()) {
-            Messenger.m(source, "r The block at ", Messenger.tp("c", pos), "r  does not support random ticks");
+            Messenger.m(source, "r The block at ", Messenger.tp("c", pos), "r  does not support random ticks!");
             return 0;
         }
 
         if (SCHEDULED_POSITIONS.containsKey(pos)) {
-            Messenger.m(source, "r Already sent random tick(s) to the block at ", Messenger.tp("c", pos), "r  in this tick");
+            Messenger.m(source, "r Already sent random tick(s) to the block at ", Messenger.tp("c", pos), "r  in this tick!");
             return 0;
         }
 

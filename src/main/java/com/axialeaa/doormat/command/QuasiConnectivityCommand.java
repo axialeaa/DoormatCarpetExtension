@@ -21,6 +21,7 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 /**
+ * TODO: improve :3<br>
  * <code>/quasiconnectivity list</code> - Finds and displays all quasi-connectivity values.<br>
  * <code>/quasiconnectivity get &lt;component&gt;</code> - Finds and displays the <code>component</code>'s quasi-connectivity value.<br>
  * <code>/quasiconnectivity set &lt;value&gt; all</code> - Sets all quasi-connectivity values to <code>value</code>.<br>
@@ -37,34 +38,26 @@ public class QuasiConnectivityCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
         dispatcher.register(literal(ALIAS)
             .requires(player -> CommandHelper.canUseCommand(player, DoormatSettings.commandQC))
-            .then(literal("list")
-                .executes(ctx -> list(ctx.getSource()))
-            )
+            .then(literal("list").executes(ctx -> list(ctx.getSource())))
             .then(literal("get")
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
                     .suggests((ctx, builder) -> suggestMatching(Type.QC.getBlockKeys(), builder))
-                    .executes(ctx -> get(
-                        ctx.getSource(),
+                    .executes(ctx -> get(ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
                     ))
                 )
             )
             .then(literal("set")
                 .then(argument("value", IntegerArgumentType.integer(0))
-                    .suggests((ctx, builder) -> suggestMatching(new String[]{
-                        String.valueOf(0),
-                        String.valueOf(1)
-                    }, builder))
+                    .suggests((ctx, builder) -> suggestMatching(new String[]{String.valueOf(0), String.valueOf(1)}, builder))
                     .then(literal("all")
-                        .executes(ctx -> setAll(
-                            ctx.getSource(),
+                        .executes(ctx -> setAll(ctx.getSource(),
                             IntegerArgumentType.getInteger(ctx, "value")
                         ))
                     )
                     .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
                         .suggests((ctx, builder) -> suggestMatching(Type.QC.getBlockKeys(), builder))
-                        .executes(ctx -> set(
-                            ctx.getSource(),
+                        .executes(ctx -> set(ctx.getSource(),
                             RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value(),
                             IntegerArgumentType.getInteger(ctx, "value")
                         ))
@@ -72,13 +65,10 @@ public class QuasiConnectivityCommand {
                 )
             )
             .then(literal("reset")
-                .then(literal("all")
-                    .executes(ctx -> resetAll(ctx.getSource()))
-                )
+                .then(literal("all").executes(ctx -> resetAll(ctx.getSource())))
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
                     .suggests((ctx, builder) -> suggestMatching(Type.QC.getBlockKeys(), builder))
-                    .executes(ctx -> reset(
-                        ctx.getSource(),
+                    .executes(ctx -> reset(ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
                     ))
                 )
@@ -101,7 +91,7 @@ public class QuasiConnectivityCommand {
         }
 
         if ((int) Type.QC.getModifiedValue(block) == input) {
-            Messenger.m(source, "r " + getTranslatedName(block) + " quasi-connectivity range is already set to " + input);
+            Messenger.m(source, "r " + getTranslatedName(block) + " quasi-connectivity range is already set to " + input + "!");
             return 0;
         }
         else {
