@@ -8,6 +8,7 @@ import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.block.Block;
 import net.minecraft.command.CommandRegistryAccess;
@@ -41,6 +42,9 @@ public abstract class AbstractTinkerKitCommand<T> {
 
     private Class<T> genericClass;
 
+    /**
+     * <a href="https://web.archive.org/web/20180124022935/http://blog.xebia.com/acessing-generic-types-at-runtime-in-java/">Accessing generic types at runtime in Java</a>
+     */
     @SuppressWarnings("unchecked")
     AbstractTinkerKitCommand() {
         Type superClass = this.getClass().getGenericSuperclass();
@@ -58,7 +62,7 @@ public abstract class AbstractTinkerKitCommand<T> {
     public abstract TinkerKit.Type getType();
 
     /**
-     * @return The argument type for this command's input value. Should be defined as a new instance of an argument type class, for example {@link com.mojang.brigadier.arguments.IntegerArgumentType}.
+     * @return The argument type for this command's input value. Should be defined as a new instance of an argument type class, for example {@link IntegerArgumentType#integer()}.
      */
     public abstract ArgumentType<T> getArgumentType();
 
