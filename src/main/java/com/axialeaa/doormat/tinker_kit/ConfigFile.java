@@ -1,19 +1,17 @@
 package com.axialeaa.doormat.tinker_kit;
 
 import com.axialeaa.doormat.DoormatServer;
-import com.axialeaa.doormat.command.QuasiConnectivityCommand;
-import com.axialeaa.doormat.command.UpdateTypeCommand;
 import com.axialeaa.doormat.util.UpdateType;
 import com.google.gson.*;
 import net.minecraft.block.Block;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.JsonHelper;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Locale;
 import java.util.UUID;
 
 import static com.axialeaa.doormat.tinker_kit.TinkerKit.*;
@@ -22,8 +20,6 @@ import static com.axialeaa.doormat.tinker_kit.TinkerKit.*;
  * Controls the saving and loading of the doormat.json file, which is used to keep the quasi-connectivity and update type settings persistent on relog. This should never be mixed into or called from in any other mod than <b>Doormat</b>.
  */
 @ApiStatus.Internal
-@ApiStatus.NonExtendable
-@ApiStatus.Experimental
 public class ConfigFile {
 
     public static final String FILE_NAME = DoormatServer.MOD_ID + ".json";
@@ -32,144 +28,121 @@ public class ConfigFile {
         return server.getSavePath(WorldSavePath.ROOT).toFile();
     }
 
-    public static void updateFile(MinecraftServer server) {
-        File directory = getWorldDirectory(server);
+    public static boolean updateFile(MinecraftServer server) {
+        File dir = getWorldDirectory(server);
 
-        if ((directory.exists() && directory.isDirectory()) || directory.mkdirs()) {
+        if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
             JsonObject root = new JsonObject();
-
-            JsonObject qcObj = new JsonObject();
-            JsonObject updateTypeObj = new JsonObject();
 
             root.addProperty("mod_version", DoormatServer.MOD_VERSION.getFriendlyString());
             root.addProperty("notice", "This file is used for saving values across server restarts. If you delete an entry here (or set it to something invalid), it will reset to the default value the next time you enter the world!");
 
-            root.add(QuasiConnectivityCommand.ALIAS, qcObj);
-            root.add(UpdateTypeCommand.ALIAS, updateTypeObj);
-            // Reuse the command aliases for the object names because why not? It saves writing another string xd
+            for (Type type : Type.values()) {
+                JsonObject obj = new JsonObject();
+                root.add(type.name, obj);
 
-            for (Block block : Type.QC.getBlocks().toList()) {
-                if (!Type.QC.isDefaultValue(block))
-                    qcObj.add(getKey(block), new JsonPrimitive((int) Type.QC.getModifiedValue(block)));
+                for (Block block : type.getBlocks().toList()) {
+                    // Saves the value when, and only when, it has been modified from default.
+                    //  This helps prevent unnecessary bloat, since the default values are already hardcoded.
+                    if (!type.isDefaultValue(block)) {
+                        var value = type.getModifiedValue(block);
+
+                        obj.add(getKey(block), switch (type) {
+                            case QC -> new JsonPrimitive((int) value);
+                            case UPDATE_TYPE -> new JsonPrimitive(value.toString());
+                        });
+                    }
+                }
             }
 
-            for (Block block : Type.UPDATE_TYPE.getBlocks().toList()) {
-                if (!Type.UPDATE_TYPE.isDefaultValue(block))
-                    updateTypeObj.add(getKey(block), new JsonPrimitive(((UpdateType) Type.UPDATE_TYPE.getModifiedValue(block)).toString()));
-            }
-            // Saves the value when, and only when, it has been modified from default.
-            //  This helps prevent unnecessary bloat, since the default values are already hardcoded.
-
-            writeToFile(root, new File(directory, FILE_NAME));
+            return writeToFile(root, new File(dir, FILE_NAME));
         }
+
+        return false;
     }
 
     /**
      * This is pretty much copied from Masa's Malilib. It writes new modifications to a temporary file which then
      * overwrites the old one. This helps to prevent losing your data if the server crashes when changing a value.
      */
-    private static void writeToFile(JsonObject root, File configFile) {
-        File tempFile = new File(configFile.getParentFile(), configFile.getName() + ".tmp");
+    private static boolean writeToFile(JsonObject root, File file) {
+        File temp = new File(file.getParentFile(), file.getName() + ".tmp");
 
-        if (tempFile.exists())
-            tempFile = new File(configFile.getParentFile(), UUID.randomUUID() + ".tmp");
+        if (temp.exists())
+            temp = new File(file.getParentFile(), UUID.randomUUID() + ".tmp");
 
-        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(tempFile), StandardCharsets.UTF_8)) {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(temp), StandardCharsets.UTF_8)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
             writer.write(gson.toJson(root));
             writer.close();
 
-            if (configFile.exists() && configFile.isFile() && !configFile.delete())
-                DoormatServer.LOGGER.warn("Could not delete the file at {}!", configFile.getAbsolutePath());
+            if (file.exists() && file.isFile() && !file.delete())
+                DoormatServer.LOGGER.warn("Could not delete the file at {}!", file.getAbsolutePath());
 
-            if (!tempFile.renameTo(configFile))
+            if (!temp.renameTo(file))
                 throw new Exception();
         }
-        catch (Exception exception) {
-            DoormatServer.LOGGER.warn("Could not write data to file at {}!", tempFile.getAbsolutePath(), exception);
+        catch (Exception e) {
+            DoormatServer.LOGGER.warn("Could not write data to file at {}!", temp.getAbsolutePath(), e);
+            return false;
         }
+
+        return true;
     }
 
     /**
      * Sets the quasi-connectivity and update type hashmap values to those stored in the json file, if they exist. Otherwise, they will be set to the default values.
      */
-    public static void loadFromFile(MinecraftServer server) {
-        File configFile = new File(getWorldDirectory(server), FILE_NAME);
+    public static boolean loadFromFile(MinecraftServer server) {
+        File file = new File(getWorldDirectory(server), FILE_NAME);
 
-        if (configFile.exists() && configFile.isFile() && configFile.canRead()) {
-            JsonElement parseElement = null;
+        if (file.exists() && file.isFile() && file.canRead()) {
+            JsonElement elem;
 
-            try (InputStreamReader reader = new InputStreamReader(new FileInputStream(configFile), StandardCharsets.UTF_8)) {
-                parseElement = JsonParser.parseReader(reader);
+            try (InputStreamReader reader = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+                elem = JsonParser.parseReader(reader);
             }
-            catch (IOException exception) {
-                DoormatServer.LOGGER.warn("Failed to parse the file at {}!", configFile.getAbsolutePath(), exception);
+            catch (IOException e) {
+                DoormatServer.LOGGER.warn("Failed to parse the file at {}!", file.getAbsolutePath(), e);
+                return false;
             }
 
-            if (parseElement != null && parseElement.isJsonObject()) {
-                JsonObject root = parseElement.getAsJsonObject();
+            if (elem == null || !elem.isJsonObject())
+                return false;
 
-                putQCValues(root);
-                putUpdateTypeValues(root);
-            }
-        }
-    }
+            JsonObject root = elem.getAsJsonObject();
+            boolean changed = false;
 
-    private static void putQCValues(JsonObject root) {
-        JsonObject qcObject = root.get(QuasiConnectivityCommand.ALIAS).getAsJsonObject();
+            for (Type type : Type.values()) {
+                String name = type.name;
 
-        for (Block block : Type.QC.getBlocks().toList()) {
-            String key = getKey(block);
+                if (!root.has(name))
+                    continue;
 
-            JsonElement qcElement = qcObject.get(key);
+                JsonObject obj = root.get(name).getAsJsonObject();
 
-            if (qcObject.has(key) && qcElement.isJsonPrimitive()) {
-                JsonPrimitive qcPrimitive = qcElement.getAsJsonPrimitive();
+                for (Block block : type.getBlocks().toList()) {
+                    if (!obj.has(getKey(block)))
+                        continue;
 
-                try {
-                    if (qcPrimitive.isNumber())
-                        Type.QC.set(block, MathHelper.clamp(qcElement.getAsNumber().intValue(), 0, DoormatServer.MAX_QC_RANGE));
-                    else if (qcPrimitive.isBoolean()) {
-                        DoormatServer.LOGGER.info("{} quasi-connectivity value was written as {}", getTranslatedName(block), qcElement.getAsBoolean() ? "true. Attempting to use quasiConnectivity setting." : "false. Attempting to set to 0.");
-                        Type.QC.set(block, qcElement.getAsBoolean() ? 1 : 0);
+                    try {
+                        type.set(block, switch (type) {
+                            case QC -> MathHelper.clamp(JsonHelper.getInt(obj, getKey(block)), 0, DoormatServer.MAX_QC_RANGE);
+                            case UPDATE_TYPE -> UpdateType.valueOf(JsonHelper.getString(obj, getKey(block)).toUpperCase());
+                        });
+                        changed = true;
                     }
-                    else throw new Exception();
-                }
-                catch (Exception e) {
-                    DoormatServer.LOGGER.warn("{} quasi-connectivity value failed to overwrite the default value ({}) from json!", getTranslatedName(block), Type.UPDATE_TYPE.getDefaultValue(block));
-                }
-            }
-        }
-    }
-
-    private static void putUpdateTypeValues(JsonObject root) {
-        JsonObject updateTypeObj = root.get(UpdateTypeCommand.ALIAS).getAsJsonObject();
-
-        for (Block block : Type.UPDATE_TYPE.getBlocks().toList()) {
-            String key = getKey(block);
-
-            JsonElement updateTypeElement = updateTypeObj.get(key);
-
-            if (updateTypeObj.has(key) && updateTypeElement.isJsonPrimitive()) {
-                JsonPrimitive updateTypePrimitive = updateTypeElement.getAsJsonPrimitive();
-
-                try {
-                    if (updateTypePrimitive.isString())
-                        Type.UPDATE_TYPE.set(block, UpdateType.valueOf(updateTypeElement.getAsString().toUpperCase(Locale.ROOT)));
-                    else if (updateTypePrimitive.isNumber()) {
-                        int value = MathHelper.clamp(updateTypeElement.getAsInt(), 0, 3);
-
-                        DoormatServer.LOGGER.info("{} update type value was written as {}. Attempting to set to UpdateType with flags matching {}.", getTranslatedName(block), updateTypeElement.getAsNumber(), value);
-                        Type.UPDATE_TYPE.set(block, UpdateType.getFromFlags(value));
+                    catch (Exception e) {
+                        DoormatServer.LOGGER.warn("Failed to overwrite the default {} value ({}) for block {}!", name, type.getDefaultValue(block), getTranslatedName(block), e);
                     }
-                    else throw new Exception();
-                }
-                catch (Exception e) {
-                    DoormatServer.LOGGER.warn("{} update type failed to overwrite the default value ({}) from json!", getTranslatedName(block), Type.UPDATE_TYPE.getDefaultValue(block));
                 }
             }
+
+            return changed;
         }
+
+        return false;
     }
 
 }

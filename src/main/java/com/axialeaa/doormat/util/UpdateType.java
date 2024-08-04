@@ -1,28 +1,26 @@
 package com.axialeaa.doormat.util;
 
-import java.util.Locale;
+import net.minecraft.block.Block;
 
 /**
  * This is where the types of updates each redstone component can emit are defined.
  */
 public enum UpdateType {
 
-    NEITHER,
-    BLOCK,
-    SHAPE,
-    BOTH;
+    NEITHER(0),
+    BLOCK(Block.NOTIFY_NEIGHBORS),
+    SHAPE(Block.NOTIFY_LISTENERS),
+    BOTH(Block.NOTIFY_ALL);
+
+    public final int flags;
+
+    UpdateType(int flags) {
+        this.flags = flags;
+    }
 
     @Override
     public String toString() {
-        return this.name().toLowerCase(Locale.ROOT);
-    }
-
-    public int getFlags() {
-        return this.ordinal();
-    }
-
-    public static UpdateType getFromFlags(int flags) {
-        return values()[flags];
+        return this.name().toLowerCase();
     }
 
 }

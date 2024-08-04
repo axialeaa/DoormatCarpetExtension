@@ -5,6 +5,7 @@ import carpet.utils.Translations;
 import com.axialeaa.doormat.DoormatServer;
 import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.util.UpdateType;
+import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.registry.Registries;
@@ -14,31 +15,28 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.RedstoneView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.ApiStatus;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-@ApiStatus.NonExtendable
-@ApiStatus.Experimental
 public class TinkerKit {
 
     /**
-     * This hashmap is a little different to {@link TinkerKitRegistry#DEFAULT_QC_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
+     * This hashmap is a little different to {@link Registry#DEFAULT_QC_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
      * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
      */
-    public static final Map<Block, Integer> MODIFIED_QC_VALUES = new HashMap<>();
+    public static final Map<Block, Object> MODIFIED_QC_VALUES = new HashMap<>();
     /**
-     * This hashmap is a little different to {@link TinkerKitRegistry#DEFAULT_UPDATE_TYPE_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
+     * This hashmap is a little different to {@link Registry#DEFAULT_UPDATE_TYPE_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
      * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
      */
-    public static final Map<Block, UpdateType> MODIFIED_UPDATE_TYPE_VALUES = new HashMap<>();
+    public static final Map<Block, Object> MODIFIED_UPDATE_TYPE_VALUES = new HashMap<>();
 
     static {
         try {
-            MODIFIED_QC_VALUES.putAll(TinkerKitRegistry.getDefaultQCValues());
-            MODIFIED_UPDATE_TYPE_VALUES.putAll(TinkerKitRegistry.getDefaultUpdateTypeValues());
+            MODIFIED_QC_VALUES.putAll(Registry.DEFAULT_QC_VALUES);
+            MODIFIED_UPDATE_TYPE_VALUES.putAll(Registry.DEFAULT_UPDATE_TYPE_VALUES);
 
             DoormatServer.LOGGER.info("Tinker Kit hashmaps received default values!");
         }
@@ -135,7 +133,7 @@ public class TinkerKit {
     /**
      * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, BlockState, int)} which instead outputs a signal strength--used for diodes.
      * <p>
-     * This has been re-implemented due to diodes ({@link AbstractRedstoneGateBlock}<code>s</code>) taking in integer inputs instead of booleans like most other components; they getFromFlags told <i>if</i> they're powered, not to "what degree".
+     * This has been re-implemented due to diodes ({@link AbstractRedstoneGateBlock}<code>s</code>) taking in integer inputs instead of booleans like most other components; they byFlags told <i>if</i> they're powered, not to "what degree".
      * @param world the world this method is called in.
      * @param pos the block position this method is called at.
      * @param direction the direction to check if power is being received.
@@ -167,7 +165,7 @@ public class TinkerKit {
     /**
      * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, BlockState)} which instead outputs a signal strength--used for diodes.
      * <p>
-     * This has been re-implemented due to diodes ({@link AbstractRedstoneGateBlock}<code>s</code>) taking in integer inputs instead of booleans like most other components; they getFromFlags told <i>if</i> they're powered, not to "what degree".
+     * This has been re-implemented due to diodes ({@link AbstractRedstoneGateBlock}<code>s</code>) taking in integer inputs instead of booleans like most other components; they byFlags told <i>if</i> they're powered, not to "what degree".
      * @param world the world this method is called in.
      * @param pos the block position this method is called at.
      * @param direction the direction to check if power is being received.
@@ -190,7 +188,7 @@ public class TinkerKit {
             return fallback;
         }
 
-        return ((UpdateType) Type.UPDATE_TYPE.getModifiedValue(block)).getFlags();
+        return ((UpdateType) Type.UPDATE_TYPE.getModifiedValue(block)).flags;
     }
 
     /**
@@ -227,29 +225,19 @@ public class TinkerKit {
      */
     public enum Type {
 
-        QC          ("quasi-connectivity", TinkerKitRegistry.getDefaultQCValues(), MODIFIED_QC_VALUES),
-        UPDATE_TYPE ("update type", TinkerKitRegistry.getDefaultUpdateTypeValues(), MODIFIED_UPDATE_TYPE_VALUES);
+        QC          ("quasiconnectivity", DoormatSettings.commandQC, Registry.DEFAULT_QC_VALUES, MODIFIED_QC_VALUES),
+        UPDATE_TYPE ("updatetype", DoormatSettings.commandUpdateType, Registry.DEFAULT_UPDATE_TYPE_VALUES, MODIFIED_UPDATE_TYPE_VALUES);
 
-        private final String name;
-        private final Map<Block, ?> defaultValues;
-        private final Map<Block, ?> modifiedValues;
+        public final String name;
+        public final String commandRule;
+        private final Map<Block, Object> defaultValues;
+        private final Map<Block, Object> modifiedValues;
 
-        Type(String name, Map<Block, ?> defaultValues, Map<Block, ?> modifiedValues) {
+        Type(String name, String commandRule, Map<Block, Object> defaultValues, Map<Block, Object> modifiedValues) {
             this.name = name;
+            this.commandRule = commandRule;
             this.defaultValues = defaultValues;
             this.modifiedValues = modifiedValues;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public Map<Block, ?> getDefaultValues() {
-            return this.defaultValues;
-        }
-
-        public Map<Block, ?> getModifiedValues() {
-            return this.modifiedValues;
         }
 
         /**
@@ -259,7 +247,7 @@ public class TinkerKit {
             if (!DoormatSettings.redstoneOpensBarrels && block instanceof BarrelBlock)
                 return false;
 
-            return this.getDefaultValues().containsKey(block);
+            return this.defaultValues.containsKey(block);
         }
 
         /**
@@ -303,12 +291,10 @@ public class TinkerKit {
          * @apiNote This requires you cast the return value to either {@link Integer} or {@link UpdateType} depending on the {@link Type}.
          */
         public Object getDefaultValue(Block block) {
-            try {
-                return this.getDefaultValues().get(block);
-            }
-            catch (NullPointerException e) {
-                throw new NullPointerException("Failed to find the default " + this.getName() + " value for " + getTranslatedName(block) + "!");
-            }
+            if (!this.defaultValues.containsKey(block))
+                throw new NullPointerException(String.format("Failed to find the default %s value for %s!", this.name, getTranslatedName(block)));
+
+            return this.defaultValues.get(block);
         }
 
         /**
@@ -318,12 +304,10 @@ public class TinkerKit {
          * @apiNote This requires you cast the return value to either {@link Integer} or {@link UpdateType} depending on the {@link Type}.
          */
         public Object getModifiedValue(Block block) {
-            try {
-                return this.getModifiedValues().get(block);
-            }
-            catch (NullPointerException e) {
-                throw new NullPointerException("Failed to find the modified " + this.getName() + " value for " + getTranslatedName(block) + "!");
-            }
+            if (!this.modifiedValues.containsKey(block))
+                throw new NullPointerException(String.format("Failed to find the modified %s value for %s!", this.name, getTranslatedName(block)));
+
+            return this.modifiedValues.get(block);
         }
 
         /**
@@ -336,11 +320,7 @@ public class TinkerKit {
         private boolean trySet(Block block, Object value) {
             if (this.canModify(block)) {
                 try {
-                    switch (this) {
-                        case QC -> MODIFIED_QC_VALUES.put(block, (int) value);
-                        case UPDATE_TYPE -> MODIFIED_UPDATE_TYPE_VALUES.put(block, (UpdateType) value);
-                    }
-
+                    this.modifiedValues.put(block, value);
                     return true;
                 }
                 catch (Exception ignored) {}
@@ -351,20 +331,144 @@ public class TinkerKit {
 
         public void set(Block block, Object value) {
             if (!trySet(block, value))
-                throw new IllegalArgumentException("Failed to set the " + this.getName() + " value of " + getTranslatedName(block) + " to " + value.toString() + "!");
+                throw new IllegalArgumentException(String.format("Failed to set %s to a new %s value: %s!", getTranslatedName(block), this.name, value));
         }
 
         public void reset(Block block) {
-            if (!trySet(block, this.getDefaultValue(block)))
-                throw new IllegalArgumentException("Failed to set " + getTranslatedName(block) + " to its default " + this.getName() + " value!");
+            this.set(block, this.getDefaultValue(block));
         }
 
         public void warn(Block block) {
-            String s = switch (this) {
-                case QC -> "vanilla call";
-                case UPDATE_TYPE -> "fallback argument";
-            };
-            DoormatServer.LOGGER.warn("{} does not support {} modification! Returning {}.", getTranslatedName(block), this.getName(), s);
+            DoormatServer.LOGGER.warn("{} does not support {} modification! Falling back.", getTranslatedName(block), this.name);
+        }
+
+    }
+
+    public static class Registry {
+
+        /**
+         * A hashmap which stores all valid blocks alongside their default quasi-connectivity values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
+         */
+        static final Map<Block, Object> DEFAULT_QC_VALUES = new HashMap<>();
+        /**
+         * A hashmap which stores all valid blocks alongside their default update type values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
+         */
+        static final Map<Block, Object> DEFAULT_UPDATE_TYPE_VALUES = new HashMap<>();
+
+        /**
+         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
+         * @param defaultQCValue the quasi-connectivity value the <code>block</code> starts out with by default (usually 0).
+         * @param block the block to assign <code>defaultQCValue</code> to.
+         */
+        public static void putBlock(Block block, Integer defaultQCValue) {
+            if (block == null)
+                throw new IllegalArgumentException("Failed to map default quasi-connectivity value to null block!");
+
+            if (defaultQCValue < 0)
+                throw new IllegalArgumentException(String.format("Failed to map out-of-bounds quasi-connectivity value (%s) to %s!", defaultQCValue, getTranslatedName(block)));
+
+            DEFAULT_QC_VALUES.put(block, defaultQCValue);
+        }
+
+        /**
+         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
+         * @param defaultUpdateTypeValue the update type value the <code>block</code> starts out with by default.
+         * @param block the block to assign <code>defaultUpdateTypeValue</code> to.
+         */
+        public static void putBlock(Block block, UpdateType defaultUpdateTypeValue) {
+            if (block == null)
+                throw new IllegalArgumentException("Failed to assign default update type value to null block!");
+
+            if (defaultUpdateTypeValue == null)
+                throw new IllegalArgumentException(String.format("Failed to map null update type value to %s!", getTranslatedName(block)));
+
+            DEFAULT_UPDATE_TYPE_VALUES.put(block, defaultUpdateTypeValue);
+        }
+
+        /**
+         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
+         * @param defaultQCValue the quasi-connectivity value the <code>block</code> starts out with by default (usually 0).
+         * @param defaultUpdateTypeValue the update type value the <code>block</code> starts out with by default.
+         * @param block the block to assign these values to.
+         */
+        public static void putBlock(Block block, Integer defaultQCValue, UpdateType defaultUpdateTypeValue) {
+            putBlock(block, defaultQCValue);
+            putBlock(block, defaultUpdateTypeValue);
+        }
+
+        /**
+         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
+         * @param defaultQCValue the quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
+         * @param blocks a list of blocks to assign <code>defaultQCValue</code> to.
+         */
+        public static void putBlocks(Integer defaultQCValue, Block... blocks) {
+            if (blocks.length == 0)
+                throw new IllegalArgumentException("No blocks found in variable argument list!");
+
+            for (Block block : blocks)
+                putBlock(block, defaultQCValue);
+        }
+
+        /**
+         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
+         * @param defaultUpdateTypeValue the update type value the <code>blocks</code> start out with by default.
+         * @param blocks a list of blocks to assign <code>defaultUpdateTypeValue</code> to.
+         */
+        public static void putBlocks(UpdateType defaultUpdateTypeValue, Block... blocks) {
+            if (blocks.length == 0)
+                throw new IllegalArgumentException("No blocks found in variable argument list!");
+
+            for (Block block : blocks)
+                putBlock(block, defaultUpdateTypeValue);
+        }
+
+        /**
+         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
+         * @param defaultQCValue the quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
+         * @param defaultUpdateTypeValue the update type value the <code>blocks</code> start out with by default.
+         * @param blocks a list of blocks to assign these values to.
+         */
+        public static void putBlocks(Integer defaultQCValue, UpdateType defaultUpdateTypeValue, Block... blocks) {
+            putBlocks(defaultQCValue, blocks);
+            putBlocks(defaultUpdateTypeValue, blocks);
+        }
+
+        /**
+         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
+         * @param blockClass the class of which all child blocks should inherit the following values (eg. DoorBlock.class, 0, UpdateType.SHAPE).
+         * @param defaultQCValue the quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
+         */
+        public static void putBlocksByClass(Class<? extends Block> blockClass, Integer defaultQCValue) {
+            for (Block block : getBlocksByClass(blockClass).toList())
+                putBlock(block, defaultQCValue);
+        }
+
+        /**
+         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
+         * @param blockClass the class of which all child blocks should inherit the following values (eg. DoorBlock.class, UpdateType.SHAPE).
+         * @param defaultUpdateTypeValue the update type value the <code>blocks</code> start out with by default.
+         */
+        public static void putBlocksByClass(Class<? extends Block> blockClass, UpdateType defaultUpdateTypeValue) {
+            for (Block block : getBlocksByClass(blockClass).toList())
+                putBlock(block, defaultUpdateTypeValue);
+        }
+
+        /**
+         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
+         * @param blockClass the class of which all child blocks should inherit the following values (eg. DoorBlock.class, 0, UpdateType.SHAPE).
+         * @param defaultQCValue the quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
+         * @param defaultUpdateTypeValue the update type value the <code>blocks</code> start out with by default.
+         */
+        public static void putBlocksByClass(Class<? extends Block> blockClass, Integer defaultQCValue, UpdateType defaultUpdateTypeValue) {
+            putBlocksByClass(blockClass, defaultQCValue);
+            putBlocksByClass(blockClass, defaultUpdateTypeValue);
+        }
+
+        /**
+         * @return a stream of blocks based on whether they're an instance of {@code blockClass}.
+         */
+        private static Stream<Block> getBlocksByClass(Class<? extends Block> blockClass) {
+            return Registries.BLOCK.stream().filter(blockClass::isInstance);
         }
 
     }

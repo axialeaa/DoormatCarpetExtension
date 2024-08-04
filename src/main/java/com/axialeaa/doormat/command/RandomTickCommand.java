@@ -35,7 +35,7 @@ public class RandomTickCommand {
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(ALIAS)
-            .requires(player -> CommandHelper.canUseCommand(player, DoormatSettings.commandRandomTick))
+            .requires(source -> CommandHelper.canUseCommand(source, DoormatSettings.commandRandomTick))
             .executes(ctx -> execute(ctx.getSource()))
             .then(argument("pos", BlockPosArgumentType.blockPos())
                 .executes(ctx -> execute(ctx.getSource(),
