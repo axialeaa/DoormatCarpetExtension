@@ -18,9 +18,4 @@ public enum UpdateType {
         this.flags = flags;
     }
 
-    @Override
-    public String toString() {
-        return this.name().toLowerCase();
-    }
-
 }

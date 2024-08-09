@@ -15,6 +15,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.RedstoneView;
 import net.minecraft.world.World;
+import net.minecraft.world.tick.TickPriority;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.*;
@@ -28,15 +30,27 @@ public class TinkerKit {
      */
     public static final Map<Block, Object> MODIFIED_QC_VALUES = new HashMap<>();
     /**
+     * This hashmap is a little different to {@link Registry#DEFAULT_DELAY_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
+     * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
+     */
+    public static final Map<Block, Object> MODIFIED_DELAY_VALUES = new HashMap<>();
+    /**
      * This hashmap is a little different to {@link Registry#DEFAULT_UPDATE_TYPE_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
      * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
      */
     public static final Map<Block, Object> MODIFIED_UPDATE_TYPE_VALUES = new HashMap<>();
+    /**
+     * This hashmap is a little different to {@link Registry#DEFAULT_TICK_PRIORITY_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
+     * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
+     */
+    public static final Map<Block, Object> MODIFIED_TICK_PRIORITY_VALUES = new HashMap<>();
 
     static {
         try {
             MODIFIED_QC_VALUES.putAll(Registry.DEFAULT_QC_VALUES);
             MODIFIED_UPDATE_TYPE_VALUES.putAll(Registry.DEFAULT_UPDATE_TYPE_VALUES);
+            MODIFIED_TICK_PRIORITY_VALUES.putAll(Registry.DEFAULT_TICK_PRIORITY_VALUES);
+            MODIFIED_DELAY_VALUES.putAll(Registry.DEFAULT_DELAY_VALUES);
 
             DoormatServer.LOGGER.info("Tinker Kit hashmaps received default values!");
         }
@@ -89,7 +103,6 @@ public class TinkerKit {
                     return true;
             }
         }
-        else Type.QC.warn(block);
 
         return world.isReceivingRedstonePower(pos);
     }
@@ -157,7 +170,6 @@ public class TinkerKit {
 
             return power;
         }
-        else Type.QC.warn(block);
 
         return world.getEmittedRedstonePower(pos, direction);
     }
@@ -177,25 +189,38 @@ public class TinkerKit {
 
     /**
      * @param state the blockstate this method checks for.
+     * @param fallback the default delay this method should fall back to if it can't find the default value in the registry map.
+     * @return the delay for the given blockstate.
+     */
+    public static int getDelay(BlockState state, int fallback) {
+        Block block = state.getBlock();
+
+        if (Type.DELAY.canModify(block))
+            return (int) Type.DELAY.getModifiedValue(block);
+
+        return fallback;
+    }
+
+    /**
+     * @param state the blockstate this method checks for.
      * @param fallback the default flags this method should fall back to if it can't find the default value in the registry map (should be the third parameter in the call to {@link World#setBlockState(BlockPos, BlockState, int)}, obtained by default when using {@link ModifyArg} to index 2).
      * @return the update type flag(s) for the given blockstate.
      */
     public static int getFlags(BlockState state, int fallback) {
         Block block = state.getBlock();
         
-        if (!Type.UPDATE_TYPE.canModify(block)) {
-            Type.UPDATE_TYPE.warn(block);
-            return fallback;
-        }
+        if (Type.UPDATE_TYPE.canModify(block))
+            return ((UpdateType) Type.UPDATE_TYPE.getModifiedValue(block)).flags;
 
-        return ((UpdateType) Type.UPDATE_TYPE.getModifiedValue(block)).flags;
+        return fallback;
     }
 
     /**
-     * An alternative implementation of {@link World#removeBlock(BlockPos, boolean)}, allowing for custom update flags based on the block at the position this method is called from.
-     * @param world the world this method is called in.
-     * @param pos the block position this method is called at.
-     * @param move if the block is moving.
+     * An alternative implementation of {@link World#removeBlock(BlockPos, boolean)}, allowing for custom update flags based on the block passed through {@code state}.
+     * @param world The world this method is called in.
+     * @param pos The block position this method is called at.
+     * @param state The block state this method is called on.
+     * @param move Whether the block is moving.
      */
     public static boolean removeBlock(World world, BlockPos pos, BlockState state, boolean move) {
         FluidState fluidState = world.getFluidState(pos);
@@ -221,12 +246,28 @@ public class TinkerKit {
     }
 
     /**
+     * @param state the blockstate this method checks for.
+     * @param fallback the default tick priority this method should fall back to if it can't find the default value in the registry map.
+     * @return the tick priority for the given blockstate.
+     */
+    public static TickPriority getTickPriority(BlockState state, TickPriority fallback) {
+        Block block = state.getBlock();
+
+        if (!Type.TICK_PRIORITY.canModify(block))
+            return (TickPriority) Type.TICK_PRIORITY.getModifiedValue(block);
+
+        return fallback;
+    }
+
+    /**
      * Used for multiple instances of needing to specify which type of redstone rule to modify via commands or the config file.
      */
     public enum Type {
 
-        QC          ("quasiconnectivity", DoormatSettings.commandQC, Registry.DEFAULT_QC_VALUES, MODIFIED_QC_VALUES),
-        UPDATE_TYPE ("updatetype", DoormatSettings.commandUpdateType, Registry.DEFAULT_UPDATE_TYPE_VALUES, MODIFIED_UPDATE_TYPE_VALUES);
+        QC            ("quasiconnectivity", DoormatSettings.commandQC, Registry.DEFAULT_QC_VALUES, MODIFIED_QC_VALUES),
+        DELAY         ("delay", DoormatSettings.commandDelay, Registry.DEFAULT_DELAY_VALUES, MODIFIED_DELAY_VALUES),
+        UPDATE_TYPE   ("updatetype", DoormatSettings.commandUpdateType, Registry.DEFAULT_UPDATE_TYPE_VALUES, MODIFIED_UPDATE_TYPE_VALUES),
+        TICK_PRIORITY ("tickpriority", DoormatSettings.commandTickPriority, Registry.DEFAULT_TICK_PRIORITY_VALUES, MODIFIED_TICK_PRIORITY_VALUES);
 
         public final String name;
         public final String commandRule;
@@ -245,6 +286,9 @@ public class TinkerKit {
          */
         public boolean canModify(Block block) {
             if (!DoormatSettings.redstoneOpensBarrels && block instanceof BarrelBlock)
+                return false;
+
+            if (Type.DELAY.modifiedValues.containsKey(block) && (int) Type.DELAY.modifiedValues.get(block) == 0 && this == Type.TICK_PRIORITY)
                 return false;
 
             return this.defaultValues.containsKey(block);
@@ -288,7 +332,7 @@ public class TinkerKit {
          * @param block the block to get the default value of.
          * @return the default value assigned to the <code>block</code>.
          * @throws NullPointerException if no value can be found for the <code>block</code>.
-         * @apiNote This requires you cast the return value to either {@link Integer} or {@link UpdateType} depending on the {@link Type}.
+         * @apiNote This requires you cast the return value depending on the {@link Type}.
          */
         public Object getDefaultValue(Block block) {
             if (!this.defaultValues.containsKey(block))
@@ -301,7 +345,7 @@ public class TinkerKit {
          * @param block the block to get the modified value of.
          * @return the default value assigned to the <code>block</code>.
          * @throws NullPointerException if no value can be found for the <code>block</code>.
-         * @apiNote This requires you cast the return value to either {@link Integer} or {@link UpdateType} depending on the {@link Type}.
+         * @apiNote This requires you cast the return value depending on the {@link Type}.
          */
         public Object getModifiedValue(Block block) {
             if (!this.modifiedValues.containsKey(block))
@@ -338,10 +382,6 @@ public class TinkerKit {
             this.set(block, this.getDefaultValue(block));
         }
 
-        public void warn(Block block) {
-            DoormatServer.LOGGER.warn("{} does not support {} modification! Falling back.", getTranslatedName(block), this.name);
-        }
-
     }
 
     public static class Registry {
@@ -351,117 +391,78 @@ public class TinkerKit {
          */
         static final Map<Block, Object> DEFAULT_QC_VALUES = new HashMap<>();
         /**
+         * A hashmap which stores all valid blocks alongside their default delay values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
+         */
+        static final Map<Block, Object> DEFAULT_DELAY_VALUES = new HashMap<>();
+        /**
          * A hashmap which stores all valid blocks alongside their default update type values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
          */
         static final Map<Block, Object> DEFAULT_UPDATE_TYPE_VALUES = new HashMap<>();
+        /**
+         * A hashmap which stores all valid blocks alongside their default tick priority values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
+         */
+        static final Map<Block, Object> DEFAULT_TICK_PRIORITY_VALUES = new HashMap<>();
 
         /**
          * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
-         * @param defaultQCValue the quasi-connectivity value the <code>block</code> starts out with by default (usually 0).
-         * @param block the block to assign <code>defaultQCValue</code> to.
+         * @param block The block to assign the values to.
+         * @param defaultQCValue The quasi-connectivity value the <code>block</code> starts out with by default (usually 0).
+         * @param defaultDelayValue The delay value the <code>block</code> starts out with by default (usually 0).
+         * @param defaultUpdateTypeValue The update type value the <code>block</code> starts out with by default.
+         * @param defaultTickPriorityValue The tick priority value the <code>block</code> starts out with by default.
          */
-        public static void putBlock(Block block, Integer defaultQCValue) {
+        public static void putBlock(Block block, @Nullable Integer defaultQCValue, @Nullable Integer defaultDelayValue, @Nullable UpdateType defaultUpdateTypeValue, @Nullable TickPriority defaultTickPriorityValue) {
             if (block == null)
-                throw new IllegalArgumentException("Failed to map default quasi-connectivity value to null block!");
+                throw new IllegalArgumentException(String.format("Failed to map default Tinker Kit values (quasiconnectivity: %s, delay: %s, updatetype: %s, tickpriority: %s) to null block!", defaultQCValue, defaultDelayValue, defaultUpdateTypeValue, defaultTickPriorityValue));
 
-            if (defaultQCValue < 0)
-                throw new IllegalArgumentException(String.format("Failed to map out-of-bounds quasi-connectivity value (%s) to %s!", defaultQCValue, getTranslatedName(block)));
+            if (defaultQCValue != null) {
+                if (defaultQCValue < 0)
+                    throw new IllegalArgumentException(String.format("Failed to map out-of-bounds quasi-connectivity value (%s) to block %s!", defaultQCValue, block));
 
-            DEFAULT_QC_VALUES.put(block, defaultQCValue);
+                DEFAULT_QC_VALUES.put(block, defaultQCValue);
+            }
+
+            if (defaultDelayValue != null) {
+                if (defaultDelayValue < 0)
+                    throw new IllegalArgumentException(String.format("Failed to map out-of-bounds delay value (%s) to block %s!", defaultDelayValue, block));
+
+                DEFAULT_DELAY_VALUES.put(block, defaultDelayValue);
+            }
+
+            if (defaultUpdateTypeValue != null)
+                DEFAULT_UPDATE_TYPE_VALUES.put(block, defaultUpdateTypeValue);
+
+            if (defaultTickPriorityValue != null)
+                DEFAULT_TICK_PRIORITY_VALUES.put(block, defaultTickPriorityValue.getIndex());
         }
 
         /**
          * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
-         * @param defaultUpdateTypeValue the update type value the <code>block</code> starts out with by default.
-         * @param block the block to assign <code>defaultUpdateTypeValue</code> to.
+         * @param defaultQCValue The quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
+         * @param defaultDelayValue The delay value the <code>blocks</code> start out with by default (usually 0).
+         * @param defaultUpdateTypeValue The update type value the <code>blocks</code> start out with by default.
+         * @param defaultTickPriorityValue The tick priority value the <code>blocks</code> start out with by default.
+         * @param blocks a list of blocks to assign the values to.
          */
-        public static void putBlock(Block block, UpdateType defaultUpdateTypeValue) {
-            if (block == null)
-                throw new IllegalArgumentException("Failed to assign default update type value to null block!");
-
-            if (defaultUpdateTypeValue == null)
-                throw new IllegalArgumentException(String.format("Failed to map null update type value to %s!", getTranslatedName(block)));
-
-            DEFAULT_UPDATE_TYPE_VALUES.put(block, defaultUpdateTypeValue);
-        }
-
-        /**
-         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
-         * @param defaultQCValue the quasi-connectivity value the <code>block</code> starts out with by default (usually 0).
-         * @param defaultUpdateTypeValue the update type value the <code>block</code> starts out with by default.
-         * @param block the block to assign these values to.
-         */
-        public static void putBlock(Block block, Integer defaultQCValue, UpdateType defaultUpdateTypeValue) {
-            putBlock(block, defaultQCValue);
-            putBlock(block, defaultUpdateTypeValue);
-        }
-
-        /**
-         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
-         * @param defaultQCValue the quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
-         * @param blocks a list of blocks to assign <code>defaultQCValue</code> to.
-         */
-        public static void putBlocks(Integer defaultQCValue, Block... blocks) {
+        public static void putBlocks(@Nullable Integer defaultQCValue, @Nullable Integer defaultDelayValue, @Nullable UpdateType defaultUpdateTypeValue, @Nullable TickPriority defaultTickPriorityValue, Block... blocks) {
             if (blocks.length == 0)
                 throw new IllegalArgumentException("No blocks found in variable argument list!");
 
             for (Block block : blocks)
-                putBlock(block, defaultQCValue);
+                putBlock(block, defaultQCValue, defaultDelayValue, defaultUpdateTypeValue, defaultTickPriorityValue);
         }
 
         /**
          * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
-         * @param defaultUpdateTypeValue the update type value the <code>blocks</code> start out with by default.
-         * @param blocks a list of blocks to assign <code>defaultUpdateTypeValue</code> to.
+         * @param blockClass the class of which all child blocks should inherit the following values (eg. DoorBlock.class, 0, 0, UpdateType.SHAPE, null).
+         * @param defaultQCValue The quasi-connectivity value the blocks start out with by default (usually 0).
+         * @param defaultDelayValue The delay value the blocks start out with by default (usually 0).
+         * @param defaultUpdateTypeValue The update type value the blocks start out with by default.
+         * @param defaultTickPriorityValue The tick priority value the blocks start out with by default.
          */
-        public static void putBlocks(UpdateType defaultUpdateTypeValue, Block... blocks) {
-            if (blocks.length == 0)
-                throw new IllegalArgumentException("No blocks found in variable argument list!");
-
-            for (Block block : blocks)
-                putBlock(block, defaultUpdateTypeValue);
-        }
-
-        /**
-         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
-         * @param defaultQCValue the quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
-         * @param defaultUpdateTypeValue the update type value the <code>blocks</code> start out with by default.
-         * @param blocks a list of blocks to assign these values to.
-         */
-        public static void putBlocks(Integer defaultQCValue, UpdateType defaultUpdateTypeValue, Block... blocks) {
-            putBlocks(defaultQCValue, blocks);
-            putBlocks(defaultUpdateTypeValue, blocks);
-        }
-
-        /**
-         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
-         * @param blockClass the class of which all child blocks should inherit the following values (eg. DoorBlock.class, 0, UpdateType.SHAPE).
-         * @param defaultQCValue the quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
-         */
-        public static void putBlocksByClass(Class<? extends Block> blockClass, Integer defaultQCValue) {
+        public static void putBlocksByClass(Class<? extends Block> blockClass, @Nullable Integer defaultQCValue, @Nullable Integer defaultDelayValue, @Nullable UpdateType defaultUpdateTypeValue, @Nullable TickPriority defaultTickPriorityValue) {
             for (Block block : getBlocksByClass(blockClass).toList())
-                putBlock(block, defaultQCValue);
-        }
-
-        /**
-         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
-         * @param blockClass the class of which all child blocks should inherit the following values (eg. DoorBlock.class, UpdateType.SHAPE).
-         * @param defaultUpdateTypeValue the update type value the <code>blocks</code> start out with by default.
-         */
-        public static void putBlocksByClass(Class<? extends Block> blockClass, UpdateType defaultUpdateTypeValue) {
-            for (Block block : getBlocksByClass(blockClass).toList())
-                putBlock(block, defaultUpdateTypeValue);
-        }
-
-        /**
-         * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
-         * @param blockClass the class of which all child blocks should inherit the following values (eg. DoorBlock.class, 0, UpdateType.SHAPE).
-         * @param defaultQCValue the quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
-         * @param defaultUpdateTypeValue the update type value the <code>blocks</code> start out with by default.
-         */
-        public static void putBlocksByClass(Class<? extends Block> blockClass, Integer defaultQCValue, UpdateType defaultUpdateTypeValue) {
-            putBlocksByClass(blockClass, defaultQCValue);
-            putBlocksByClass(blockClass, defaultUpdateTypeValue);
+                putBlock(block, defaultQCValue, defaultDelayValue, defaultUpdateTypeValue, defaultTickPriorityValue);
         }
 
         /**
@@ -472,5 +473,7 @@ public class TinkerKit {
         }
 
     }
+
+    private record Entry(@Nullable Integer qc, @Nullable UpdateType updateType, @Nullable Integer delay, @Nullable TickPriority tickPriority) {}
 
 }

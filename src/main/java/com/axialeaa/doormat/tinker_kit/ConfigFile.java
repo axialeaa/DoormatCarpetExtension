@@ -8,6 +8,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.tick.TickPriority;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.*;
@@ -48,7 +49,7 @@ public class ConfigFile {
                         var value = type.getModifiedValue(block);
 
                         obj.add(getKey(block), switch (type) {
-                            case QC -> new JsonPrimitive((int) value);
+                            case QC, DELAY, TICK_PRIORITY -> new JsonPrimitive((int) value);
                             case UPDATE_TYPE -> new JsonPrimitive(value.toString());
                         });
                     }
@@ -129,7 +130,9 @@ public class ConfigFile {
                     try {
                         type.set(block, switch (type) {
                             case QC -> MathHelper.clamp(JsonHelper.getInt(obj, getKey(block)), 0, DoormatServer.MAX_QC_RANGE);
-                            case UPDATE_TYPE -> UpdateType.valueOf(JsonHelper.getString(obj, getKey(block)).toUpperCase());
+                            case DELAY -> Math.max(JsonHelper.getInt(obj, getKey(block)), 0);
+                            case UPDATE_TYPE -> UpdateType.valueOf(JsonHelper.getString(obj, getKey(block)));
+                            case TICK_PRIORITY -> MathHelper.clamp(JsonHelper.getInt(obj, getKey(block)), TickPriority.EXTREMELY_HIGH.getIndex(), TickPriority.EXTREMELY_LOW.getIndex());
                         });
                         changed = true;
                     }

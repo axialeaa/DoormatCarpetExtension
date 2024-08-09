@@ -12,20 +12,12 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin({
     AbstractSkullBlock.class,
-    BellBlock.class,
-    CommandBlock.class,
-    CrafterBlock.class,
-    FenceGateBlock.class,
-    NoteBlock.class,
-    RedstoneLampBlock.class,
-    StructureBlock.class,
-    TntBlock.class,
-    TrapdoorBlock.class
+    BellBlock.class
 })
 public class _QuasiConnectivityMultiMixin {
 
     @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean allowQuasiConnecting(World instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
+    private boolean allowQuasiConnectivity(World instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
         return TinkerKit.isReceivingRedstonePower(instance, pos, state);
     }
 

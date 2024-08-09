@@ -7,7 +7,6 @@ import net.minecraft.block.BlockState;
 /**
  * Opt-in interface for easily configurable comparator behaviour via {@link ComparatorBlockMixin} and {@link WorldMixin}.
  */
-@FunctionalInterface
 public interface ComparatorBehaviour {
 
     /**

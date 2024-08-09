@@ -3,9 +3,7 @@ package com.axialeaa.doormat;
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
 import carpet.utils.Translations;
-import com.axialeaa.doormat.command.RandomTickCommand;
-import com.axialeaa.doormat.command.QuasiConnectivityCommand;
-import com.axialeaa.doormat.command.UpdateTypeCommand;
+import com.axialeaa.doormat.command.*;
 import com.axialeaa.doormat.tinker_kit.ConfigFile;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.axialeaa.doormat.util.UpdateType;
@@ -20,9 +18,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.tick.TickPriority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 public class DoormatServer implements ModInitializer, CarpetExtension {
@@ -33,6 +33,13 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static int MAX_QC_RANGE = 1;
+
+	public static List<AbstractTinkerKitCommand<?>> TINKER_KIT_COMMANDS = List.of(
+		new QuasiConnectivityCommand(),
+		new DelayCommand(),
+		new UpdateTypeCommand(),
+		new TickPriorityCommand()
+	);
 
 	static {
 		ModMetadata metadata = FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow(RuntimeException::new).getMetadata();
@@ -50,34 +57,34 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 
 		// Handles all instances of most blocks for automatic inter-mod compatibility.
 		// Modders should not need to add their own variants manually if the block in question extends any of these classes.
-		TinkerKit.Registry.putBlocksByClass(DoorBlock.class, 0, UpdateType.SHAPE);
-		TinkerKit.Registry.putBlocksByClass(TrapdoorBlock.class, 0, UpdateType.SHAPE);
-		TinkerKit.Registry.putBlocksByClass(FenceGateBlock.class, 0, UpdateType.SHAPE);
-		TinkerKit.Registry.putBlocksByClass(AbstractSkullBlock.class, 0, UpdateType.SHAPE);
-		TinkerKit.Registry.putBlocksByClass(AbstractRedstoneGateBlock.class, 0, UpdateType.SHAPE);
-		TinkerKit.Registry.putBlocksByClass(DispenserBlock.class, 1, UpdateType.SHAPE);
-		TinkerKit.Registry.putBlocksByClass(RedstoneLampBlock.class, 0, UpdateType.SHAPE);
-		TinkerKit.Registry.putBlocksByClass(BulbBlock.class, 0, UpdateType.BOTH);
-		TinkerKit.Registry.putBlocksByClass(PistonBlock.class, 1);
-		TinkerKit.Registry.putBlocksByClass(TntBlock.class, 0, UpdateType.BOTH);
-		TinkerKit.Registry.putBlocksByClass(NoteBlock.class, 0, UpdateType.BOTH);
-		TinkerKit.Registry.putBlocksByClass(BellBlock.class, 0, UpdateType.BOTH);
-		TinkerKit.Registry.putBlocksByClass(HopperBlock.class, 0, UpdateType.SHAPE);
-		TinkerKit.Registry.putBlocksByClass(CommandBlock.class, 0);
-		TinkerKit.Registry.putBlocksByClass(StructureBlock.class, 0);
-		TinkerKit.Registry.putBlocksByClass(BarrelBlock.class, 0, UpdateType.SHAPE);
+		TinkerKit.Registry.putBlocksByClass(DoorBlock.class, 0, 0, UpdateType.SHAPE, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(TrapdoorBlock.class, 0, 0, UpdateType.SHAPE, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(FenceGateBlock.class, 0, 0, UpdateType.SHAPE, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(AbstractSkullBlock.class, 0, 0, UpdateType.SHAPE, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(AbstractRedstoneGateBlock.class, 0, 2, UpdateType.SHAPE, null);
+		TinkerKit.Registry.putBlocksByClass(DispenserBlock.class, 1, 4, UpdateType.SHAPE, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(RedstoneLampBlock.class, 0, 4, UpdateType.SHAPE, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(BulbBlock.class, 0, 0, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(PistonBlock.class, 1, 0, null, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(TntBlock.class, 0, 0, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(NoteBlock.class, 0, 0, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(BellBlock.class, 0, 0, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(HopperBlock.class, 0, 0, UpdateType.SHAPE, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(CommandBlock.class, 0, 1, null, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(StructureBlock.class, 0, 1, null, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(BarrelBlock.class, 0, 0, UpdateType.SHAPE, TickPriority.NORMAL);
 
-		TinkerKit.Registry.putBlock(Blocks.RAIL, UpdateType.BOTH);
-		TinkerKit.Registry.putBlocks(0, UpdateType.BOTH,
+		TinkerKit.Registry.putBlock(Blocks.RAIL, null, 0, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocks(0, 0, UpdateType.BOTH, TickPriority.NORMAL,
 			Blocks.ACTIVATOR_RAIL,
 			Blocks.POWERED_RAIL
 		);
-		TinkerKit.Registry.putBlock(Blocks.CRAFTER, 0, UpdateType.SHAPE);
+		TinkerKit.Registry.putBlock(Blocks.CRAFTER, 0, 4, UpdateType.SHAPE, TickPriority.NORMAL);
 
-		TinkerKit.Registry.putBlock(Blocks.OBSERVER, UpdateType.SHAPE);
-		TinkerKit.Registry.putBlock(Blocks.REDSTONE_WALL_TORCH, 0);
-		TinkerKit.Registry.putBlock(Blocks.BIG_DRIPLEAF,	0, UpdateType.SHAPE);
-		TinkerKit.Registry.putBlock(Blocks.BARREL, 0, UpdateType.SHAPE);
+		TinkerKit.Registry.putBlock(Blocks.OBSERVER, null, 2, UpdateType.SHAPE, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlock(Blocks.REDSTONE_TORCH, null, 2, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlock(Blocks.REDSTONE_WALL_TORCH, 0, 2, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlock(Blocks.BIG_DRIPLEAF, 0, null, UpdateType.SHAPE, null);
 	}
 
 	@Override
@@ -99,8 +106,8 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 	public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
 		RandomTickCommand.register(dispatcher);
 
-		new QuasiConnectivityCommand().register(dispatcher, registryAccess);
-		new UpdateTypeCommand().register(dispatcher, registryAccess);
+		for (AbstractTinkerKitCommand<?> tinkerKitCommand : TINKER_KIT_COMMANDS)
+			tinkerKitCommand.register(dispatcher, registryAccess);
 	}
 
 	@Override

@@ -9,7 +9,6 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.block.Block;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
@@ -27,15 +26,7 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 /**
- * Defines an instance for a new Tinker Kit command, simplifying the registration process of a new one.<br>
- * <code>/alias list</code> - {@link AbstractTinkerKitCommand#list(ServerCommandSource)}.<br>
- * <code>/alias get &lt;component&gt;</code> - {@link AbstractTinkerKitCommand#get(ServerCommandSource, Block)}.<br>
- * <code>/alias set &lt;value&gt; all</code> - {@link AbstractTinkerKitCommand#setAll(ServerCommandSource, Object)}.<br>
- * <code>/alias set &lt;value&gt; &lt;component&gt;</code> - {@link AbstractTinkerKitCommand#set(ServerCommandSource, Block, Object)}.<br>
- * <code>/alias reset all</code> - {@link AbstractTinkerKitCommand#resetAll(ServerCommandSource)}.<br>
- * <code>/alias reset &lt;component&gt;</code> - {@link AbstractTinkerKitCommand#reset(ServerCommandSource, Block)}.<br>
- * <code>/alias file load</code> - {@link AbstractTinkerKitCommand#load(ServerCommandSource)}.<br>
- * <code>/alias file update</code> - {@link AbstractTinkerKitCommand#update(ServerCommandSource)}.
+ * Defines an instance for a new Tinker Kit command, simplifying the registration process of a new one.
  * @param <T> The object type used as an input for the command.
  */
 public abstract class AbstractTinkerKitCommand<T> {
@@ -46,7 +37,7 @@ public abstract class AbstractTinkerKitCommand<T> {
      * <a href="https://web.archive.org/web/20180124022935/http://blog.xebia.com/acessing-generic-types-at-runtime-in-java/">Accessing generic types at runtime in Java</a>
      */
     @SuppressWarnings("unchecked")
-    AbstractTinkerKitCommand() {
+    public AbstractTinkerKitCommand() {
         Type superClass = this.getClass().getGenericSuperclass();
         Type type = ((ParameterizedType) superClass).getActualTypeArguments()[0];
 
@@ -67,14 +58,35 @@ public abstract class AbstractTinkerKitCommand<T> {
     public abstract ArgumentType<T> getArgumentType();
 
     /**
-     * @return A stream of objects defining the autocompletion suggestions for the command. Converted to strings upon registration.
+     * @return A stream of objects defining the autocompletion suggestions for the command.
      */
     public abstract Stream<T> getSuggestions();
 
-    public Object getInputValue(CommandContext<ServerCommandSource> ctx, String name, T value) {
-        return value;
+    /**
+     * @param argument The command argument as specified by {@link AbstractTinkerKitCommand#getArgumentType()}.
+     * @return An acceptable value for the associated Tinker Kit map, manipulating the command argument passed into {@code argument}.
+     */
+    public Object getInputValue(T argument) {
+        return argument;
     }
 
+    /**
+     *<pre> .
+     *└── /getType().name
+     *    ├──{@link AbstractTinkerKitCommand#list(ServerCommandSource) list}
+     *    ├── get
+     *    │   └──{@link AbstractTinkerKitCommand#get(ServerCommandSource, Block) &lt;block&gt;}
+     *    ├── set
+     *    │   └── &lt;value&gt;
+     *    │       ├──{@link AbstractTinkerKitCommand#setAll(ServerCommandSource, Object) all}
+     *    │       └──{@link AbstractTinkerKitCommand#set(ServerCommandSource, Block, Object) &lt;block&gt;}
+     *    ├── reset
+     *    │   ├──{@link AbstractTinkerKitCommand#resetAll(ServerCommandSource) all}
+     *    │   └──{@link AbstractTinkerKitCommand#reset(ServerCommandSource, Block) &lt;block&gt;}
+     *    └── file
+     *        ├──{@link AbstractTinkerKitCommand#load(ServerCommandSource) load}
+     *        └──{@link AbstractTinkerKitCommand#update(ServerCommandSource) update} </pre>
+     */
     public void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
         dispatcher.register(literal(getType().name)
             .requires(source -> CommandHelper.canUseCommand(source, getType().commandRule))
@@ -92,14 +104,14 @@ public abstract class AbstractTinkerKitCommand<T> {
                     .suggests((ctx, builder) -> suggestMatching(getSuggestions().map(Objects::toString), builder))
                     .then(literal("all")
                         .executes(ctx -> setAll(ctx.getSource(),
-                            getInputValue(ctx, "value", ctx.getArgument("value", genericClass))
+                            getInputValue(ctx.getArgument("value", genericClass))
                         ))
                     )
                     .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
                         .suggests((ctx, builder) -> suggestMatching(getType().getBlockKeys(), builder))
                         .executes(ctx -> set(ctx.getSource(),
                             RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value(),
-                            getInputValue(ctx, "value", ctx.getArgument("value", genericClass))
+                            getInputValue(ctx.getArgument("value", genericClass))
                         ))
                     )
                 )
@@ -124,24 +136,24 @@ public abstract class AbstractTinkerKitCommand<T> {
     /**
      * Assigns the inputted value to the entered-in redstone component.
      */
-    private int set(ServerCommandSource source, Block block, Object input) {
+    private int set(ServerCommandSource source, Block block, Object value) {
         if (!getType().canModify(block)) {
             Messenger.m(source, String.format("r \"%s\" is not a valid component!", TinkerKit.getTranslatedName(block)));
             return 0;
         }
 
-        if (input == null) {
+        if (value == null) {
             Messenger.m(source, String.format("r Invalid %s value!", getType().name));
             return 0;
         }
 
-        if (getType().getModifiedValue(block).equals(input)) {
-            Messenger.m(source, String.format("r %s %s value is already set to %s!", TinkerKit.getTranslatedName(block), getType().name, input));
+        if (getType().getModifiedValue(block).equals(value)) {
+            Messenger.m(source, String.format("r %s %s value is already set to %s!", TinkerKit.getTranslatedName(block), getType().name, value));
             return 0;
         }
         else {
-            getType().set(block, input);
-            Messenger.m(source, String.format("w Set %s %s value to %s", TinkerKit.getTranslatedName(block), getType().name, input));
+            getType().set(block, value);
+            Messenger.m(source, String.format("w Set %s %s value to %s", TinkerKit.getTranslatedName(block), getType().name, value));
 
             return updateFile(source) ? Command.SINGLE_SUCCESS : 0;
         }
@@ -150,22 +162,22 @@ public abstract class AbstractTinkerKitCommand<T> {
     /**
      * Assigns the inputted value to every redstone component in this map.
      */
-    private int setAll(ServerCommandSource source, Object input) {
+    private int setAll(ServerCommandSource source, Object value) {
         boolean wasModified = false;
 
         for (Block block : getType().getBlocks().toList()) {
-            if (!getType().getModifiedValue(block).equals(input)) {
-                getType().set(block, input);
+            if (!getType().getModifiedValue(block).equals(value)) {
+                getType().set(block, value);
                 wasModified = true;
             }
         }
 
         if (wasModified) {
-            Messenger.m(source, String.format("w Set all %s values to %s", getType().name, input));
+            Messenger.m(source, String.format("w Set all %s values to %s", getType().name, value));
             return updateFile(source) ? Command.SINGLE_SUCCESS : 0;
         }
         else {
-            Messenger.m(source, String.format("r All %s values match %s. Try tweaking some settings first!", getType().name, input));
+            Messenger.m(source, String.format("r All %s values match %s. Try tweaking some settings first!", getType().name, value));
             return 0;
         }
     }

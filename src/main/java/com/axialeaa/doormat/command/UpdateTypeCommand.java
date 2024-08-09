@@ -3,8 +3,6 @@ package com.axialeaa.doormat.command;
 import com.axialeaa.doormat.util.UpdateType;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.context.CommandContext;
-import net.minecraft.server.command.ServerCommandSource;
 
 import java.util.stream.Stream;
 
@@ -18,17 +16,8 @@ public class UpdateTypeCommand extends AbstractTinkerKitCommand<String> {
     }
 
     @Override
-    public Object getInputValue(CommandContext<ServerCommandSource> ctx, String name, String value) {
-        UpdateType updateType;
-
-        try {
-            updateType = UpdateType.valueOf(value.toUpperCase());
-        }
-        catch (IllegalArgumentException e) {
-            return null;
-        }
-
-        return updateType;
+    public Object getInputValue(String argument) {
+        return UpdateType.valueOf(argument.toUpperCase());
     }
 
     @Override
@@ -38,7 +27,7 @@ public class UpdateTypeCommand extends AbstractTinkerKitCommand<String> {
 
     @Override
     public Stream<String> getSuggestions() {
-        return Stream.of(UpdateType.values()).map(UpdateType::toString);
+        return Stream.of(UpdateType.values()).map(updateType -> updateType.name().toLowerCase());
     }
 
 }

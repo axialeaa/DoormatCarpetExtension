@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.tinker_kit.quasiconnectivity;
+package com.axialeaa.doormat.mixin.tinker_kit;
 
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;

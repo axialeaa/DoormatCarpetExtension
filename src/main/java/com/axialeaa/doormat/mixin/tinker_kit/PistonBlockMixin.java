@@ -1,19 +1,30 @@
-package com.axialeaa.doormat.mixin.tinker_kit.quasiconnectivity;
+package com.axialeaa.doormat.mixin.tinker_kit;
 
+import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PistonBlock;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.RedstoneView;
+import net.minecraft.world.World;
+import net.minecraft.world.tick.TickPriority;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = PistonBlock.class, priority = 1500)
-public class PistonBlockMixin {
+public class PistonBlockMixin extends AbstractBlockMixin {
+
+    @Unique private int type;
+    @Unique private int data;
 
     /**
      * This needs to be different because of carpet's modified quasi-connectivity logic.
@@ -44,6 +55,26 @@ public class PistonBlockMixin {
         }
 
         return false;
+    }
+
+    @Override
+    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
+        world.addSyncedBlockEvent(pos, state.getBlock(), type, data);
+    }
+
+    @WrapOperation(method = "tryMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addSyncedBlockEvent(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;II)V"))
+    private void defineTinkerKitBehaviour(World instance, BlockPos pos, Block block, int type, int data, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
+        int delay = TinkerKit.getDelay(state, 0);
+
+        if (delay == 0)
+            original.call(instance, pos, block, type, data);
+        else {
+            this.type = type;
+            this.data = data;
+
+            TickPriority tickPriority = TinkerKit.getTickPriority(state, TickPriority.NORMAL);
+            instance.scheduleBlockTick(pos, block, delay, tickPriority);
+        }
     }
 
 }

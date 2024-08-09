@@ -253,9 +253,6 @@ public class DoormatSettings {
     @Rule( categories = { BUGFIX, DOORMAT } )
     public static boolean consistentWaterlogPushing = false;
 
-    @Rule( options = { "0", "1" }, validators = TimeFromZeroValidator.class, strict = false, categories = { TINKERING, DOORMAT } )
-    public static int copperBulbDelay = 0;
-
     @Rule( categories = { TINKERING, DOORMAT } )
     public static boolean copperBulbOxidationSignal = false;
 
@@ -500,7 +497,13 @@ public class DoormatSettings {
     public static String commandQC = "true";
 
     @Rule( categories = { COMMAND, TINKERING, DOORMAT } )
+    public static String commandDelay = "true";
+
+    @Rule( categories = { COMMAND, TINKERING, DOORMAT } )
     public static String commandUpdateType = "true";
+
+    @Rule( categories = { COMMAND, TINKERING, DOORMAT } )
+    public static String commandTickPriority = "true";
 
     @Rule( categories = { COMMAND, DOORMAT } )
     public static String commandRandomTick = "true";

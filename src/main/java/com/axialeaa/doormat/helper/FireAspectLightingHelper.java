@@ -37,7 +37,9 @@ public class FireAspectLightingHelper {
             if (hasFireAspect(world, stack)) {
                 if (blockState.getBlock() instanceof TntBlock) {
                     TntBlockAccessor.invokePrimeTnt(world, blockPos, player);
-                    world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), TinkerKit.getFlags(blockState, Block.NOTIFY_ALL) | Block.REDRAW_ON_MAIN_THREAD);
+
+                    int flags = TinkerKit.getFlags(blockState, Block.NOTIFY_ALL) | Block.REDRAW_ON_MAIN_THREAD;
+                    world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), flags);
                 }
                 else if (CampfireBlock.canBeLit(blockState) || CandleBlock.canBeLit(blockState) || CandleCakeBlock.canBeLit(blockState)) {
                     world.setBlockState(blockPos, blockState.with(Properties.LIT, true), Block.NOTIFY_ALL_AND_REDRAW);

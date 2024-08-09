@@ -2,7 +2,6 @@
   "carpet.rule.azaleaLeavesGrowFlowers.desc": "Azalea leaves grow flowers when fertilised",
   "carpet.rule.chiseledBookshelfFullnessSignal.desc": "Comparators measure the number of books in chiselled bookshelves instead of the last slot interacted with",
   "carpet.rule.consistentWaterlogPushing.extra.0": "Despite the intentional behaviour clearly being for the water to vanish, this rule partly satisfies this open report: https://bugs.mojang.com/browse/MC-130202",
-  "carpet.rule.copperBulbDelay.extra.0": "1 is the value that matches the behaviour of 23w43a-23w45a.",
   "carpet.rule.endPlatformSillyString.extra.0": "\"delete_string\" prevents the string from dropping as an item, for the most part restoring pre-1.21 behaviour.",
   "carpet.rule.fastLeafDecayingChance.extra.0": "0 restores vanilla randomTick behaviour, and 0.075 is the value that matches the behaviour of Vanilla Tweaks' datapack.",
   "carpet.rule.forceGrassSpreading.desc": "Grass and mycelium can instantly spread to adjacent dirt, when the dirt is fertilised with bonemeal",

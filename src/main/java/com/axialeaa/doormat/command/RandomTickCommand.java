@@ -19,11 +19,6 @@ import net.minecraft.util.math.random.Random;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
-/**
- * <code>/randomtick</code> - Sends 1 random tick to the block position the command is called from.<br>
- * <code>/randomtick &lt;pos&gt;</code> - Sends 1 random tick to the specified block position.<br>
- * <code>/randomtick &lt;pos&gt; &lt;count&gt;</code> - Sends <code>count</code> random ticks to the specified block position.
- */
 public class RandomTickCommand {
 
     public static final String ALIAS = "randomtick";
@@ -33,6 +28,12 @@ public class RandomTickCommand {
      */
     public static final Object2IntMap<BlockPos> SCHEDULED_POSITIONS = new Object2IntOpenHashMap<>();
 
+    /**
+     *<pre> .
+     *└──{@link RandomTickCommand#execute(ServerCommandSource) /randomtick}
+     *    └──{@link RandomTickCommand#execute(ServerCommandSource, BlockPos) &lt;pos&gt;}
+     *        └──{@link RandomTickCommand#execute(ServerCommandSource, BlockPos, int) &lt;count&gt;}</pre>
+     */
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(literal(ALIAS)
             .requires(source -> CommandHelper.canUseCommand(source, DoormatSettings.commandRandomTick))
@@ -51,6 +52,9 @@ public class RandomTickCommand {
         );
     }
 
+    /**
+     * Sends {@code count} random tick(s) to {@code pos}.
+     */
     private static int execute(ServerCommandSource source, BlockPos pos, int count) {
         ServerWorld world = source.getWorld();
         BlockState blockState = world.getBlockState(pos);
@@ -71,10 +75,16 @@ public class RandomTickCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    /**
+     * Sends 1 random tick to {@code pos}.
+     */
     private static int execute(ServerCommandSource source, BlockPos pos) {
         return execute(source, pos, 1);
     }
 
+    /**
+     * Sends 1 random tick to the block position of {@code source}.
+     */
     private static int execute(ServerCommandSource source) {
         Vec3d vec3d = source.getPosition();
         BlockPos pos = BlockPos.ofFloored(vec3d);
