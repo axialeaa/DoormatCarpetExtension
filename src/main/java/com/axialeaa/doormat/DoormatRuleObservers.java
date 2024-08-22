@@ -13,19 +13,20 @@ public class DoormatRuleObservers {
         String name = currentRuleState.name();
         Object value = currentRuleState.value();
 
-        if (Objects.equals(name, "moreTimeArgumentUnits")) {
-            Object2IntMap<String> units = TimeArgumentTypeAccessor.getUnits();
+        if (!Objects.equals(name, "moreTimeArgumentUnits"))
+            return;
 
-            if ((boolean) value) {
-                units.putIfAbsent("m", 1200);
-                units.putIfAbsent("h", 72000);
-                units.putIfAbsent("w", 168000);
-            }
-            else {
-                units.removeInt("m");
-                units.removeInt("h");
-                units.removeInt("w");
-            }
+        Object2IntMap<String> units = TimeArgumentTypeAccessor.getUnits();
+
+        if ((boolean) value) {
+            units.putIfAbsent("m", 1200);
+            units.putIfAbsent("h", 72000);
+            units.putIfAbsent("w", 168000);
+        }
+        else {
+            units.removeInt("m");
+            units.removeInt("h");
+            units.removeInt("w");
         }
     }
 

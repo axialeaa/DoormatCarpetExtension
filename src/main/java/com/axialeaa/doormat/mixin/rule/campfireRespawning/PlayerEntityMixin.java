@@ -24,18 +24,19 @@ public abstract class PlayerEntityMixin {
 
     @Inject(method = "findRespawnPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;", ordinal = 0, shift = At.Shift.AFTER), cancellable = true)
     private static void respawnAtCampfire(ServerWorld world, BlockPos pos, float angle, boolean forced, boolean alive, CallbackInfoReturnable<Optional<Vec3d>> cir, @Local BlockState blockState) {
-        if (DoormatSettings.campfireRespawning && CampfireBlock.isLitCampfire(blockState)) {
-            Optional<Vec3d> optional = CampfireRespawningHelper.findRespawnPosition(EntityType.PLAYER, world, pos);
+        if (!DoormatSettings.campfireRespawning || !CampfireBlock.isLitCampfire(blockState))
+            return;
 
-            if (!world.getBlockState(pos).isOf(Blocks.SOUL_CAMPFIRE) && !forced && !alive && optional.isPresent()) {
-                CampfireBlock.extinguish(null, world, pos, blockState);
+        Optional<Vec3d> optional = CampfireRespawningHelper.findRespawnPosition(EntityType.PLAYER, world, pos);
 
-                world.setBlockState(pos, blockState.with(CampfireBlock.LIT, false));
-                world.syncWorldEvent(null, WorldEvents.FIRE_EXTINGUISHED, pos, 0);
-            }
+        if (!blockState.isOf(Blocks.SOUL_CAMPFIRE) && !forced && !alive && optional.isPresent()) {
+            CampfireBlock.extinguish(null, world, pos, blockState);
 
-            cir.setReturnValue(optional);
+            world.setBlockState(pos, blockState.with(CampfireBlock.LIT, false));
+            world.syncWorldEvent(null, WorldEvents.FIRE_EXTINGUISHED, pos, 0);
         }
+
+        cir.setReturnValue(optional);
     }
 
 }

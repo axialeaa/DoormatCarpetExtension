@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.fake;
 
-import com.axialeaa.doormat.mixin.rule.comparatorsReadThrough.ComparatorBlockMixin;
-import com.axialeaa.doormat.mixin.rule.comparatorsReadThrough.WorldMixin;
+import com.axialeaa.doormat.mixin.rule.comparatorsReadThrough.functionality.ComparatorBlockMixin;
+import com.axialeaa.doormat.mixin.rule.comparatorsReadThrough.functionality.WorldMixin;
 import net.minecraft.block.BlockState;
 
 /**

@@ -22,9 +22,11 @@ public class BoneMealItemMixin {
     @Inject(method = "useOnFertilizable", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BlockState;getBlock()Lnet/minecraft/block/Block;", shift = At.Shift.AFTER), cancellable = true)
     private static void dropSporeBlossomOnUse(ItemStack stack, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         BlockState blockState = world.getBlockState(pos);
+
         if (DoormatSettings.sporeBlossomDuplication && blockState.isOf(Blocks.SPORE_BLOSSOM)) {
             Block.dropStack(world, pos, new ItemStack(Items.SPORE_BLOSSOM));
             ParticleUtil.spawnParticlesAround(world, pos, 15, ParticleTypes.HAPPY_VILLAGER);
+
             cir.setReturnValue(true);
         }
     }

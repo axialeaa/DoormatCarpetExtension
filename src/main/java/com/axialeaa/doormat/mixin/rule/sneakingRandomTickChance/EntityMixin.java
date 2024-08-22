@@ -21,17 +21,18 @@ public abstract class EntityMixin {
 
     @Inject(method = "setSneaking", at = @At("HEAD"))
     private void randomTickOnSneak(boolean sneaking, CallbackInfo ci) {
-        if (DoormatSettings.sneakingRandomTickChance > 0 && sneaking) {
-            BlockPos blockPos = this.getBlockPos();
+        if (DoormatSettings.sneakingRandomTickChance <= 0 || !sneaking)
+            return;
 
-            for (BlockPos blockPos1 : BlockPos.iterate(blockPos.add(-3, -3, -3), blockPos.add(3, 3, 3))) {
-                World world = this.getWorld();
-                BlockState blockState = world.getBlockState(blockPos1);
-                Random random = world.getRandom();
+        BlockPos blockPos = this.getBlockPos();
 
-                if (random.nextFloat() < DoormatSettings.sneakingRandomTickChance && blockState.hasRandomTicks())
-                    blockState.randomTick((ServerWorld) world, blockPos1, random);
-            }
+        for (BlockPos blockPos1 : BlockPos.iterate(blockPos.add(-3, -3, -3), blockPos.add(3, 3, 3))) {
+            World world = this.getWorld();
+            BlockState blockState = world.getBlockState(blockPos1);
+            Random random = world.getRandom();
+
+            if (random.nextFloat() < DoormatSettings.sneakingRandomTickChance && blockState.hasRandomTicks())
+                blockState.randomTick((ServerWorld) world, blockPos1, random);
         }
     }
 

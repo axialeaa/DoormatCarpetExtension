@@ -20,7 +20,6 @@ public class DispenserBlockMixin {
     @WrapOperation(method = "dispense", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/DispenserBlock;getBehaviorForItem(Lnet/minecraft/world/World;Lnet/minecraft/item/ItemStack;)Lnet/minecraft/block/dispenser/DispenserBehavior;"))
     private DispenserBehavior dispenseCustomBehaviour(DispenserBlock instance, World world, ItemStack stack, Operation<DispenserBehavior> original, @Local(argsOnly = true) BlockPos pos, @Local BlockPointer blockPointer) {
         DispenserBehavior behaviour = DoormatDispenserBehaviours.getCustom((ServerWorld) world, pos, blockPointer);
-
         return behaviour == null ? original.call(instance, world, stack) : behaviour;
     }
 

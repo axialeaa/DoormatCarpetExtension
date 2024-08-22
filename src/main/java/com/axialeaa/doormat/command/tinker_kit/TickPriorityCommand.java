@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.command;
+package com.axialeaa.doormat.command.tinker_kit;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -18,6 +18,11 @@ public class TickPriorityCommand extends AbstractTinkerKitCommand<Integer> {
     @Override
     public ArgumentType<Integer> getArgumentType() {
         return IntegerArgumentType.integer(TickPriority.EXTREMELY_HIGH.getIndex(), TickPriority.EXTREMELY_LOW.getIndex());
+    }
+
+    @Override
+    public Class<Integer> getObjectClass() {
+        return Integer.class;
     }
 
     @Override

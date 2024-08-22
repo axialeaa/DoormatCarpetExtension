@@ -19,27 +19,12 @@ public class CarpetSettingsMixin {
 
     @ModifyExpressionValue(method = "parseSettingsClass", at = @At(value = "INVOKE", target = "Ljava/lang/Class;getDeclaredFields()[Ljava/lang/reflect/Field;"), remap = false)
     private Field[] removeRules(Field[] original, @Local(argsOnly = true) Class<?> settingsClass) {
-        Class<?> carpetExtraSettings = null;
-        Class<?> carpetTISAdditionSettings = null;
-        Class<?> rugSettings = null;
-
-        try {
-            String carpetExtra = "carpetextra.CarpetExtraSettings";
-            String carpetTISAddition = "carpettisaddition.CarpetTISAdditionSettings";
-            String rug = "de.rubixdev.rug.RugSettings";
-
-            carpetExtraSettings = Class.forName(carpetExtra);
-            carpetTISAdditionSettings = Class.forName(carpetTISAddition);
-            rugSettings = Class.forName(rug);
-        }
-        catch (ClassNotFoundException ignored) {}
-
-        if (settingsClass != CarpetSettings.class && settingsClass != carpetExtraSettings && settingsClass != carpetTISAdditionSettings && settingsClass != rugSettings)
+        if (settingsClass != CarpetSettings.class)
             return original;
 
         return Arrays.stream(original).filter(field -> {
             String name = field.getName();
-            return !name.equals("quasiConnectivity") && !name.equals("variableWoodDelays") && !name.equals("instantCommandBlock") && !name.equals("redstoneLampTurnOffDelay");
+            return !name.equals("quasiConnectivity");
         }).toArray(Field[]::new);
     }
 

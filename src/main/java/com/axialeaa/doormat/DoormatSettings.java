@@ -5,13 +5,16 @@ import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Rule;
 import carpet.api.settings.Validator;
 import carpet.api.settings.Validators;
+import net.minecraft.block.Block;
 import net.minecraft.block.spawner.EntityDetector;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static carpet.api.settings.RuleCategory.*;
 
@@ -84,7 +87,7 @@ public class DoormatSettings {
 
     }
 
-    private static class BlockIdentifierValidator extends Validator<String> {
+    public static class BlockIdentifierValidator extends Validator<String> {
 
         @Override
         public String validate(@Nullable ServerCommandSource source, CarpetRule<String> changingRule, String newValue, String userInput) {
@@ -95,6 +98,11 @@ public class DoormatSettings {
         @Override
         public String description() {
             return "You must choose a valid block ID";
+        }
+
+        public static Optional<Block> getBlockFromId(String id) {
+            Identifier parsedId = Identifier.tryParse(id);
+            return parsedId == null ? Optional.empty() : Optional.of(Registries.BLOCK.get(parsedId));
         }
 
     }
@@ -337,6 +345,12 @@ public class DoormatSettings {
     @Rule( options = { "3", "7" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int insomniaDayCount = 3;
 
+    @Rule( options = { "0.0" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { SURVIVAL, DOORMAT } )
+    public static double itemMagnetRange = 0.0;
+
+    @Rule( options = { "0.2", "0.5", "1.0" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { SURVIVAL, DOORMAT } )
+    public static double itemMagnetVelocity = 0.2;
+
     @Rule( categories = { TINKERING, DOORMAT } )
     public static boolean jukeboxDiscProgressSignal = false;
 
@@ -358,6 +372,9 @@ public class DoormatSettings {
     @Rule( options = { "4.0", "6.0" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static double maxMinecartSpeedWater = 4.0;
 
+    @Rule( options = { "3" }, validators = OverworldHeightValidator.class, strict = false, categories = { TINKERING, DOORMAT } )
+    public static int maxSugarcaneGrowthHeight = 3;
+
     @SuppressWarnings("unused")
     @Rule( categories = { CREATIVE, EXPERIMENTAL, DOORMAT } )
     public static boolean moreTimeArgumentUnits = false;
@@ -376,6 +393,9 @@ public class DoormatSettings {
 
     @Rule( categories = { CREATIVE, DOORMAT } )
     public static boolean observerHalfDelay = false;
+
+    @Rule( categories = { FEATURE, DOORMAT } )
+    public static boolean openDoubleDoors = false;
 
     @Rule( options = { "0.0", "0.01", "1.0" }, validators = Validators.Probablity.class, strict = false, categories = { FEATURE, DOORMAT } )
     public static double obsidianFrameConversionChance = 0.0;

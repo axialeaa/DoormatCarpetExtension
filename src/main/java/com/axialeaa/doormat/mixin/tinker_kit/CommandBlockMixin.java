@@ -23,32 +23,32 @@ public abstract class CommandBlockMixin {
 
     @Shadow protected abstract void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);
 
-    @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
-    private void changeDelayAndTickPriority(World instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state, @Local CommandBlockBlockEntity commandBlockBlockEntity) {
-        int delay = TinkerKit.getDelay(state, i);
+    @WrapOperation(method = { "neighborUpdate", "onPlaced" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
+    private boolean allowQuasiConnectivity(World instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.isReceivingRedstonePower(instance, pos, block);
+    }
 
-        if (delay == 0) {
+    @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
+    private void scheduleOrCall(World instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state, @Local CommandBlockBlockEntity commandBlockBlockEntity) {
+        int delay = TinkerKit.getDelay(block, i);
+
+        if (delay > 0) {
+            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            instance.scheduleBlockTick(pos, block, delay, tickPriority);
+        }
+        else if (instance instanceof ServerWorld serverWorld) {
             CommandBlockWorldTimeChecker checker = (CommandBlockWorldTimeChecker) commandBlockBlockEntity.getCommandExecutor();
             checker.setShouldCheckTime(false);
 
-            if (instance instanceof ServerWorld serverWorld)
-                this.scheduledTick(state, serverWorld, pos, serverWorld.getRandom());
+            this.scheduledTick(state, serverWorld, pos, serverWorld.getRandom());
         }
-        else {
-            TickPriority tickPriority = TinkerKit.getTickPriority(state, TickPriority.NORMAL);
-            instance.scheduleBlockTick(pos, block, delay, tickPriority);
-        }
-    }
-
-    @WrapOperation(method = { "neighborUpdate", "onPlaced" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean allowQuasiConnectivity(World instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.isReceivingRedstonePower(instance, pos, state);
     }
 
     @WrapOperation(method = "scheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
-    private void changeDelayAndTickPriority(ServerWorld instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state, @Local(argsOnly = true) Random random) {
-        int delay = Math.max(TinkerKit.getDelay(state, i), 1);
-        TickPriority tickPriority = TinkerKit.getTickPriority(state, TickPriority.NORMAL);
+    private void modifyLoopSpeed(ServerWorld instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state, @Local(argsOnly = true) Random random) {
+        int delay = Math.max(TinkerKit.getDelay(block, i), 1);
+        TickPriority tickPriority = TinkerKit.getTickPriority(block);
 
         instance.scheduleBlockTick(pos, block, delay, tickPriority);
     }

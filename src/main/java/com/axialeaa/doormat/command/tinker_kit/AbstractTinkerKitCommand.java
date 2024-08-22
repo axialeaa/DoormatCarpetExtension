@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.command;
+package com.axialeaa.doormat.command.tinker_kit;
 
 import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
@@ -15,37 +15,20 @@ import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.ServerCommandSource;
 import org.apache.commons.lang3.StringUtils;
-
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
-
 import static net.minecraft.command.CommandSource.suggestMatching;
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 /**
  * Defines an instance for a new Tinker Kit command, simplifying the registration process of a new one.
- * @param <T> The object type used as an input for the command.
+ * @param <T> The object entries used as an input for the command.
  */
 public abstract class AbstractTinkerKitCommand<T> {
 
-    private Class<T> genericClass;
-
-    /**
-     * <a href="https://web.archive.org/web/20180124022935/http://blog.xebia.com/acessing-generic-types-at-runtime-in-java/">Accessing generic types at runtime in Java</a>
-     */
-    @SuppressWarnings("unchecked")
-    public AbstractTinkerKitCommand() {
-        Type superClass = this.getClass().getGenericSuperclass();
-        Type type = ((ParameterizedType) superClass).getActualTypeArguments()[0];
-
-        try {
-            this.genericClass = (Class<T>) Class.forName(type.getTypeName());
-        }
-        catch (ClassNotFoundException ignored) {}
-    }
+    private final String ALIAS = getType().name;
 
     /**
      * @return The {@link TinkerKit.Type} associated with this command. Controls the command aliases, chat outputs and maps, among other things.
@@ -53,14 +36,27 @@ public abstract class AbstractTinkerKitCommand<T> {
     public abstract TinkerKit.Type getType();
 
     /**
-     * @return The argument type for this command's input value. Should be defined as a new instance of an argument type class, for example {@link IntegerArgumentType#integer()}.
+     * @return The argument entries for this command's input value. Should be defined as a new instance of an argument entries class, for example {@link IntegerArgumentType#integer()}.
      */
     public abstract ArgumentType<T> getArgumentType();
 
     /**
+     * @return The class associated with the entries parameter {@code T}.
+     */
+    public abstract Class<T> getObjectClass();
+
+    /**
      * @return A stream of objects defining the autocompletion suggestions for the command.
      */
-    public abstract Stream<T> getSuggestions();
+    public Stream<T> getSuggestions() {
+        Map<Block, Object> defaults = this.getType().getDefaultMap();
+        Stream<Object> values = defaults.values().stream();
+
+        values = values.filter(Objects::nonNull);
+        Stream<T> castedValues = values.map(object -> getObjectClass().cast(object));
+
+        return castedValues.distinct();
+    }
 
     /**
      * @param argument The command argument as specified by {@link AbstractTinkerKitCommand#getArgumentType()}.
@@ -72,7 +68,7 @@ public abstract class AbstractTinkerKitCommand<T> {
 
     /**
      *<pre> .
-     *└── /getType().name
+     *└── /{@link AbstractTinkerKitCommand#ALIAS}
      *    ├──{@link AbstractTinkerKitCommand#list(ServerCommandSource) list}
      *    ├── get
      *    │   └──{@link AbstractTinkerKitCommand#get(ServerCommandSource, Block) &lt;block&gt;}
@@ -88,47 +84,47 @@ public abstract class AbstractTinkerKitCommand<T> {
      *        └──{@link AbstractTinkerKitCommand#update(ServerCommandSource) update} </pre>
      */
     public void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
-        dispatcher.register(literal(getType().name)
-            .requires(source -> CommandHelper.canUseCommand(source, getType().commandRule))
-            .then(literal("list").executes(ctx -> list(ctx.getSource())))
+        dispatcher.register(literal(this.ALIAS)
+            .requires(source -> CommandHelper.canUseCommand(source, this.getType().rule))
+            .then(literal("list").executes(ctx -> this.list(ctx.getSource())))
             .then(literal("get")
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                    .suggests((ctx, builder) -> suggestMatching(getType().getBlockKeys(), builder))
-                    .executes(ctx -> get(ctx.getSource(),
+                    .suggests((ctx, builder) -> suggestMatching(this.getType().getBlockKeys(), builder))
+                    .executes(ctx -> this.get(ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
                     ))
                 )
             )
             .then(literal("set")
-                .then(argument("value", getArgumentType())
-                    .suggests((ctx, builder) -> suggestMatching(getSuggestions().map(Objects::toString), builder))
+                .then(argument("value", this.getArgumentType())
+                    .suggests((ctx, builder) -> suggestMatching(this.getSuggestions().map(Objects::toString), builder))
                     .then(literal("all")
-                        .executes(ctx -> setAll(ctx.getSource(),
-                            getInputValue(ctx.getArgument("value", genericClass))
+                        .executes(ctx -> this.setAll(ctx.getSource(),
+                            this.getInputValue(ctx.getArgument("value", this.getObjectClass()))
                         ))
                     )
                     .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                        .suggests((ctx, builder) -> suggestMatching(getType().getBlockKeys(), builder))
-                        .executes(ctx -> set(ctx.getSource(),
+                        .suggests((ctx, builder) -> suggestMatching(this.getType().getBlockKeys(), builder))
+                        .executes(ctx -> this.set(ctx.getSource(),
                             RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value(),
-                            getInputValue(ctx.getArgument("value", genericClass))
+                            this.getInputValue(ctx.getArgument("value", this.getObjectClass()))
                         ))
                     )
                 )
             )
             .then(literal("reset")
-                .then(literal("all").executes(ctx -> resetAll(ctx.getSource())))
+                .then(literal("all").executes(ctx -> this.resetAll(ctx.getSource())))
                 .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
-                    .suggests((ctx, builder) -> suggestMatching(getType().getBlockKeys(), builder))
-                    .executes(ctx -> reset(ctx.getSource(),
+                    .suggests((ctx, builder) -> suggestMatching(this.getType().getBlockKeys(), builder))
+                    .executes(ctx -> this.reset(ctx.getSource(),
                         RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value()
                     ))
                 )
             )
             .then(literal("file")
                 .requires(source -> DoormatServer.IS_DEBUG)
-                .then(literal("load").executes(ctx -> load(ctx.getSource())))
-                .then(literal("update").executes(ctx -> update(ctx.getSource())))
+                .then(literal("load").executes(ctx -> this.load(ctx.getSource())))
+                .then(literal("update").executes(ctx -> this.update(ctx.getSource())))
             )
         );
     }
@@ -137,26 +133,28 @@ public abstract class AbstractTinkerKitCommand<T> {
      * Assigns the inputted value to the entered-in redstone component.
      */
     private int set(ServerCommandSource source, Block block, Object value) {
-        if (!getType().canModify(block)) {
-            Messenger.m(source, String.format("r \"%s\" is not a valid component!", TinkerKit.getTranslatedName(block)));
+        if (!this.getType().canModify(block)) {
+            Messenger.m(source, String.format("r \"%s\" is not a valid redstone component!", TinkerKit.getTranslatedName(block)));
             return 0;
         }
 
         if (value == null) {
-            Messenger.m(source, String.format("r Invalid %s value!", getType().name));
+            Messenger.m(source, String.format("r Invalid %s value!", this.ALIAS));
             return 0;
         }
 
-        if (getType().getModifiedValue(block).equals(value)) {
-            Messenger.m(source, String.format("r %s %s value is already set to %s!", TinkerKit.getTranslatedName(block), getType().name, value));
+        if (this.getType().getValue(block) == value) {
+            Messenger.m(source, String.format("r %s %s value is already set to %s!", TinkerKit.getTranslatedName(block), this.ALIAS, value));
             return 0;
         }
-        else {
-            getType().set(block, value);
-            Messenger.m(source, String.format("w Set %s %s value to %s", TinkerKit.getTranslatedName(block), getType().name, value));
 
-            return updateFile(source) ? Command.SINGLE_SUCCESS : 0;
-        }
+        this.getType().set(block, value);
+
+        if (!this.updateFile(source))
+            return 0;
+
+        Messenger.m(source, String.format("w Set %s %s value to %s", TinkerKit.getTranslatedName(block), this.ALIAS, value));
+        return Command.SINGLE_SUCCESS;
     }
 
     /**
@@ -165,34 +163,37 @@ public abstract class AbstractTinkerKitCommand<T> {
     private int setAll(ServerCommandSource source, Object value) {
         boolean wasModified = false;
 
-        for (Block block : getType().getBlocks().toList()) {
-            if (!getType().getModifiedValue(block).equals(value)) {
-                getType().set(block, value);
-                wasModified = true;
-            }
+        for (Block block : this.getType().getBlocks()) {
+            if (this.getType().getValue(block) == value)
+                continue;
+
+            this.getType().set(block, value);
+            wasModified = true;
         }
 
-        if (wasModified) {
-            Messenger.m(source, String.format("w Set all %s values to %s", getType().name, value));
-            return updateFile(source) ? Command.SINGLE_SUCCESS : 0;
-        }
-        else {
-            Messenger.m(source, String.format("r All %s values match %s. Try tweaking some settings first!", getType().name, value));
+        if (!wasModified) {
+            Messenger.m(source, String.format("r All %s values match %s. Try tweaking some settings first!", this.ALIAS, value));
             return 0;
         }
+
+        if (!this.updateFile(source))
+            return 0;
+
+        Messenger.m(source, String.format("w Set all %s values to %s", this.ALIAS, value));
+        return Command.SINGLE_SUCCESS;
     }
 
     /**
      * Finds and prints the value assigned to the inputted redstone component for this map to chat.
      */
     private int get(ServerCommandSource source, Block block) {
-        if (!getType().canModify(block)) {
-            Messenger.m(source, String.format("r %s is not a valid component!", TinkerKit.getTranslatedName(block)));
+        if (!this.getType().canModify(block)) {
+            Messenger.m(source, String.format("r %s is not a valid redstone component!", TinkerKit.getTranslatedName(block)));
             return 0;
         }
 
-        Object value = getType().getModifiedValue(block);
-        Messenger.m(source, String.format("w %s %s value is set to %s (%s value)", TinkerKit.getTranslatedName(block), getType().name, value, getType().isDefaultValue(block) ? "default" : "modified"));
+        Object value = this.getType().getValue(block);
+        Messenger.m(source, String.format("w %s %s value is set to %s (%s value)", TinkerKit.getTranslatedName(block), this.ALIAS, value, this.getType().isDefaultValue(block) ? "default" : "modified"));
 
         return Command.SINGLE_SUCCESS;
     }
@@ -203,20 +204,20 @@ public abstract class AbstractTinkerKitCommand<T> {
     private int list(ServerCommandSource source) {
         Messenger.m(source, "");
 
-        if (getType().isMapModified()) {
-            String cmd = String.format("?/%s reset all", getType().name);
-            Messenger.m(source, String.format("bui %s values:", StringUtils.capitalize(getType().name)), cmd, "^g Restore default values?");
+        if (this.getType().hasBeenModified()) {
+            String cmd = String.format("?/%s reset all", this.ALIAS);
+            Messenger.m(source, String.format("bui %s values:", StringUtils.capitalize(this.ALIAS)), cmd, "^g Restore default values?");
         }
-        else Messenger.m(source, String.format("bu %s values:", StringUtils.capitalize(getType().name)));
+        else Messenger.m(source, String.format("bu %s values:", StringUtils.capitalize(this.ALIAS)));
 
-        for (Block block : getType().getBlocks().toList()) {
-            Object value = getType().getModifiedValue(block);
+        for (Block block : this.getType().getBlocks()) {
+            Object value = this.getType().getValue(block);
             String s = String.format("%s: %s", TinkerKit.getTranslatedName(block), value);
 
-            if (getType().isDefaultValue(block))
+            if (this.getType().isDefaultValue(block))
                 Messenger.m(source, String.format("g - %s (default value)", s));
             else {
-                String cmd = String.format("?/%s reset %s", getType().name, TinkerKit.getKey(block));
+                String cmd = String.format("?/%s reset %s", this.ALIAS, TinkerKit.getKey(block));
                 Messenger.m(source, "w - ", String.format("wi %s (modified value)", s), cmd, "^g Restore default value?");
             }
         }
@@ -228,21 +229,23 @@ public abstract class AbstractTinkerKitCommand<T> {
      * Sets the inputted redstone component's value to the default for this map.
      */
     private int reset(ServerCommandSource source, Block block) {
-        if (!getType().canModify(block)) {
+        if (!this.getType().canModify(block)) {
             Messenger.m(source, String.format("r %s is not a valid component!", TinkerKit.getTranslatedName(block)));
             return 0;
         }
 
-        if (getType().isDefaultValue(block)) {
-            Messenger.m(source, String.format("r %s %s value is already set to default!", TinkerKit.getTranslatedName(block), getType().name));
+        if (this.getType().isDefaultValue(block)) {
+            Messenger.m(source, String.format("r %s %s value is already set to default!", TinkerKit.getTranslatedName(block), this.ALIAS));
             return 0;
         }
-        else {
-            getType().reset(block);
-            Messenger.m(source, String.format("w Restored default %s %s value", TinkerKit.getTranslatedName(block), getType().name));
 
-            return updateFile(source) ? Command.SINGLE_SUCCESS : 0;
-        }
+        this.getType().reset(block);
+
+        if (!this.updateFile(source))
+            return 0;
+
+        Messenger.m(source, String.format("w Restored default %s %s value", TinkerKit.getTranslatedName(block), this.ALIAS));
+        return Command.SINGLE_SUCCESS;
     }
 
     /**
@@ -251,21 +254,24 @@ public abstract class AbstractTinkerKitCommand<T> {
     private int resetAll(ServerCommandSource source) {
         boolean wasModified = false;
 
-        for (Block block : getType().getBlocks().toList()) {
-            if (!getType().isDefaultValue(block)) {
-                getType().reset(block);
-                wasModified = true;
-            }
+        for (Block block : this.getType().getBlocks()) {
+            if (this.getType().isDefaultValue(block))
+                continue;
+
+            this.getType().reset(block);
+            wasModified = true;
         }
 
-        if (wasModified) {
-            Messenger.m(source, String.format("w Restored default %s values", getType().name));
-            return updateFile(source) ? Command.SINGLE_SUCCESS : 0;
-        }
-        else {
-            Messenger.m(source, String.format("r %s values are already set to default. Try tweaking some settings first!", StringUtils.capitalize(getType().name)));
+        if (!wasModified) {
+            Messenger.m(source, String.format("r %s values are already set to default. Try tweaking some settings first!", StringUtils.capitalize(this.ALIAS)));
             return 0;
         }
+
+        if (!this.updateFile(source))
+            return 0;
+
+        Messenger.m(source, String.format("w Restored default %s values", ALIAS));
+        return Command.SINGLE_SUCCESS;
     }
 
     private int load(ServerCommandSource source) {
@@ -279,7 +285,7 @@ public abstract class AbstractTinkerKitCommand<T> {
     }
 
     private int update(ServerCommandSource source) {
-        if (!updateFile(source))
+        if (!this.updateFile(source))
             return 0;
 
         Messenger.m(source, "w Successfully updated config file");

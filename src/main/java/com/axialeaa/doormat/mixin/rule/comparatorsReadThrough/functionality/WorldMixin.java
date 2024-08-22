@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.comparatorsReadThrough;
+package com.axialeaa.doormat.mixin.rule.comparatorsReadThrough.functionality;
 
 import com.axialeaa.doormat.fake.ComparatorBehaviour;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

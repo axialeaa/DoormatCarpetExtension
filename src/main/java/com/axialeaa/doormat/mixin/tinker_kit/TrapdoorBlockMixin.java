@@ -1,6 +1,5 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.fake.TinkerKitBehaviourSetter;
 import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -28,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TrapdoorBlock.class)
-public abstract class TrapdoorBlockMixin extends AbstractBlockMixin implements TinkerKitBehaviourSetter {
+public abstract class TrapdoorBlockMixin extends AbstractBlockMixin {
 
     @Shadow @Final public static BooleanProperty POWERED;
     @Shadow @Final public static BooleanProperty OPEN;
@@ -37,27 +36,34 @@ public abstract class TrapdoorBlockMixin extends AbstractBlockMixin implements T
 
     @Unique private boolean isPowered = false;
 
-    @Inject(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z", shift = At.Shift.BEFORE), cancellable = true)
-    private void defineTinkerKitBehaviour(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
-        int delay = TinkerKit.getDelay(state, 0);
-        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, state);
-
-        if (delay == 0)
-            getBehaviour(world, pos, state);
-        else world.scheduleBlockTick(pos, state.getBlock(), delay, TinkerKit.getTickPriority(state, TickPriority.NORMAL));
-
-        ci.cancel();
-    }
-
     @WrapOperation(method = "getPlacementState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnectivity(World instance, BlockPos pos, Operation<Boolean> original, @Local(ordinal = 0) BlockState state) {
-        this.isPowered = TinkerKit.isReceivingRedstonePower(instance, pos, state);
+        Block block = state.getBlock();
+        this.isPowered = TinkerKit.isReceivingRedstonePower(instance, pos, block);
+
         return isPowered;
     }
 
     @ModifyArg(method = "flip", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
-    private int changeUpdateType(int original, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.getFlags(state, original);
+    private int modifyUpdateType(int original, @Local(argsOnly = true) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.getFlags(block, original);
+    }
+
+    @Inject(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z", shift = At.Shift.BEFORE), cancellable = true)
+    private void scheduleOrCall(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
+        Block block = state.getBlock();
+        int delay = TinkerKit.getDelay(block, 0);
+
+        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, block);
+
+        if (delay > 0) {
+            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            world.scheduleBlockTick(pos, block, delay, tickPriority);
+        }
+        else getBehaviour(world, pos, state);
+
+        ci.cancel();
     }
 
     @Override
@@ -65,20 +71,25 @@ public abstract class TrapdoorBlockMixin extends AbstractBlockMixin implements T
         getBehaviour(world, pos, state);
     }
 
-    @Override
+    @Unique
     public void getBehaviour(World world, BlockPos pos, BlockState state) {
-        if (isPowered != state.get(POWERED)) {
-            BlockState blockState = state;
+        if (isPowered == state.get(POWERED))
+            return;
 
-            if (state.get(OPEN) != isPowered) {
-                blockState = state.with(OPEN, isPowered);
-                this.playToggleSound(null, world, pos, isPowered);
-            }
+        BlockState blockState = state;
 
-            world.setBlockState(pos, blockState.with(POWERED, isPowered), TinkerKit.getFlags(state, Block.NOTIFY_LISTENERS));
-            if (state.get(WATERLOGGED))
-                world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        if (state.get(OPEN) != isPowered) {
+            blockState = state.with(OPEN, isPowered);
+            this.playToggleSound(null, world, pos, isPowered);
         }
+
+        Block block = state.getBlock();
+        int flags = TinkerKit.getFlags(block, Block.NOTIFY_LISTENERS);
+
+        world.setBlockState(pos, blockState.with(POWERED, isPowered), flags);
+
+        if (state.get(WATERLOGGED))
+            world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
     }
 
 }

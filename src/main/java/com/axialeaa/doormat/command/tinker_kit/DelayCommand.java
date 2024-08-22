@@ -1,10 +1,7 @@
-package com.axialeaa.doormat.command;
+package com.axialeaa.doormat.command.tinker_kit;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-
-import java.util.stream.Stream;
-
 import static com.axialeaa.doormat.tinker_kit.TinkerKit.Type;
 
 public class DelayCommand extends AbstractTinkerKitCommand<Integer> {
@@ -16,12 +13,12 @@ public class DelayCommand extends AbstractTinkerKitCommand<Integer> {
 
     @Override
     public ArgumentType<Integer> getArgumentType() {
-        return IntegerArgumentType.integer(0);
+        return IntegerArgumentType.integer(0, 72000);
     }
 
     @Override
-    public Stream<Integer> getSuggestions() {
-        return Stream.of(0, 2, 4);
+    public Class<Integer> getObjectClass() {
+        return Integer.class;
     }
 
 }

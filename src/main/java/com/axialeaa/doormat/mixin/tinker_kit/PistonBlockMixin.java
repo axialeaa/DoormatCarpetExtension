@@ -39,12 +39,12 @@ public class PistonBlockMixin extends AbstractBlockMixin {
         if (!TinkerKit.Type.QC.canModify(block))
             return original.call(instance, pos);
 
-        int qcValue = (int) TinkerKit.Type.QC.getModifiedValue(block);
+        var value = TinkerKit.Type.QC.getValue(block);
 
-        if (qcValue < 1)
+        if (value == null || (int) value < 1)
             return false;
 
-        for (int i = 1; i <= qcValue; i++) {
+        for (int i = 1; i <= (int) value; i++) {
             BlockPos blockPos = pos.up(i);
 
             if (TinkerKit.cannotQC(instance, blockPos))
@@ -57,24 +57,24 @@ public class PistonBlockMixin extends AbstractBlockMixin {
         return false;
     }
 
-    @Override
-    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        world.addSyncedBlockEvent(pos, state.getBlock(), type, data);
-    }
-
     @WrapOperation(method = "tryMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;addSyncedBlockEvent(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;II)V"))
-    private void defineTinkerKitBehaviour(World instance, BlockPos pos, Block block, int type, int data, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
-        int delay = TinkerKit.getDelay(state, 0);
+    private void scheduleOrCall(World instance, BlockPos pos, Block block, int type, int data, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
+        int delay = TinkerKit.getDelay(block, 0);
 
-        if (delay == 0)
-            original.call(instance, pos, block, type, data);
-        else {
+        if (delay > 0) {
             this.type = type;
             this.data = data;
 
-            TickPriority tickPriority = TinkerKit.getTickPriority(state, TickPriority.NORMAL);
+            TickPriority tickPriority = TinkerKit.getTickPriority(block);
             instance.scheduleBlockTick(pos, block, delay, tickPriority);
         }
+        else original.call(instance, pos, block, type, data);
+    }
+
+    @Override
+    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
+        Block block = state.getBlock();
+        world.addSyncedBlockEvent(pos, block, type, data);
     }
 
 }

@@ -4,6 +4,7 @@ import carpet.CarpetExtension;
 import carpet.CarpetServer;
 import carpet.utils.Translations;
 import com.axialeaa.doormat.command.*;
+import com.axialeaa.doormat.command.tinker_kit.*;
 import com.axialeaa.doormat.tinker_kit.ConfigFile;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.axialeaa.doormat.util.UpdateType;
@@ -21,7 +22,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.tick.TickPriority;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Map;
 

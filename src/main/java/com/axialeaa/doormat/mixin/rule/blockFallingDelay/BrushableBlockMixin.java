@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public class BrushableBlockMixin {
     
     @ModifyArg(method = { "onBlockAdded", "getStateForNeighborUpdate" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"), index = 2)
-    private int modifyFallDelay(int delay) {
+    private int modifyFallDelay(int original) {
         return DoormatSettings.blockFallingDelay;
     }
     

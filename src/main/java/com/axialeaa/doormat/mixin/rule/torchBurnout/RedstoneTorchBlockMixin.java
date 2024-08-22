@@ -13,7 +13,7 @@ public class RedstoneTorchBlockMixin {
      * @return the timespan to measure the flicker amount against.
      */
     @ModifyConstant(method = "scheduledTick", constant = @Constant(longValue = 60))
-    private long modifyTime(long constant) {
+    private long modifyTime(long original) {
         return DoormatSettings.torchBurnoutTime;
     }
 
@@ -21,7 +21,7 @@ public class RedstoneTorchBlockMixin {
      * @return the maximum number of flickers a torch can have in the set timespan before burning out.
      */
     @ModifyConstant(method = "isBurnedOut", constant = @Constant(intValue = 8))
-    private static int modifyMaxFlickerAmount(int constant) {
+    private static int modifyMaxFlickerAmount(int original) {
         return DoormatSettings.torchBurnoutFlickerAmount;
     }
 

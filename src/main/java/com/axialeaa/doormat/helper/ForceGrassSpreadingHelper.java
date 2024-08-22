@@ -21,33 +21,41 @@ public class ForceGrassSpreadingHelper {
     /**
      * Future-proof implementation of what is essentially {@link net.minecraft.block.NetherrackBlock#grow(ServerWorld, Random, BlockPos, BlockState) nylium logic}. Instead of defining new booleans for each instanceof {@link SpreadableBlock}, just create a list of all {@link SpreadableBlock} instances around the target dirt, eliminate duplicate list entries, and pick a random list index. This should comfortably scale with any new {@link SpreadableBlock} types Mojang may or may not decide to add in the future.
      */
-    @SuppressWarnings("ConstantValue")
+    @SuppressWarnings({"ConstantValue", "UnreachableCode"})
     public static boolean onUse(World world, BlockPos pos) {
         BlockState state = world.getBlockState(pos);
 
-        if (DoormatSettings.forceGrassSpreading && state.isOf(Blocks.DIRT)) {
-            List<Block> blocks = new ArrayList<>();
+        if (!DoormatSettings.forceGrassSpreading || !state.isOf(Blocks.DIRT))
+            return false;
 
-            for (BlockPos adjacentPos : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
-                Block adjacentBlock = world.getBlockState(adjacentPos).getBlock();
-                if (adjacentBlock instanceof SpreadableBlock)
-                    blocks.add(adjacentBlock);
-            }
+        List<Block> blocks = new ArrayList<>();
 
-            List<Block> uniqueBlocks = blocks.stream().distinct().toList();
-            if (!uniqueBlocks.isEmpty() && SpreadableBlockAccessor.invokeCanSpread(state, world, pos)) {
-                if (!world.isClient()) {
-                    Block randomBlock = uniqueBlocks.get(world.getRandom().nextInt(uniqueBlocks.size()));
-                    boolean isSnowAbove = world.getBlockState(pos.up()).isOf(Blocks.SNOW);
+        for (BlockPos adjacentPos : BlockPos.iterate(pos.add(-1, -1, -1), pos.add(1, 1, 1))) {
+            BlockState adjacentState = world.getBlockState(adjacentPos);
+            Block adjacentBlock = adjacentState.getBlock();
 
-                    world.setBlockState(pos, randomBlock.getDefaultState().with(SpreadableBlock.SNOWY, isSnowAbove));
-                }
-                ParticleUtil.spawnParticlesAround(world, pos.up(), 45, 3.0, 1.0, false, ParticleTypes.HAPPY_VILLAGER);
-                return true;
-            }
+            if (adjacentBlock instanceof SpreadableBlock)
+                blocks.add(adjacentBlock);
         }
 
-        return false;
+        List<Block> uniqueBlocks = blocks.stream().distinct().toList();
+
+        if (uniqueBlocks.isEmpty() || !SpreadableBlockAccessor.invokeCanSpread(state, world, pos))
+            return false;
+
+        BlockPos upPos = pos.up();
+        BlockState upState = world.getBlockState(upPos);
+
+        ParticleUtil.spawnParticlesAround(world, upPos, 45, 3.0, 1.0, false, ParticleTypes.HAPPY_VILLAGER);
+
+        if (!world.isClient()) {
+            Block randomBlock = uniqueBlocks.get(world.getRandom().nextInt(uniqueBlocks.size()));
+            boolean isSnowAbove = upState.isOf(Blocks.SNOW);
+
+            world.setBlockState(pos, randomBlock.getDefaultState().with(SpreadableBlock.SNOWY, isSnowAbove));
+        }
+
+        return true;
     }
 
 }

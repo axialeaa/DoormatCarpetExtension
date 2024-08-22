@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
-import com.axialeaa.doormat.helper.TooltipCarouselHelper;
+import com.axialeaa.doormat.helper.CompactTooltipHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -21,7 +21,7 @@ public class MinecraftClientMixin {
     @Inject(method = "tick", at = @At("HEAD"))
     private void getCarouselTime(CallbackInfo ci) {
         if (this.world != null)
-            TooltipCarouselHelper.onTick(this.world.getTime());
+            CompactTooltipHelper.onTick(this.world.getTime());
     }
 
 }

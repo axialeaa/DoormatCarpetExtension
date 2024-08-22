@@ -1,8 +1,10 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
+import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.RepeaterBlock;
 import net.minecraft.state.property.IntProperty;
@@ -17,8 +19,12 @@ public class RepeaterBlockMixin {
     @Shadow @Final public static IntProperty DELAY;
 
     @ModifyReturnValue(method = "getUpdateDelayInternal", at = @At("RETURN"))
-    private int changeDelay(int original, @Local(argsOnly = true) BlockState state) {
-        return state.get(DELAY) * TinkerKit.getDelay(state, original);
+    private int modifyDelay(int original, @Local(argsOnly = true) BlockState state) {
+        if (DoormatSettings.retroRepeaterDelay)
+            return original;
+
+        Block block = state.getBlock();
+        return state.get(DELAY) * TinkerKit.getDelay(block, original);
     }
 
 }

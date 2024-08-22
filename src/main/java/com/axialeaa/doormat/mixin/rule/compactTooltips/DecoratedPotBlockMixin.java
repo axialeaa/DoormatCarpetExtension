@@ -51,10 +51,10 @@ public class DecoratedPotBlockMixin {
             int count = Collections.frequency(sherds.stream(), sherd); // and finds the quantity of this item in the original list
 
             if (DoormatSettings.compactPotTooltips == DoormatSettings.PotTooltipMode.IGNORE_BRICKS && sherd == Items.BRICK)
-                return;
+                continue;
 
             String translate = Translations.tr("compact_tooltip.pot." + sherd.getTranslationKey().replace("item.minecraft.", ""));
-            tooltip.add(Text.literal(count > 1 ? translate + " x" + count : translate) // add a numerical tag at the end if there are more than 1 of this type
+            tooltip.add(Text.literal(count > 1 ? translate + " x" + count : translate) // add a numerical tag at the end if there are more than 1 of this entries
                 .formatted(Formatting.GRAY));
         }
     }

@@ -13,7 +13,7 @@ public class PistonBlockEntityMixin {
      * @return the speed of the arm in blocks per tick.
      */
     @ModifyConstant(method = "tick", constant = @Constant(floatValue = 0.5F))
-    private static float adjustTiming(float constant) {
+    private static float modifyMovementTime(float original) {
         return 1.0F / DoormatSettings.pistonMovementTime;
     }
 

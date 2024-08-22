@@ -8,7 +8,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-public class TooltipCarouselHelper {
+public class CompactTooltipHelper {
 
     public static int LIST_INDEX = 0;
     public static int LIST_SIZE = 0;
@@ -18,12 +18,12 @@ public class TooltipCarouselHelper {
      * @implNote Referencing the gametime via a method that only gets loaded in certain circumstances (in this case hovering over an item) causes some weird flickers. These can be resolved by constantly checking the gametime in {@link MinecraftClient} and quering the output via a global variable.
      */
     public static void onTick(long gameTime) {
-        long modTime = gameTime % 20;
-        if (modTime == 0) {
-            if (LIST_INDEX < LIST_SIZE - 1)
-                LIST_INDEX++;
-            else LIST_INDEX = 0;
-        }
+        if (gameTime % 20 > 0)
+            return;
+
+        if (getNumerator() < getDenominator())
+            LIST_INDEX++;
+        else LIST_INDEX = 0;
     }
 
     public static MutableText format(MutableText text) {
@@ -47,7 +47,8 @@ public class TooltipCarouselHelper {
     }
 
     public static MutableText getFormattedFraction() {
-        return format(Text.literal(getFraction()).append(": "));
+        MutableText fraction = Text.literal(getFraction());
+        return format(fraction.append(": "));
     }
 
 }

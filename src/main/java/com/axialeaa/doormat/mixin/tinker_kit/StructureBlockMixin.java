@@ -1,6 +1,5 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.fake.TinkerKitBehaviourSetter;
 import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import net.minecraft.block.Block;
@@ -20,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(StructureBlock.class)
-public abstract class StructureBlockMixin extends AbstractBlockMixin implements TinkerKitBehaviourSetter {
+public abstract class StructureBlockMixin extends AbstractBlockMixin {
 
     @Shadow protected abstract void doAction(ServerWorld world, StructureBlockBlockEntity blockEntity);
 
@@ -28,33 +27,39 @@ public abstract class StructureBlockMixin extends AbstractBlockMixin implements 
 
     @Inject(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z", shift = At.Shift.BEFORE), cancellable = true)
     private void allowQuasiConnectivity(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
-        int delay = TinkerKit.getDelay(state, 0);
-        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, state);
+        Block block = state.getBlock();
+        int delay = TinkerKit.getDelay(block, 0);
 
-        if (delay == 0)
-            getBehaviour(world, pos, state);
-        else world.scheduleBlockTick(pos, state.getBlock(), delay, TinkerKit.getTickPriority(state, TickPriority.NORMAL));
+        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, block);
+
+        if (delay > 0) {
+            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            world.scheduleBlockTick(pos, block, delay, tickPriority);
+        }
+        else getBehaviour(world, pos);
 
         ci.cancel();
     }
 
     @Override
     public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        getBehaviour(world, pos, state);
+        getBehaviour(world, pos);
     }
 
-    @Override
-    public void getBehaviour(World world, BlockPos pos, BlockState state) {
-        if (world.getBlockEntity(pos) instanceof StructureBlockBlockEntity blockEntity) {
-            boolean bl = blockEntity.isPowered();
+    @Unique
+    public void getBehaviour(World world, BlockPos pos) {
+        if (!(world.getBlockEntity(pos) instanceof StructureBlockBlockEntity blockEntity))
+            return;
 
-            if (isPowered && !bl) {
-                blockEntity.setPowered(true);
-                this.doAction((ServerWorld) world, blockEntity);
-            }
-            else if (!isPowered && bl)
-                blockEntity.setPowered(false);
-        }
+        boolean bl = blockEntity.isPowered();
+
+        if (isPowered == bl)
+            return;
+
+        blockEntity.setPowered(isPowered);
+
+        if (isPowered && world instanceof ServerWorld serverWorld)
+            this.doAction(serverWorld, blockEntity);
     }
 
 }

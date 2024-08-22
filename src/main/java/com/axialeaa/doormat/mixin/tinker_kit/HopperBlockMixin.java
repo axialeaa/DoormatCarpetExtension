@@ -1,6 +1,5 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.fake.TinkerKitBehaviourSetter;
 import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -23,29 +22,30 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HopperBlock.class)
-public class HopperBlockMixin extends AbstractBlockMixin implements TinkerKitBehaviourSetter {
+public class HopperBlockMixin extends AbstractBlockMixin {
 
     @Shadow @Final public static BooleanProperty ENABLED;
 
-    @Unique private boolean isPowered = false;
+    @Unique private boolean isPowered;
 
     @WrapOperation(method = "onBlockAdded", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/HopperBlock;updateEnabled(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)V"))
-    private void setPowered(HopperBlock instance, World world, BlockPos pos, BlockState state, Operation<Void> original) {
-        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, state);
+    private void fixPlacement(HopperBlock instance, World world, BlockPos pos, BlockState state, Operation<Void> original) {
+        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, instance);
         getBehaviour(world, pos, state);
     }
 
     @Inject(method = "neighborUpdate", at = @At("HEAD"), cancellable = true)
-    private void defineTinkerKitBehaviour(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
-        int delay = TinkerKit.getDelay(state, 0);
-        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, state);
+    private void scheduleOrCall(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
+        Block block = state.getBlock();
+        int delay = TinkerKit.getDelay(block, 0);
 
-        if (delay == 0)
-            getBehaviour(world, pos, state);
-        else {
-            TickPriority tickPriority = TinkerKit.getTickPriority(state, TickPriority.NORMAL);
-            world.scheduleBlockTick(pos, state.getBlock(), delay, tickPriority);
+        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, block);
+
+        if (delay > 0) {
+            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            world.scheduleBlockTick(pos, block, delay, tickPriority);
         }
+        else getBehaviour(world, pos, state);
 
         ci.cancel();
     }
@@ -55,10 +55,15 @@ public class HopperBlockMixin extends AbstractBlockMixin implements TinkerKitBeh
         getBehaviour(world, pos, state);
     }
 
-    @Override
+    @Unique
     public void getBehaviour(World world, BlockPos pos, BlockState state) {
-        if (isPowered == state.get(ENABLED))
-            world.setBlockState(pos, state.with(ENABLED, isPowered), TinkerKit.getFlags(state, Block.NOTIFY_LISTENERS));
+        if (isPowered != state.get(ENABLED))
+            return;
+
+        Block block = state.getBlock();
+        int flags = TinkerKit.getFlags(block, Block.NOTIFY_LISTENERS);
+
+        world.setBlockState(pos, state.with(ENABLED, !isPowered), flags);
     }
 
 }

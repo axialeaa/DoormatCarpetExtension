@@ -27,14 +27,16 @@ public class PropaguleBlockMixin {
      */
     @Inject(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/PropaguleBlock;isFullyGrown(Lnet/minecraft/block/BlockState;)Z"))
     private void fallOnFullyGrown(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (DoormatSettings.propagulePropagation && state.get(AGE) == 4) {
-            BlockState upState = world.getBlockState(pos.up());
+        if (!DoormatSettings.propagulePropagation || state.get(AGE) < 4)
+            return;
 
-            if (!upState.getOrEmpty(LeavesBlock.PERSISTENT).orElse(false)) {
-                BlockPos.Mutable mutable = pos.mutableCopy();
-                FallingBlockEntity.spawnFromBlock(world, mutable, state);
-                mutable.move(Direction.DOWN);
-            }
+        BlockState upState = world.getBlockState(pos.up());
+
+        if (!upState.getOrEmpty(LeavesBlock.PERSISTENT).orElse(false)) {
+            BlockPos.Mutable mutable = pos.mutableCopy();
+            FallingBlockEntity.spawnFromBlock(world, mutable, state);
+
+            mutable.move(Direction.DOWN);
         }
     }
 

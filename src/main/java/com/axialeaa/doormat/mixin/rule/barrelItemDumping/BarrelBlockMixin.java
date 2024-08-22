@@ -28,14 +28,16 @@ public abstract class BarrelBlockMixin extends BlockWithEntity implements BlockE
     @Unique
     private static void dumpItems(World world, BlockPos pos, BlockState state, BarrelBlockEntity blockEntity) {
         Direction down = Direction.DOWN;
-        if (state.get(BarrelBlock.FACING) == down && !Block.hasTopRim(world, pos.down())) {
-            for (ItemStack stack : ((BarrelBlockEntityAccessor) blockEntity).getInventory()) {
-                if (stack.isEmpty())
-                    return;
 
-                stack = stack.split(stack.getCount());
-                ItemDispenserBehavior.spawnItem(world, stack, 0, down, Vec3d.ofCenter(pos).offset(down, 0.7));
-            }
+        if (state.get(BarrelBlock.FACING) != down || Block.hasTopRim(world, pos.down()))
+            return;
+
+        for (ItemStack stack : ((BarrelBlockEntityAccessor) blockEntity).getInventory()) {
+            if (stack.isEmpty())
+                return;
+
+            stack = stack.split(stack.getCount());
+            ItemDispenserBehavior.spawnItem(world, stack, 0, down, Vec3d.ofCenter(pos).offset(down, 0.7));
         }
     }
 

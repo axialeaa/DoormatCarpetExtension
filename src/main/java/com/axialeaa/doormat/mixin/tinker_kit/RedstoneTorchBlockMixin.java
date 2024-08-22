@@ -23,27 +23,28 @@ public abstract class RedstoneTorchBlockMixin {
 
     @Shadow protected abstract void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);
 
-    @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
-    private void changeDelayAndTickPriority(World instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
-        int delay = TinkerKit.getDelay(state, i);
-
-        if (delay == 0) {
-            if (instance instanceof ServerWorld serverWorld)
-                this.scheduledTick(state, serverWorld, pos, instance.getRandom());
-        } else {
-            TickPriority tickPriority = TinkerKit.getTickPriority(state, TickPriority.NORMAL);
-            instance.scheduleBlockTick(pos, block, delay, tickPriority);
-        }
+    @ModifyArg(method = "scheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"), index = 2)
+    private int modifyUpdateType(int original, @Local(argsOnly = true) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.getFlags(block, original);
     }
 
     @WrapWithCondition(method = { "onBlockAdded", "onStateReplaced" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
-    private boolean suppressUpdates(World instance, BlockPos pos, Block sourceBlock, @Local(argsOnly = true, ordinal = 0) BlockState state) {
-        return TinkerKit.shouldUpdateNeighbours(state);
+    private boolean shouldUpdateNeighbours(World instance, BlockPos pos, Block sourceBlock, @Local(argsOnly = true, ordinal = 0) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.shouldUpdateNeighbours(block);
     }
 
-    @ModifyArg(method = "scheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"), index = 2)
-    private int changeUpdateType(int original, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.getFlags(state, original);
+    @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
+    private void scheduleOrCall(World instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
+        int delay = TinkerKit.getDelay(block, i);
+
+        if (delay > 0) {
+            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            instance.scheduleBlockTick(pos, block, delay, tickPriority);
+        }
+        else if (instance instanceof ServerWorld serverWorld)
+            this.scheduledTick(state, serverWorld, pos, serverWorld.getRandom());
     }
 
 }

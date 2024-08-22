@@ -18,7 +18,6 @@ import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.CollisionView;
 import net.minecraft.world.World;
 
@@ -55,10 +54,6 @@ public class CampfireRespawningHelper {
         .addAll(DONUT.stream().map(Vec3i::up).iterator())
         .build();
 
-    public static boolean isOverworld(World world) {
-        return world.getRegistryKey() == World.OVERWORLD;
-    }
-
     public static Optional<Vec3d> findRespawnPosition(EntityType<?> entity, CollisionView world, BlockPos pos) {
         Optional<Vec3d> optional = findRespawnPosition(entity, world, pos, true);
         return optional.isPresent() ? optional : findRespawnPosition(entity, world, pos, false);
@@ -70,6 +65,7 @@ public class CampfireRespawningHelper {
         for(Vec3i offset : SPAWN_OFFSETS) {
             mutable.set(pos).move(offset);
             Vec3d vec3d = Dismounting.findRespawnPos(entity, world, mutable, ignoreInvalidPos);
+
             if (vec3d != null)
                 return Optional.of(vec3d);
         }
@@ -78,20 +74,25 @@ public class CampfireRespawningHelper {
     }
 
     public static ItemActionResult setSpawnAt(World world, BlockPos pos, BlockState state, PlayerEntity player, ItemStack stack) {
-        if (DoormatSettings.campfireRespawning && stack.isEmpty() && player.isSneaking() && isOverworld(world) && CampfireBlock.isLitCampfire(state) && !world.isClient()) {
-            ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
-            if (!pos.equals(serverPlayer.getSpawnPointPosition())) {
-                serverPlayer.setSpawnPoint(World.OVERWORLD, pos, 0.0f, false, true);
-                return ItemActionResult.SUCCESS;
-            }
+        if (!DoormatSettings.campfireRespawning || !shouldAcceptCampfireInteraction(world, state, player, stack) || !(player instanceof ServerPlayerEntity serverPlayer))
+            return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
+        if (pos != serverPlayer.getSpawnPointPosition()) {
+            serverPlayer.setSpawnPoint(World.OVERWORLD, pos, 0.0f, false, true);
+            return ItemActionResult.SUCCESS;
         }
 
         return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
+    private static boolean shouldAcceptCampfireInteraction(World world, BlockState state, PlayerEntity player, ItemStack stack) {
+        return stack.isEmpty() && player.isSneaking() && world.getRegistryKey() == World.OVERWORLD && CampfireBlock.isLitCampfire(state);
+    }
+
     public static void sendSoundPacket(ServerWorld world, BlockPos pos, ServerPlayerEntity player) {
-        Random random = world.getRandom();
-        double x = pos.getX(), y = pos.getY(), z = pos.getZ();
+        double x = pos.getX();
+        double y = pos.getY();
+        double z = pos.getZ();
 
         player.networkHandler.sendPacket(new PlaySoundS2CPacket(
             RegistryEntry.of(SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE),
@@ -99,7 +100,7 @@ public class CampfireRespawningHelper {
             x, y, z,
             1.0F,
             1.0F,
-            random.nextLong()
+            world.getRandom().nextLong()
         ));
     }
 

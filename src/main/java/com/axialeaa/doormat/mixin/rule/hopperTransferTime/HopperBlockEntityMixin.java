@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 public class HopperBlockEntityMixin {
 
     @ModifyArg(method = "insertAndExtract", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/entity/HopperBlockEntity;setTransferCooldown(I)V"))
-    private static int modifyTransferTime(int transferCooldown) {
+    private static int modifyTransferTime(int original) {
         return DoormatSettings.hopperTransferTime;
     }
 
@@ -23,7 +23,7 @@ public class HopperBlockEntityMixin {
     }
 
     @ModifyConstant(method = "isDisabled", constant = @Constant(intValue = 8))
-    private int modifyDisabledCheck(int constant) {
+    private int modifyDisabledCheck(int original) {
         return DoormatSettings.hopperTransferTime;
     }
 

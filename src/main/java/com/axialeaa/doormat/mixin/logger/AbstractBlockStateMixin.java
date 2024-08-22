@@ -31,52 +31,50 @@ public abstract class AbstractBlockStateMixin {
 
     @Shadow public abstract Block getBlock();
 
-    @Unique
-    private static long prevTime = 0;
-    @Unique
-    private static int count = 0;
-    @Unique
-    private static boolean newTick;
+    @Unique private static long prevTime = 0;
+    @Unique private static int count = 0;
+    @Unique private static boolean newTick;
 
     @Inject(method = "randomTick", at = @At("HEAD"))
     private void printRandomTickLogLine(ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (DoormatLoggers.__randomTicks) {
-            LoggerRegistry.getLogger("randomTicks").log(option -> {
-                long time = world.getTime();
+        if (!DoormatLoggers.__randomTicks)
+            return;
 
-                newTick = false;
+        LoggerRegistry.getLogger("randomTicks").log(option -> {
+            long time = world.getTime();
 
-                if (prevTime != time) {
-                    count = 0;
-                    prevTime = time;
-                    newTick = true;
-                }
+            newTick = false;
 
-                count++;
-                List<Text> messages = new ArrayList<>();
+            if (prevTime != time) {
+                count = 0;
+                prevTime = time;
+                newTick = true;
+            }
 
-                if (newTick)
-                    messages.add(c("wb tick : ", "d " + time));
+            count++;
+            List<Text> messages = new ArrayList<>();
 
-                Block block = this.getBlock();
-                String key = TinkerKit.getKey(block);
+            if (newTick)
+                messages.add(c("wb tick : ", "d " + time));
 
-                if ("brief".equals(option))
-                    messages.add(c("d #" + count, "gb ->", tp("l", pos), "m (" + key + ")"));
-                else if ("full".equals(option)) {
-                    messages.add(c("d #" + count, "gb ->", tp("l", pos)));
+            Block block = this.getBlock();
+            String key = TinkerKit.getKey(block);
 
-                    ChunkPos chunkPos = world.getChunk(pos).getPos();
-                    String dimension = world.getDimensionEntry().getIdAsString();
+            if ("brief".equals(option))
+                messages.add(c("d #" + count, "gb ->", tp("l", pos), "m (" + key + ")"));
+            else if ("full".equals(option)) {
+                messages.add(c("d #" + count, "gb ->", tp("l", pos)));
 
-                    messages.add(c("w   block: ", "m " + key));
-                    messages.add(c("w   chunk: ", "c " + chunkPos));
-                    messages.add(c("w   dimension: ", "m " + dimension));
-                }
+                ChunkPos chunkPos = world.getChunk(pos).getPos();
+                String dimension = world.getDimensionEntry().getIdAsString();
 
-                return messages.toArray(new Text[0]);
-            });
-        }
+                messages.add(c("w   block: ", "m " + key));
+                messages.add(c("w   chunk: ", "c " + chunkPos));
+                messages.add(c("w   dimension: ", "m " + dimension));
+            }
+
+            return messages.toArray(new Text[0]);
+        });
     }
 
 }

@@ -16,48 +16,23 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.RedstoneView;
 import net.minecraft.world.World;
 import net.minecraft.world.tick.TickPriority;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-
 import java.util.*;
 import java.util.stream.Stream;
 
 public class TinkerKit {
 
     /**
-     * This hashmap is a little different to {@link Registry#DEFAULT_QC_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
-     * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
+     * A hashmap which stores all valid blocks alongside their default values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
      */
-    public static final Map<Block, Object> MODIFIED_QC_VALUES = new HashMap<>();
+    static final Map<Type, Map<Block, Object>> DEFAULT_VALUES = new HashMap<>();
     /**
-     * This hashmap is a little different to {@link Registry#DEFAULT_DELAY_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
+     * This hashmap is a little different to {@link TinkerKit#DEFAULT_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
      * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
      */
-    public static final Map<Block, Object> MODIFIED_DELAY_VALUES = new HashMap<>();
-    /**
-     * This hashmap is a little different to {@link Registry#DEFAULT_UPDATE_TYPE_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
-     * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
-     */
-    public static final Map<Block, Object> MODIFIED_UPDATE_TYPE_VALUES = new HashMap<>();
-    /**
-     * This hashmap is a little different to {@link Registry#DEFAULT_TICK_PRIORITY_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
-     * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
-     */
-    public static final Map<Block, Object> MODIFIED_TICK_PRIORITY_VALUES = new HashMap<>();
-
-    static {
-        try {
-            MODIFIED_QC_VALUES.putAll(Registry.DEFAULT_QC_VALUES);
-            MODIFIED_UPDATE_TYPE_VALUES.putAll(Registry.DEFAULT_UPDATE_TYPE_VALUES);
-            MODIFIED_TICK_PRIORITY_VALUES.putAll(Registry.DEFAULT_TICK_PRIORITY_VALUES);
-            MODIFIED_DELAY_VALUES.putAll(Registry.DEFAULT_DELAY_VALUES);
-
-            DoormatServer.LOGGER.info("Tinker Kit hashmaps received default values!");
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Tinker Kit hashmaps failed to receive default values!", e);
-        }
-    }
+    static final Map<Type, Map<Block, Object>> TRANSIENT_VALUES = new HashMap<>();
 
     /**
      * @param block the block to get the key of.
@@ -83,25 +58,51 @@ public class TinkerKit {
         return world.isOutOfHeightLimit(pos) || DoormatSettings.qcSuppressor && world.getBlockState(pos).isOf(Blocks.EMERALD_ORE);
     }
 
+    private static void putSafelyWithType(Map<Type, Map<Block, Object>> map, @NotNull Type type, @NotNull Block block, @NotNull Object value) {
+        if (map == null)
+            return;
+
+        if (!map.containsKey(type)) {
+            map.put(type, new HashMap<>(Map.of(block, value)));
+            return;
+        }
+
+        putSafely(map.get(type), block, value);
+    }
+
+    private static void putSafely(Map<Block, Object> map, @NotNull Block block, @NotNull Object value) {
+        if (map == null)
+            return;
+
+        Map<Block, Object> newMap = new HashMap<>(map);
+        newMap.put(block, value);
+
+        map.putAll(newMap);
+    }
+
     /**
      * @param world the world this method is called in.
      * @param pos the block position this method is called at.
      * @param i the number to add onto the range check (useful for doors).
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
-    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, BlockState state, int i) {
-        Block block = state.getBlock();
+    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, Block block, int i) {
+        if (!Type.QC.canModify(block))
+            return world.isReceivingRedstonePower(pos);
 
-        if (Type.QC.canModify(block)) {
-            for (int j = 0; j <= (int) Type.QC.getModifiedValue(block) + i; j++) {
-                BlockPos blockPos = pos.up(j);
+        var value = Type.QC.getValue(block);
 
-                if (cannotQC(world, blockPos))
-                    break;
+        if (value == null)
+            return world.isReceivingRedstonePower(pos);
 
-                if (world.isReceivingRedstonePower(blockPos))
-                    return true;
-            }
+        for (int j = 0; j <= (int) value + i; j++) {
+            BlockPos blockPos = pos.up(j);
+
+            if (cannotQC(world, blockPos))
+                break;
+
+            if (world.isReceivingRedstonePower(blockPos))
+                return true;
         }
 
         return world.isReceivingRedstonePower(pos);
@@ -112,39 +113,39 @@ public class TinkerKit {
      * @param pos the block position this method is called at.
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
-    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, BlockState state) {
-        return isReceivingRedstonePower(world, pos, state, 0);
+    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, Block block) {
+        return isReceivingRedstonePower(world, pos, block, 0);
     }
 
     /**
-     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, BlockState, int)} which takes in a direction--used for redstone torches.
+     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, Block, int)} which takes in a direction--used for redstone torches.
      * <p>
-     * This has been re-implemented due to the semantic difference between {@link net.minecraft.world.RedstoneView#isEmittingRedstonePower(BlockPos, Direction) isEmittingRedstonePower()} and {@link net.minecraft.world.RedstoneView#isReceivingRedstonePower(BlockPos) isReceivingRedstonePower()}. The second will return true if any of the blocks adjacent to the block position are powered, whereas the first checks for only the block position itself. This makes sense for torches and really nothing else, which unpower when the block they're resting on is sourcing power.
+     * This has been re-implemented due to the semantic difference between {@link RedstoneView#isEmittingRedstonePower(BlockPos, Direction) isEmittingRedstonePower()} and {@link RedstoneView#isReceivingRedstonePower(BlockPos) isReceivingRedstonePower()}. The second will return true if any of the blocks adjacent to the block position are powered, whereas the first checks for only the block position itself. This makes sense for torches and really nothing else, which unpower when the block they're resting on is sourcing power.
      * @param world the world this method is called in.
      * @param pos the block position this method is called at.
      * @param direction the direction to check if power is being received.
      * @param i the number to add onto the range check.
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
-    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, BlockState state, Direction direction, int i) {
-        return getEmittedRedstonePower(world, pos, state, direction, i) > 0;
+    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, Block block, Direction direction, int i) {
+        return getEmittedRedstonePower(world, pos, block, direction, i) > 0;
     }
 
     /**
-     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, BlockState)} which takes in a direction--used for redstone torches.
+     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, Block)} which takes in a direction--used for redstone torches.
      * <p>
-     * This has been re-implemented due to the semantic difference between {@link net.minecraft.world.RedstoneView#isEmittingRedstonePower(BlockPos, Direction) isEmittingRedstonePower()} and {@link net.minecraft.world.RedstoneView#isReceivingRedstonePower(BlockPos) isReceivingRedstonePower()}. The second will return true if any of the blocks adjacent to the block position are powered, whereas the first checks for only the block position itself. This makes sense for torches and really nothing else, which unpower when the block they're resting on is sourcing power.
+     * This has been re-implemented due to the semantic difference between {@link RedstoneView#isEmittingRedstonePower(BlockPos, Direction) isEmittingRedstonePower()} and {@link RedstoneView#isReceivingRedstonePower(BlockPos) isReceivingRedstonePower()}. The second will return true if any of the blocks adjacent to the block position are powered, whereas the first checks for only the block position itself. This makes sense for torches and really nothing else, which unpower when the block they're resting on is sourcing power.
      * @param world the world this method is called in.
      * @param pos the block position this method is called at.
      * @param direction the direction to check if power is being received.
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
-    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, BlockState state, Direction direction) {
-        return getEmittedRedstonePower(world, pos, state, direction, 0) > 0;
+    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, Block block, Direction direction) {
+        return getEmittedRedstonePower(world, pos, block, direction, 0) > 0;
     }
 
     /**
-     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, BlockState, int)} which instead outputs a signal strength--used for diodes.
+     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, Block, int)} which instead outputs a signal strength--used for diodes.
      * <p>
      * This has been re-implemented due to diodes ({@link AbstractRedstoneGateBlock}<code>s</code>) taking in integer inputs instead of booleans like most other components; they byFlags told <i>if</i> they're powered, not to "what degree".
      * @param world the world this method is called in.
@@ -153,29 +154,31 @@ public class TinkerKit {
      * @param i the number to add onto the range check.
      * @return the largest signal strength within the quasi-connectivity range.
      */
-    public static int getEmittedRedstonePower(RedstoneView world, BlockPos pos, BlockState state, Direction direction, int i) {
-        Block block = state.getBlock();
+    public static int getEmittedRedstonePower(RedstoneView world, BlockPos pos, Block block, Direction direction, int i) {
+        int power = world.getEmittedRedstonePower(pos, direction);
 
-        if (Type.QC.canModify(block)) {
-            int power = 0;
-
-            for (int j = 0; j <= (int) Type.QC.getModifiedValue(block) + i; j++) {
-                BlockPos blockPos = pos.offset(direction).up(j);
-
-                if (cannotQC(world, blockPos) || power >= 15)
-                    break;
-
-                power = Math.max(power, world.getEmittedRedstonePower(blockPos, direction));
-            }
-
+        if (!Type.QC.canModify(block))
             return power;
+
+        var value = Type.QC.getValue(block);
+
+        if (value == null)
+            return power;
+
+        for (int j = 0; j <= (int) value + i; j++) {
+            BlockPos blockPos = pos.up(j);
+
+            if (cannotQC(world, blockPos) || power >= 15)
+                break;
+
+            power = Math.max(power, world.getEmittedRedstonePower(blockPos, direction));
         }
 
-        return world.getEmittedRedstonePower(pos, direction);
+        return power;
     }
 
     /**
-     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, BlockState)} which instead outputs a signal strength--used for diodes.
+     * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, Block)} which instead outputs a signal strength--used for diodes.
      * <p>
      * This has been re-implemented due to diodes ({@link AbstractRedstoneGateBlock}<code>s</code>) taking in integer inputs instead of booleans like most other components; they byFlags told <i>if</i> they're powered, not to "what degree".
      * @param world the world this method is called in.
@@ -183,122 +186,141 @@ public class TinkerKit {
      * @param direction the direction to check if power is being received.
      * @return the largest signal strength within the quasi-connectivity range.
      */
-    public static int getEmittedRedstonePower(RedstoneView world, BlockPos pos, BlockState state, Direction direction) {
-        return getEmittedRedstonePower(world, pos, state, direction, 0);
+    public static int getEmittedRedstonePower(RedstoneView world, BlockPos pos, Block block, Direction direction) {
+        return getEmittedRedstonePower(world, pos, block, direction, 0);
     }
 
     /**
-     * @param state the blockstate this method checks for.
+     * @param block the block this method checks for.
      * @param fallback the default delay this method should fall back to if it can't find the default value in the registry map.
      * @return the delay for the given blockstate.
      */
-    public static int getDelay(BlockState state, int fallback) {
-        Block block = state.getBlock();
+    public static int getDelay(Block block, int fallback) {
+        if (!Type.DELAY.canModify(block))
+            return fallback;
 
-        if (Type.DELAY.canModify(block))
-            return (int) Type.DELAY.getModifiedValue(block);
+        var value = Type.DELAY.getValue(block);
 
-        return fallback;
+        if (value == null)
+            return fallback;
+
+        return (int) value;
     }
 
     /**
-     * @param state the blockstate this method checks for.
+     * @param block the block this method checks for.
      * @param fallback the default flags this method should fall back to if it can't find the default value in the registry map (should be the third parameter in the call to {@link World#setBlockState(BlockPos, BlockState, int)}, obtained by default when using {@link ModifyArg} to index 2).
-     * @return the update type flag(s) for the given blockstate.
+     * @return the update entries flag(s) for the given blockstate.
      */
-    public static int getFlags(BlockState state, int fallback) {
-        Block block = state.getBlock();
-        
-        if (Type.UPDATE_TYPE.canModify(block))
-            return ((UpdateType) Type.UPDATE_TYPE.getModifiedValue(block)).flags;
+    public static int getFlags(Block block, int fallback) {
+        if (!Type.UPDATE_TYPE.canModify(block))
+            return fallback;
 
-        return fallback;
+        var value = Type.UPDATE_TYPE.getValue(block);
+
+        if (value == null)
+            return fallback;
+
+        return ((UpdateType) value).flags;
     }
 
     /**
      * An alternative implementation of {@link World#removeBlock(BlockPos, boolean)}, allowing for custom update flags based on the block passed through {@code state}.
      * @param world The world this method is called in.
      * @param pos The block position this method is called at.
-     * @param state The block state this method is called on.
+     * @param block The block this method is called on.
      * @param move Whether the block is moving.
      */
-    public static boolean removeBlock(World world, BlockPos pos, BlockState state, boolean move) {
+    public static boolean removeBlock(World world, BlockPos pos, Block block, boolean move) {
         FluidState fluidState = world.getFluidState(pos);
-        return world.setBlockState(pos, fluidState.getBlockState(), getFlags(state, Block.NOTIFY_ALL) | (move ? Block.MOVED : 0));
+        return world.setBlockState(pos, fluidState.getBlockState(), getFlags(block, Block.NOTIFY_ALL) | (move ? Block.MOVED : 0));
     }
 
     /**
-     * @param state the blockstate this method checks for.
+     * @param block the block this method checks for.
      * @param fallback the default flags this method should fall back to if it can't find the default value in the registry map (should be the third parameter in the call to {@link World#setBlockState(BlockPos, BlockState, int)}, obtained by default when using {@link ModifyArg} to index 2).
-     * @return true if the update type flags of the given blockstate are odd (BLOCK, 1 and BOTH, 3).
+     * @return true if the update entries flags of the given blockstate are odd (BLOCK, 1 and BOTH, 3).
      */
-    public static boolean shouldUpdateNeighbours(BlockState state, int fallback) {
-        return (getFlags(state, fallback) & Block.NOTIFY_NEIGHBORS) == 1;
+    public static boolean shouldUpdateNeighbours(Block block, int fallback) {
+        return (getFlags(block, fallback) & Block.NOTIFY_NEIGHBORS) == 1;
     }
 
     /**
-     * An alternative implementation of {@link TinkerKit#shouldUpdateNeighbours(BlockState, int)} which assumes a default fallback value equivalent to {@link Block#NOTIFY_ALL}.
-     * @param state the blockstate this method checks for.
-     * @return true if the update type flags of the given blockstate are odd (BLOCK, 1 and BOTH, 3).
+     * An alternative implementation of {@link TinkerKit#shouldUpdateNeighbours(Block, int)} which assumes a default fallback value equivalent to {@link Block#NOTIFY_ALL}.
+     * @param block the block this method checks for.
+     * @return true if the update entries flags of the given blockstate are odd (BLOCK, 1 and BOTH, 3).
      */
-    public static boolean shouldUpdateNeighbours(BlockState state) {
-        return shouldUpdateNeighbours(state, Block.NOTIFY_ALL);
+    public static boolean shouldUpdateNeighbours(Block block) {
+        return shouldUpdateNeighbours(block, Block.NOTIFY_ALL);
     }
 
     /**
-     * @param state the blockstate this method checks for.
+     * @param block the block this method checks for.
      * @param fallback the default tick priority this method should fall back to if it can't find the default value in the registry map.
      * @return the tick priority for the given blockstate.
      */
-    public static TickPriority getTickPriority(BlockState state, TickPriority fallback) {
-        Block block = state.getBlock();
-
+    public static TickPriority getTickPriority(Block block, TickPriority fallback) {
         if (!Type.TICK_PRIORITY.canModify(block))
-            return (TickPriority) Type.TICK_PRIORITY.getModifiedValue(block);
+            return fallback;
 
-        return fallback;
+        return (TickPriority) Type.TICK_PRIORITY.getValue(block);
     }
 
-    /**
-     * Used for multiple instances of needing to specify which type of redstone rule to modify via commands or the config file.
-     */
+    public static TickPriority getTickPriority(Block block) {
+        return getTickPriority(block, TickPriority.NORMAL);
+    }
+
     public enum Type {
 
-        QC            ("quasiconnectivity", DoormatSettings.commandQC, Registry.DEFAULT_QC_VALUES, MODIFIED_QC_VALUES),
-        DELAY         ("delay", DoormatSettings.commandDelay, Registry.DEFAULT_DELAY_VALUES, MODIFIED_DELAY_VALUES),
-        UPDATE_TYPE   ("updatetype", DoormatSettings.commandUpdateType, Registry.DEFAULT_UPDATE_TYPE_VALUES, MODIFIED_UPDATE_TYPE_VALUES),
-        TICK_PRIORITY ("tickpriority", DoormatSettings.commandTickPriority, Registry.DEFAULT_TICK_PRIORITY_VALUES, MODIFIED_TICK_PRIORITY_VALUES);
+        QC            ("quasiconnectivity", DoormatSettings.commandQC),
+        DELAY         ("delay", DoormatSettings.commandDelay),
+        UPDATE_TYPE   ("updatetype", DoormatSettings.commandUpdateType),
+        TICK_PRIORITY ("tickpriority", DoormatSettings.commandTickPriority);
 
         public final String name;
-        public final String commandRule;
-        private final Map<Block, Object> defaultValues;
-        private final Map<Block, Object> modifiedValues;
+        public final String rule;
 
-        Type(String name, String commandRule, Map<Block, Object> defaultValues, Map<Block, Object> modifiedValues) {
+        Type(String name, String rule) {
             this.name = name;
-            this.commandRule = commandRule;
-            this.defaultValues = defaultValues;
-            this.modifiedValues = modifiedValues;
+            this.rule = rule;
+        }
+
+        public Map<Block, Object> getDefaultMap() {
+            return DEFAULT_VALUES.get(this);
+        }
+
+        private Map<Block, Object> getTransientMap() {
+            return TRANSIENT_VALUES.get(this);
         }
 
         /**
-         * @return true if this rule type has support for the component.
+         * @return true if this rule entries has support for the component.
          */
         public boolean canModify(Block block) {
-            if (!DoormatSettings.redstoneOpensBarrels && block instanceof BarrelBlock)
+            if (isBarrelUnmodifiable(block) || (this == Type.TICK_PRIORITY && !hasDelay(block)))
                 return false;
 
-            if (Type.DELAY.modifiedValues.containsKey(block) && (int) Type.DELAY.modifiedValues.get(block) == 0 && this == Type.TICK_PRIORITY)
+            return DEFAULT_VALUES.containsKey(this) && this.getDefaultMap().containsKey(block);
+        }
+
+        private static boolean isBarrelUnmodifiable(Block block) {
+            return !DoormatSettings.redstoneOpensBarrels && block instanceof BarrelBlock;
+        }
+
+        private static boolean hasDelay(Block block) {
+            var value = Type.DELAY.getValue(block);
+
+            if (value == null)
                 return false;
 
-            return this.defaultValues.containsKey(block);
+            return (int) value > 0;
         }
 
         /**
-         * @return true if the map for this rule type has been modified.
+         * @return true if the map for this rule entries has been modified.
          */
-        public boolean isMapModified() {
-            for (Block block : this.getBlocks().toList()) {
+        public boolean hasBeenModified() {
+            for (Block block : this.getBlocks()) {
                 if (!this.isDefaultValue(block))
                     return true;
             }
@@ -307,19 +329,22 @@ public class TinkerKit {
         }
 
         /**
-         * Converts a list of all modifiable blocks (by <code>type</code>) into a list of their keys, sorts them alphabetically, and then re-interprets the blocks from the keys.
-         * @return a sorted stream of blocks ordered alphabetically by their keys.
+         * Converts a list of all modifiable blocks (by <code>entries</code>) into a list of their keys, sorts them alphabetically, and then re-interprets the blocks from the keys.
+         * @return a sorted list of blocks ordered alphabetically by their keys.
          */
-        public Stream<Block> getBlocks() {
+        public List<Block> getBlocks() {
             List<String> strings = new ArrayList<>(Registries.BLOCK.stream().filter(this::canModify).map(TinkerKit::getKey).toList());
             Collections.sort(strings);
 
-            return Arrays.stream(strings.toArray(String[]::new)).map(key -> Registries.BLOCK.get(Identifier.tryParse(key)));
+            Stream<String> stream = Arrays.stream(strings.toArray(String[]::new));
+            Stream<Block> mapped = stream.map(key -> Registries.BLOCK.get(Identifier.tryParse(key)));
+
+            return mapped.toList();
         }
 
         /**
-         * Converts a list of all modifiable blocks (by <code>type</code>) into a list of their keys and sorts them alphabetically.
-         * @return a sorted array of all modifiable blocks' keys (by <code>type</code>), used for command autocompletion.
+         * Converts a list of all modifiable blocks (by <code>entries</code>) into a list of their keys and sorts them alphabetically.
+         * @return a sorted array of all modifiable blocks' keys (by <code>entries</code>), used for command autocompletion.
          */
         public String[] getBlockKeys() {
             List<String> strings = new ArrayList<>(Registries.BLOCK.stream().filter(this::canModify).map(TinkerKit::getKey).toList());
@@ -328,58 +353,88 @@ public class TinkerKit {
             return strings.toArray(String[]::new);
         }
 
+        private @Nullable Map<Block, Object> getValues(Block block) {
+            Map<Block, Object> defaults = this.getDefaultMap();
+
+            if (!DEFAULT_VALUES.containsKey(this) || !defaults.containsKey(block))
+                return null;
+
+            Map<Block, Object> map = new HashMap<>(defaults);
+            Map<Block, Object> transients = this.getTransientMap();
+
+            if (!TRANSIENT_VALUES.containsKey(this) || !transients.containsKey(block))
+                return map;
+
+            map.putAll(transients);
+
+            return map;
+        }
+
+        /**
+         * @param block the block to get the modified value of.
+         * @return the default value assigned to the <code>block</code>.
+         * @apiNote This requires you cast the return value depending on the {@link Type}.
+         */
+        public @Nullable Object getValue(Block block) {
+            Map<Block, Object> map = this.getValues(block);
+
+            if (map == null)
+                return null;
+
+            return map.get(block);
+        }
+
         /**
          * @param block the block to get the default value of.
          * @return the default value assigned to the <code>block</code>.
          * @throws NullPointerException if no value can be found for the <code>block</code>.
          * @apiNote This requires you cast the return value depending on the {@link Type}.
          */
-        public Object getDefaultValue(Block block) {
-            if (!this.defaultValues.containsKey(block))
-                throw new NullPointerException(String.format("Failed to find the default %s value for %s!", this.name, getTranslatedName(block)));
-
-            return this.defaultValues.get(block);
+        public @Nullable Object getDefaultValue(Block block) {
+            return DEFAULT_VALUES.containsKey(this) ? this.getDefaultMap().get(block) : null;
         }
 
         /**
          * @param block the block to get the modified value of.
          * @return the default value assigned to the <code>block</code>.
-         * @throws NullPointerException if no value can be found for the <code>block</code>.
          * @apiNote This requires you cast the return value depending on the {@link Type}.
          */
-        public Object getModifiedValue(Block block) {
-            if (!this.modifiedValues.containsKey(block))
-                throw new NullPointerException(String.format("Failed to find the modified %s value for %s!", this.name, getTranslatedName(block)));
-
-            return this.modifiedValues.get(block);
+        @Nullable Object getTransientValue(Block block) {
+            return TRANSIENT_VALUES.containsKey(this) ? this.getTransientMap().get(block) : null;
         }
 
         /**
          * @return true if the map value assigned to this component is the default.
          */
         public boolean isDefaultValue(Block block) {
-            return this.getModifiedValue(block) == this.getDefaultValue(block);
-        }
-
-        private boolean trySet(Block block, Object value) {
-            if (this.canModify(block)) {
-                try {
-                    this.modifiedValues.put(block, value);
-                    return true;
-                }
-                catch (Exception ignored) {}
-            }
-
-            return false;
+            return Objects.equals(this.getValue(block), this.getDefaultValue(block));
         }
 
         public void set(Block block, Object value) {
-            if (!trySet(block, value))
+            if (!this.canModify(block))
                 throw new IllegalArgumentException(String.format("Failed to set %s to a new %s value: %s!", getTranslatedName(block), this.name, value));
+
+            if (!TRANSIENT_VALUES.containsKey(this)) {
+                TRANSIENT_VALUES.put(this, new HashMap<>(Map.of(block, value)));
+                return;
+            }
+
+            putSafely(this.getTransientMap(), block, value);
         }
 
         public void reset(Block block) {
-            this.set(block, this.getDefaultValue(block));
+            if (!TRANSIENT_VALUES.containsKey(this))
+                return;
+
+            Map<Block, Object> transients = this.getTransientMap();
+
+            if (!transients.containsKey(block))
+                return;
+
+            transients.remove(block);
+
+            if (transients.isEmpty())
+                TRANSIENT_VALUES.remove(this);
         }
 
     }
@@ -387,60 +442,34 @@ public class TinkerKit {
     public static class Registry {
 
         /**
-         * A hashmap which stores all valid blocks alongside their default quasi-connectivity values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
-         */
-        static final Map<Block, Object> DEFAULT_QC_VALUES = new HashMap<>();
-        /**
-         * A hashmap which stores all valid blocks alongside their default delay values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
-         */
-        static final Map<Block, Object> DEFAULT_DELAY_VALUES = new HashMap<>();
-        /**
-         * A hashmap which stores all valid blocks alongside their default update type values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
-         */
-        static final Map<Block, Object> DEFAULT_UPDATE_TYPE_VALUES = new HashMap<>();
-        /**
-         * A hashmap which stores all valid blocks alongside their default tick priority values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
-         */
-        static final Map<Block, Object> DEFAULT_TICK_PRIORITY_VALUES = new HashMap<>();
-
-        /**
          * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
          * @param block The block to assign the values to.
-         * @param defaultQCValue The quasi-connectivity value the <code>block</code> starts out with by default (usually 0).
-         * @param defaultDelayValue The delay value the <code>block</code> starts out with by default (usually 0).
-         * @param defaultUpdateTypeValue The update type value the <code>block</code> starts out with by default.
-         * @param defaultTickPriorityValue The tick priority value the <code>block</code> starts out with by default.
+         * @param qcValue The quasi-connectivity value the <code>block</code> starts out with by default (usually 0).
+         * @param delayValue The delay value the <code>block</code> starts out with by default (usually 0).
+         * @param updateTypeValue The update entries value the <code>block</code> starts out with by default.
+         * @param tickPriorityValue The tick priority value the <code>block</code> starts out with by default.
          */
-        public static void putBlock(Block block, @Nullable Integer defaultQCValue, @Nullable Integer defaultDelayValue, @Nullable UpdateType defaultUpdateTypeValue, @Nullable TickPriority defaultTickPriorityValue) {
-            if (block == null)
-                throw new IllegalArgumentException(String.format("Failed to map default Tinker Kit values (quasiconnectivity: %s, delay: %s, updatetype: %s, tickpriority: %s) to null block!", defaultQCValue, defaultDelayValue, defaultUpdateTypeValue, defaultTickPriorityValue));
+        public static void putBlock(@NotNull Block block, @Nullable Integer qcValue, @Nullable Integer delayValue, @Nullable UpdateType updateTypeValue, @Nullable TickPriority tickPriorityValue) {
+            for (Type type : Type.values()) {
+                Object value = switch (type) {
+                    case QC -> qcValue;
+                    case DELAY -> delayValue;
+                    case UPDATE_TYPE -> updateTypeValue;
+                    case TICK_PRIORITY -> tickPriorityValue;
+                };
 
-            if (defaultQCValue != null) {
-                if (defaultQCValue < 0)
-                    throw new IllegalArgumentException(String.format("Failed to map out-of-bounds quasi-connectivity value (%s) to block %s!", defaultQCValue, block));
+                if (value == null)
+                    continue;
 
-                DEFAULT_QC_VALUES.put(block, defaultQCValue);
+                putSafelyWithType(DEFAULT_VALUES, type, block, value);
             }
-
-            if (defaultDelayValue != null) {
-                if (defaultDelayValue < 0)
-                    throw new IllegalArgumentException(String.format("Failed to map out-of-bounds delay value (%s) to block %s!", defaultDelayValue, block));
-
-                DEFAULT_DELAY_VALUES.put(block, defaultDelayValue);
-            }
-
-            if (defaultUpdateTypeValue != null)
-                DEFAULT_UPDATE_TYPE_VALUES.put(block, defaultUpdateTypeValue);
-
-            if (defaultTickPriorityValue != null)
-                DEFAULT_TICK_PRIORITY_VALUES.put(block, defaultTickPriorityValue.getIndex());
         }
 
         /**
          * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
          * @param defaultQCValue The quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
          * @param defaultDelayValue The delay value the <code>blocks</code> start out with by default (usually 0).
-         * @param defaultUpdateTypeValue The update type value the <code>blocks</code> start out with by default.
+         * @param defaultUpdateTypeValue The update entries value the <code>blocks</code> start out with by default.
          * @param defaultTickPriorityValue The tick priority value the <code>blocks</code> start out with by default.
          * @param blocks a list of blocks to assign the values to.
          */
@@ -457,23 +486,21 @@ public class TinkerKit {
          * @param blockClass the class of which all child blocks should inherit the following values (eg. DoorBlock.class, 0, 0, UpdateType.SHAPE, null).
          * @param defaultQCValue The quasi-connectivity value the blocks start out with by default (usually 0).
          * @param defaultDelayValue The delay value the blocks start out with by default (usually 0).
-         * @param defaultUpdateTypeValue The update type value the blocks start out with by default.
+         * @param defaultUpdateTypeValue The update entries value the blocks start out with by default.
          * @param defaultTickPriorityValue The tick priority value the blocks start out with by default.
          */
         public static void putBlocksByClass(Class<? extends Block> blockClass, @Nullable Integer defaultQCValue, @Nullable Integer defaultDelayValue, @Nullable UpdateType defaultUpdateTypeValue, @Nullable TickPriority defaultTickPriorityValue) {
-            for (Block block : getBlocksByClass(blockClass).toList())
+            for (Block block : getBlocksByClass(blockClass))
                 putBlock(block, defaultQCValue, defaultDelayValue, defaultUpdateTypeValue, defaultTickPriorityValue);
         }
 
         /**
          * @return a stream of blocks based on whether they're an instance of {@code blockClass}.
          */
-        private static Stream<Block> getBlocksByClass(Class<? extends Block> blockClass) {
-            return Registries.BLOCK.stream().filter(blockClass::isInstance);
+        private static List<Block> getBlocksByClass(Class<? extends Block> blockClass) {
+            return Registries.BLOCK.stream().filter(blockClass::isInstance).toList();
         }
 
     }
-
-    private record Entry(@Nullable Integer qc, @Nullable UpdateType updateType, @Nullable Integer delay, @Nullable TickPriority tickPriority) {}
 
 }

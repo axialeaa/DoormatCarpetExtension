@@ -2,6 +2,7 @@ package com.axialeaa.doormat.mixin.rule.powderSnowPortalBreaking;
 
 import com.axialeaa.doormat.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.PowderSnowBucketItem;
@@ -17,7 +18,8 @@ public class PowderSnowBucketItemMixin {
 
     @ModifyExpressionValue(method = "placeFluid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isAir(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean shouldReplaceBlockAtPos(boolean original, @Nullable PlayerEntity player, World world, BlockPos pos, @Nullable BlockHitResult hitResult) {
-        return original || DoormatSettings.powderSnowPortalBreaking && world.getBlockState(pos).isOf(Blocks.NETHER_PORTAL);
+        BlockState blockState = world.getBlockState(pos);
+        return original || DoormatSettings.powderSnowPortalBreaking && blockState.isOf(Blocks.NETHER_PORTAL);
     }
 
 }

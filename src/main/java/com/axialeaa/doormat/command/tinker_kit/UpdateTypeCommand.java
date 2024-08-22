@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.command;
+package com.axialeaa.doormat.command.tinker_kit;
 
 import com.axialeaa.doormat.util.UpdateType;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -23,6 +23,11 @@ public class UpdateTypeCommand extends AbstractTinkerKitCommand<String> {
     @Override
     public ArgumentType<String> getArgumentType() {
         return StringArgumentType.string();
+    }
+
+    @Override
+    public Class<String> getObjectClass() {
+        return String.class;
     }
 
     @Override

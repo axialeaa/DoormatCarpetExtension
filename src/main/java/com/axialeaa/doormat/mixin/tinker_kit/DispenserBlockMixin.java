@@ -24,18 +24,6 @@ public abstract class DispenserBlockMixin {
 
     @Shadow protected abstract void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);
 
-    @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
-    private void changeDelayAndTickPriority(World instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
-        if (TinkerKit.getDelay(state, i) == 0)
-            this.scheduledTick(state, (ServerWorld) instance, pos, instance.getRandom());
-        else instance.scheduleBlockTick(pos, block, TinkerKit.getDelay(state, i), TinkerKit.getTickPriority(state, TickPriority.NORMAL));
-    }
-
-    @ModifyArg(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
-    private int changeUpdateType(int original, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.getFlags(state, original);
-    }
-
     /**
      * This needs to be different because of carpet's modified quasi-connectivity logic.
      */
@@ -44,16 +32,17 @@ public abstract class DispenserBlockMixin {
     @WrapOperation(method = "@MixinSquared:Handler", at = @At(value = "INVOKE", target =  "Lcarpet/helpers/QuasiConnectivity;hasQuasiSignal(Lnet/minecraft/world/RedstoneView;Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean shouldQC(RedstoneView instance, BlockPos pos, Operation<Boolean> original) {
         BlockState blockState = instance.getBlockState(pos);
+        Block block = blockState.getBlock();
 
-        if (!TinkerKit.Type.QC.canModify(blockState.getBlock()))
+        if (!TinkerKit.Type.QC.canModify(block))
             return original.call(instance, pos);
 
-        int qcValue = (int) TinkerKit.Type.QC.getModifiedValue(blockState.getBlock());
+        var value = TinkerKit.Type.QC.getValue(block);
 
-        if (qcValue < 1)
+        if (value == null || (int) value < 1)
             return false;
 
-        for (int i = 1; i <= qcValue; i++) {
+        for (int i = 1; i <= (int) value; i++) {
             BlockPos blockPos = pos.up(i);
 
             if (TinkerKit.cannotQC(instance, blockPos))
@@ -64,6 +53,24 @@ public abstract class DispenserBlockMixin {
         }
 
         return false;
+    }
+
+    @ModifyArg(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
+    private int modifyUpdateType(int original, @Local(argsOnly = true) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.getFlags(block, original);
+    }
+
+    @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
+    private void scheduleOrCall(World instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
+        int delay = TinkerKit.getDelay(block, i);
+
+        if (delay > 0) {
+            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            instance.scheduleBlockTick(pos, block, delay, tickPriority);
+        }
+        else if (instance instanceof ServerWorld serverWorld)
+            this.scheduledTick(state, serverWorld, pos, serverWorld.getRandom());
     }
 
 }

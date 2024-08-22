@@ -33,18 +33,21 @@ public abstract class TameableEntityMixin extends EntityMixin {
 
     /**
      * Disables entity damage if the rule is enabled and the instigator fits the criteria for the rule setting.
-     * @param source the type of damage to be dealt to the entity
+     * @param source the entries of damage to be dealt to the entity
      * @param amount the amount of damage to be dealt to the entity
      * @param cir returnable callback info parameter, since this method is instantiated from the original handler method in {@link EntityMixin}
      */
     @Override
     public void damageImpl(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         Entity attacker = source.getAttacker();
-        if (attacker instanceof PlayerEntity player) {
-            Optional<UUID> optional = Optional.ofNullable(this.getOwnerUuid());
-            if (fitsCriteria(optional, player))
-                cir.setReturnValue(false);
-        }
+
+        if (!(attacker instanceof PlayerEntity player))
+            return;
+
+        Optional<UUID> optional = Optional.ofNullable(this.getOwnerUuid());
+
+        if (fitsCriteria(optional, player))
+            cir.setReturnValue(false);
     }
 
 }

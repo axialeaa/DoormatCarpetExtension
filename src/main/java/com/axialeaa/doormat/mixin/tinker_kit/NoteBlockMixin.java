@@ -1,6 +1,5 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.fake.TinkerKitBehaviourSetter;
 import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -25,31 +24,33 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NoteBlock.class)
-public abstract class NoteBlockMixin extends AbstractBlockMixin implements TinkerKitBehaviourSetter {
+public abstract class NoteBlockMixin extends AbstractBlockMixin {
 
     @Shadow @Final public static BooleanProperty POWERED;
     @Shadow protected abstract void playNote(@Nullable Entity entity, BlockState state, World world, BlockPos pos);
 
     @Unique private boolean isPowered = false;
 
-    @Inject(method = "neighborUpdate", at = @At(value = "HEAD"), cancellable = true)
-    private void defineTinkerKitBehaviour(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
-        int delay = TinkerKit.getDelay(state, 0);
-        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, state);
-
-        if (delay == 0)
-            getBehaviour(world, pos, state);
-        else {
-            TickPriority tickPriority = TinkerKit.getTickPriority(state, TickPriority.NORMAL);
-            world.scheduleBlockTick(pos, state.getBlock(), delay, tickPriority);
-        }
-
-        ci.cancel();
+    @ModifyArg(method = "onUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"), index = 2)
+    private int modifyUpdateType(int original, @Local(argsOnly = true) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.getFlags(block, original);
     }
 
-    @ModifyArg(method = "onUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"), index = 2)
-    private int changeUpdateType_onUse(int original, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.getFlags(state, original);
+    @Inject(method = "neighborUpdate", at = @At(value = "HEAD"), cancellable = true)
+    private void scheduleOrCall(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
+        Block block = state.getBlock();
+        int delay = TinkerKit.getDelay(block, 0);
+
+        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, block);
+
+        if (delay > 0) {
+            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            world.scheduleBlockTick(pos, block, delay, tickPriority);
+        }
+        else getBehaviour(world, pos, state);
+
+        ci.cancel();
     }
 
     @Override
@@ -57,15 +58,18 @@ public abstract class NoteBlockMixin extends AbstractBlockMixin implements Tinke
         getBehaviour(world, pos, state);
     }
 
-    @Override
+    @Unique
     public void getBehaviour(World world, BlockPos pos, BlockState state) {
-        if (isPowered != state.get(POWERED)) {
-            if (isPowered)
-                this.playNote(null, state, world, pos);
+        if (isPowered == state.get(POWERED))
+            return;
 
-            int flags = TinkerKit.getFlags(state, Block.NOTIFY_ALL);
-            world.setBlockState(pos, state.with(POWERED, isPowered), flags);
-        }
+        if (isPowered)
+            this.playNote(null, state, world, pos);
+
+        Block block = state.getBlock();
+        int flags = TinkerKit.getFlags(block, Block.NOTIFY_ALL);
+
+        world.setBlockState(pos, state.with(POWERED, isPowered), flags);
     }
 
 }

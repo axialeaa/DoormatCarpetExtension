@@ -61,12 +61,13 @@ public class MossBlockMixin {
     }
 
     @Unique
-    private void generateAbove(boolean condition, RegistryKey<ConfiguredFeature<?, ?>> feature, ServerWorld world, Random random, BlockPos pos) {
-        if (condition && world.getBlockState(pos.up()).isAir()) {
-            world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap(registry ->
-                registry.getEntry(feature)).ifPresent(reference ->
-                reference.value().generate(world, world.getChunkManager().getChunkGenerator(), random, pos.up()));
-        }
+    private void generateAbove(boolean rule, RegistryKey<ConfiguredFeature<?, ?>> feature, ServerWorld world, Random random, BlockPos pos) {
+        if (!rule || !world.getBlockState(pos.up()).isAir())
+            return;
+
+        world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap(registry ->
+            registry.getEntry(feature)).ifPresent(reference ->
+            reference.value().generate(world, world.getChunkManager().getChunkGenerator(), random, pos.up()));
     }
 
 }

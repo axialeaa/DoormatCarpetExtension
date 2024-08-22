@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helper.TooltipCarouselHelper;
+import com.axialeaa.doormat.helper.CompactTooltipHelper;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
@@ -28,37 +28,39 @@ public abstract class ItemEnchantmentsComponentMixin {
     @Shadow public abstract boolean isEmpty();
 
     /**
-     * Cycles the displayed line using the logic in {@link TooltipCarouselHelper}.
+     * Cycles the displayed line using the logic in {@link CompactTooltipHelper}.
      */
     @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item$TooltipContext;getRegistryLookup()Lnet/minecraft/registry/RegistryWrapper$WrapperLookup;", shift = At.Shift.BEFORE), cancellable = true)
     private void appendTooltipCarousel(Item.TooltipContext context, Consumer<Text> tooltip, TooltipType type, CallbackInfo ci) {
         if (!DoormatSettings.compactEnchantTooltips.enabled() || this.isEmpty())
             return;
 
-        TooltipCarouselHelper.LIST_SIZE = this.getSize();
+        CompactTooltipHelper.LIST_SIZE = this.getSize();
 
-        RegistryEntry<Enchantment> enchantment = this.getEnchantments().stream().toList().get(TooltipCarouselHelper.LIST_INDEX);
+        RegistryEntry<Enchantment> enchantment = this.getEnchantments().stream().toList().get(CompactTooltipHelper.LIST_INDEX);
         Text name = Enchantment.getName(enchantment, this.getLevel(enchantment));
 
-        if (TooltipCarouselHelper.LIST_SIZE == 1)
+        if (CompactTooltipHelper.LIST_SIZE == 1) {
             tooltip.accept(name);
-        else {
-            if (DoormatSettings.compactEnchantTooltips == DoormatSettings.CarouselTooltipMode.TRUE)
-                tooltip.accept(TooltipCarouselHelper.getFormattedFraction().append(name));
-            else if (DoormatSettings.compactEnchantTooltips == DoormatSettings.CarouselTooltipMode.BAR) {
+            ci.cancel();
+        }
+
+        switch (DoormatSettings.compactEnchantTooltips) {
+            case TRUE -> tooltip.accept(CompactTooltipHelper.getFormattedFraction().append(name));
+            case BAR -> {
                 tooltip.accept(name);
                 MutableText mutableText = Text.empty();
 
                 // Constructs the bar a number of characters long equal to the length of the enchantment list,
                 // filling in the square if the enchantment at that ordinal is currently displayed by the carousel
-                for (int i = 1; i <= TooltipCarouselHelper.getDenominator(); ++i) {
+                for (int i = 1; i <= CompactTooltipHelper.getDenominator(); ++i) {
                     RegistryEntry<Enchantment> barEnchantment = this.getEnchantments().stream().toList().get(i - 1);
-                    String dot = i == TooltipCarouselHelper.getNumerator() ? "■" : "□";
+                    String dot = i == CompactTooltipHelper.getNumerator() ? "■" : "□";
 
-                    mutableText.append(TooltipCarouselHelper.format(Text.literal(dot), barEnchantment));
+                    mutableText.append(CompactTooltipHelper.format(Text.literal(dot), barEnchantment));
                 }
 
-                tooltip.accept(TooltipCarouselHelper.format(mutableText.append(" (" + TooltipCarouselHelper.getFraction() + ")")));
+                tooltip.accept(CompactTooltipHelper.format(mutableText.append(" (" + CompactTooltipHelper.getFraction() + ")")));
             }
         }
 

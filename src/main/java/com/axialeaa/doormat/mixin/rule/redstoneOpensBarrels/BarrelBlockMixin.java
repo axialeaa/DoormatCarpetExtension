@@ -1,7 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.redstoneOpensBarrels;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.fake.TinkerKitBehaviourSetter;
 import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import net.minecraft.block.BarrelBlock;
@@ -22,7 +21,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BarrelBlock.class)
-public class BarrelBlockMixin extends AbstractBlockMixin implements TinkerKitBehaviourSetter {
+public class BarrelBlockMixin extends AbstractBlockMixin {
 
     @Shadow @Final public static BooleanProperty OPEN;
 
@@ -33,17 +32,19 @@ public class BarrelBlockMixin extends AbstractBlockMixin implements TinkerKitBeh
      */
     @Override
     public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
-        if (DoormatSettings.redstoneOpensBarrels) {
-            this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, state);
-            int delay = TinkerKit.getDelay(state, 0);
+        if (!DoormatSettings.redstoneOpensBarrels)
+            return;
 
-            if (delay == 0)
-                getBehaviour(world, pos, state);
-            else {
-                TickPriority tickPriority = TinkerKit.getTickPriority(state, TickPriority.NORMAL);
-                world.scheduleBlockTick(pos, state.getBlock(), delay, tickPriority);
-            }
+        Block block = state.getBlock();
+        int delay = TinkerKit.getDelay(block, 0);
+
+        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, block);
+
+        if (delay > 0) {
+            TickPriority tickPriority = TinkerKit.getTickPriority(block, TickPriority.NORMAL);
+            world.scheduleBlockTick(pos, state.getBlock(), delay, tickPriority);
         }
+        else getBehaviour(world, pos, state);
     }
 
     @Override
@@ -51,14 +52,15 @@ public class BarrelBlockMixin extends AbstractBlockMixin implements TinkerKitBeh
         getBehaviour(world, pos, state);
     }
 
-    @Override
+    @Unique
     public void getBehaviour(World world, BlockPos pos, BlockState state) {
-        if (state.get(OPEN) != isPowered) {
-            int flags = TinkerKit.getFlags(state, Block.NOTIFY_ALL);
-            world.setBlockState(pos, state.with(BarrelBlock.OPEN, isPowered), flags);
+        if (state.get(OPEN) == isPowered)
+            return;
 
-            world.playSound(null, pos, isPowered ? SoundEvents.BLOCK_BARREL_OPEN : SoundEvents.BLOCK_BARREL_CLOSE, SoundCategory.BLOCKS);
-        }
+        int flags = TinkerKit.getFlags(state.getBlock(), Block.NOTIFY_ALL);
+        world.setBlockState(pos, state.with(BarrelBlock.OPEN, isPowered), flags);
+
+        world.playSound(null, pos, isPowered ? SoundEvents.BLOCK_BARREL_OPEN : SoundEvents.BLOCK_BARREL_CLOSE, SoundCategory.BLOCKS);
     }
 
 }

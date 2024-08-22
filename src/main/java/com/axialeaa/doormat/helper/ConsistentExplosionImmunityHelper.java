@@ -16,14 +16,13 @@ public class ConsistentExplosionImmunityHelper {
      * @return whether an explosion created inside this block (if it were placed) would destroy it.
      */
     public static boolean shouldDamage(ItemEntity itemEntity, float power) {
-        if (DoormatSettings.consistentExplosionImmunity) {
-            Item item = itemEntity.getStack().getItem();
-            float blastRes = Block.getBlockFromItem(item).getBlastResistance();
+        if (!DoormatSettings.consistentExplosionImmunity)
+            return true;
 
-            return power * 1.3 > (blastRes + 0.3) * 0.3;
-        }
+        Item item = itemEntity.getStack().getItem();
+        float blastRes = Block.getBlockFromItem(item).getBlastResistance();
 
-        return true;
+        return power * 1.3 > (blastRes + 0.3) * 0.3;
     }
 
 }

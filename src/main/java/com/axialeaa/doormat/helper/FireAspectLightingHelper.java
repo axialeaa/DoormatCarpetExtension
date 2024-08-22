@@ -27,34 +27,37 @@ public class FireAspectLightingHelper {
      * Ignites TNT, campfires or candles when clicked with the item.
      */
     public static ActionResult onUse(ItemUsageContext ctx) {
-        if (DoormatSettings.fireAspectLighting) {
-            PlayerEntity player = ctx.getPlayer();
-            ItemStack stack = ctx.getStack();
-            World world = ctx.getWorld();
-            BlockPos blockPos = ctx.getBlockPos();
-            BlockState blockState = world.getBlockState(blockPos);
+        if (!DoormatSettings.fireAspectLighting)
+            return ActionResult.PASS;
 
-            if (hasFireAspect(world, stack)) {
-                if (blockState.getBlock() instanceof TntBlock) {
-                    TntBlockAccessor.invokePrimeTnt(world, blockPos, player);
+        ItemStack stack = ctx.getStack();
+        World world = ctx.getWorld();
 
-                    int flags = TinkerKit.getFlags(blockState, Block.NOTIFY_ALL) | Block.REDRAW_ON_MAIN_THREAD;
-                    world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), flags);
-                }
-                else if (CampfireBlock.canBeLit(blockState) || CandleBlock.canBeLit(blockState) || CandleCakeBlock.canBeLit(blockState)) {
-                    world.setBlockState(blockPos, blockState.with(Properties.LIT, true), Block.NOTIFY_ALL_AND_REDRAW);
-                    world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
-                }
-                else return ActionResult.PASS;
+        if (!hasFireAspect(world, stack))
+            return ActionResult.PASS;
 
-                if (stack.isDamageable() && player != null)
-                    stack.damage(1, player, LivingEntity.getSlotForHand(ctx.getHand()));
+        BlockPos blockPos = ctx.getBlockPos();
+        BlockState blockState = world.getBlockState(blockPos);
 
-                return ActionResult.success(world.isClient());
-            }
+        PlayerEntity player = ctx.getPlayer();
+        Block block = blockState.getBlock();
+
+        if (block instanceof TntBlock) {
+            TntBlockAccessor.invokePrimeTnt(world, blockPos, player);
+
+            int flags = TinkerKit.getFlags(block, Block.NOTIFY_ALL) | Block.REDRAW_ON_MAIN_THREAD;
+            world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), flags);
         }
+        else if (CampfireBlock.canBeLit(blockState) || CandleBlock.canBeLit(blockState) || CandleCakeBlock.canBeLit(blockState)) {
+            world.setBlockState(blockPos, blockState.with(Properties.LIT, true), Block.NOTIFY_ALL_AND_REDRAW);
+            world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, blockPos);
+        }
+        else return ActionResult.PASS;
 
-        return ActionResult.PASS;
+        if (stack.isDamageable() && player != null)
+            stack.damage(1, player, LivingEntity.getSlotForHand(ctx.getHand()));
+
+        return ActionResult.success(world.isClient());
     }
 
     private static boolean hasFireAspect(World world, ItemStack stack) {

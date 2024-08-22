@@ -33,11 +33,12 @@ public class DungeonBiomeSpawningHelper {
     }
 
     public static Optional<EntityType<?>> getAlternativeForBiome(EntityType<?> type, Biome biome) {
-        if (MAP.containsKey(type)) {
-            for (EntityType<?> entityType : MAP.get(type)) {
-                if (canSpawnInBiome(biome, entityType))
-                    return Optional.of(entityType);
-            }
+        if (!MAP.containsKey(type))
+            return Optional.empty();
+
+        for (EntityType<?> entityType : MAP.get(type)) {
+            if (canSpawnInBiome(biome, entityType))
+                return Optional.of(entityType);
         }
 
         return Optional.empty();

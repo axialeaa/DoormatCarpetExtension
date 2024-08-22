@@ -24,7 +24,9 @@ public class HuskEntityMixin extends ZombieEntity {
      */
     @Inject(method = "convertInWater", at = @At("HEAD"))
     private void onConvertInWater(CallbackInfo info) {
-        if (DoormatSettings.huskWashing && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_LOOT) && !this.isBaby())
+        GameRules gameRules = this.getWorld().getGameRules();
+
+        if (DoormatSettings.huskWashing && gameRules.getBoolean(GameRules.DO_MOB_LOOT) && !this.isBaby())
             dropStack(new ItemStack(Items.SAND, random.nextBetween(1, 3)));
     }
 

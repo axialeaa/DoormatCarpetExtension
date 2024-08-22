@@ -1,10 +1,8 @@
-package com.axialeaa.doormat.command;
+package com.axialeaa.doormat.command.tinker_kit;
 
+import com.axialeaa.doormat.DoormatServer;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-
-import java.util.stream.Stream;
-
 import static com.axialeaa.doormat.tinker_kit.TinkerKit.Type;
 
 public class QuasiConnectivityCommand extends AbstractTinkerKitCommand<Integer> {
@@ -20,8 +18,13 @@ public class QuasiConnectivityCommand extends AbstractTinkerKitCommand<Integer> 
     }
 
     @Override
-    public Stream<Integer> getSuggestions() {
-        return Stream.of(0, 1);
+    public Class<Integer> getObjectClass() {
+        return Integer.class;
+    }
+
+    @Override
+    public Object getInputValue(Integer argument) {
+        return argument > DoormatServer.MAX_QC_RANGE ? null : argument;
     }
 
 }

@@ -24,17 +24,19 @@ public abstract class ComparatorBlockMixin {
     @Shadow protected abstract void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);
 
     @WrapOperation(method = "updatePowered", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;ILnet/minecraft/world/tick/TickPriority;)V"))
-    private void changeDelayAndTickPriority(World instance, BlockPos pos, Block block, int i, TickPriority tickPriority, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
-        if (this.getUpdateDelayInternal(state) == 0) {
-            if (instance instanceof ServerWorld serverWorld)
-                this.scheduledTick(state, serverWorld, pos, instance.getRandom());
-        }
-        else instance.scheduleBlockTick(pos, block, TinkerKit.getDelay(state, i), tickPriority);
+    private void scheduleOrCall(World instance, BlockPos pos, Block block, int i, TickPriority tickPriority, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
+        int delay = this.getUpdateDelayInternal(state);
+
+        if (delay > 0)
+            instance.scheduleBlockTick(pos, block, delay, tickPriority);
+        else if (instance instanceof ServerWorld serverWorld)
+            this.scheduledTick(state, serverWorld, pos, serverWorld.getRandom());
     }
 
     @ModifyReturnValue(method = "getUpdateDelayInternal", at = @At("RETURN"))
-    private int changeDelay(int original, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.getDelay(state, original);
+    private int modifyDelay(int original, @Local(argsOnly = true) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.getDelay(block, original);
     }
 
 }

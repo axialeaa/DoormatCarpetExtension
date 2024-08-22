@@ -27,11 +27,13 @@ public class BeaconBlockEntityMixin {
      */
     @Inject(method = "applyPlayerEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getNonSpectatingEntities(Ljava/lang/Class;Lnet/minecraft/util/math/Box;)Ljava/util/List;"))
     private static void regenNearbyPets(World world, BlockPos pos, int beaconLevel, @Nullable RegistryEntry<StatusEffect> primaryEffect, @Nullable RegistryEntry<StatusEffect> secondaryEffect, CallbackInfo ci, @Local Box box, @Local(ordinal = 2) int duration) {
-        if (DoormatSettings.beaconsHealPets && secondaryEffect == StatusEffects.REGENERATION) {
-            List<TameableEntity> list = world.getEntitiesByClass(TameableEntity.class, box, TameableEntity::isTamed);
-            list.forEach(tameableEntity ->
-                tameableEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration, 0, true, true)));
-        }
+        if (!DoormatSettings.beaconsHealPets || secondaryEffect != StatusEffects.REGENERATION)
+            return;
+
+        List<TameableEntity> tameableEntities = world.getEntitiesByClass(TameableEntity.class, box, TameableEntity::isTamed);
+
+        for (TameableEntity tameableEntity : tameableEntities)
+            tameableEntity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration, 0, true, true));
     }
 
 }

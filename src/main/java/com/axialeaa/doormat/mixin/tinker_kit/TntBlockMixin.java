@@ -1,6 +1,5 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.fake.TinkerKitBehaviourSetter;
 import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -23,41 +22,32 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TntBlock.class)
-public abstract class TntBlockMixin extends AbstractBlockMixin implements TinkerKitBehaviourSetter {
+public abstract class TntBlockMixin extends AbstractBlockMixin {
 
     @Shadow public static void primeTnt(World world, BlockPos pos) {}
 
-    @Unique
-    private void doBehaviour(BlockState state, World world, BlockPos pos) {
-        int delay = TinkerKit.getDelay(state, 0);
+    @WrapOperation(method = "onProjectileHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
+    private boolean modifyUpdateType_onProjectileHit(World instance, BlockPos pos, boolean move, Operation<Boolean> original, @Local(argsOnly = true, ordinal = 0) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.removeBlock(instance, pos, block, move);
+    }
 
-        if (TinkerKit.isReceivingRedstonePower(world, pos, state)) {
-            if (delay == 0)
-                getBehaviour(world, pos, state);
-            else world.scheduleBlockTick(pos, state.getBlock(), delay, TinkerKit.getTickPriority(state, TickPriority.NORMAL));
-        }
+    @ModifyArg(method = "onUseWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
+    private int modifyUpdateType_onUseWithItem(int original, @Local(argsOnly = true) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.getFlags(block, original) | Block.REDRAW_ON_MAIN_THREAD;
     }
 
     @Inject(method = "neighborUpdate", at = @At("HEAD"), cancellable = true)
-    private void onNeighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
-        doBehaviour(state, world, pos);
+    private void scheduleOrCall_neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
+        scheduleOrCall(state, world, pos);
         ci.cancel();
     }
 
     @Inject(method = "onBlockAdded", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z", shift = At.Shift.BEFORE), cancellable = true)
-    private void onOnBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
-        doBehaviour(state, world, pos);
+    private void scheduleOrCall_onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
+        scheduleOrCall(state, world, pos);
         ci.cancel();
-    }
-
-    @WrapOperation(method = "onProjectileHit", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;removeBlock(Lnet/minecraft/util/math/BlockPos;Z)Z"))
-    private boolean changeUpdateTypeOnProjectileHit(World instance, BlockPos pos, boolean move, Operation<Boolean> original, @Local(argsOnly = true, ordinal = 0) BlockState state) {
-        return TinkerKit.removeBlock(instance, pos, state, move);
-    }
-
-    @ModifyArg(method = "onUseWithItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
-    private int changeUpdateTypeOnUseWithItem(int original, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.getFlags(state, original) | Block.REDRAW_ON_MAIN_THREAD;
     }
 
     @Override
@@ -65,10 +55,25 @@ public abstract class TntBlockMixin extends AbstractBlockMixin implements Tinker
         getBehaviour(world, pos, state);
     }
 
-    @Override
+    @Unique
+    private void scheduleOrCall(BlockState state, World world, BlockPos pos) {
+        Block block = state.getBlock();
+        int delay = TinkerKit.getDelay(block, 0);
+
+        if (!TinkerKit.isReceivingRedstonePower(world, pos, block))
+            return;
+
+        if (delay > 0) {
+            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            world.scheduleBlockTick(pos, block, delay, tickPriority);
+        }
+        else getBehaviour(world, pos, state);
+    }
+
+    @Unique
     public void getBehaviour(World world, BlockPos pos, BlockState state) {
         primeTnt(world, pos);
-        TinkerKit.removeBlock(world, pos, state, false);
+        TinkerKit.removeBlock(world, pos, state.getBlock(), false);
     }
 
 }

@@ -4,6 +4,7 @@ import com.axialeaa.doormat.DoormatSettings;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BarrelBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -28,12 +29,14 @@ public class BarrelBlockEntityMixin extends BlockEntity {
      */
     @WrapWithCondition(method = "setOpen", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private boolean shouldChangeState(World world, BlockPos pos, BlockState state, int flags) {
-        return !(DoormatSettings.redstoneOpensBarrels && TinkerKit.isReceivingRedstonePower(world, pos, state));
+        Block block = state.getBlock();
+        return !(DoormatSettings.redstoneOpensBarrels && TinkerKit.isReceivingRedstonePower(world, pos, block));
     }
 
     @WrapWithCondition(method = "playSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"))
     private boolean shouldPlaySound(World world, PlayerEntity source, double x, double y, double z, SoundEvent sound, SoundCategory category, float volume, float pitch, @Local(argsOnly = true) BlockState state) {
-        return !(DoormatSettings.redstoneOpensBarrels && TinkerKit.isReceivingRedstonePower(world, pos, state));
+        Block block = state.getBlock();
+        return !(DoormatSettings.redstoneOpensBarrels && TinkerKit.isReceivingRedstonePower(world, pos, block));
     }
 
 }

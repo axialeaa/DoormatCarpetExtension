@@ -34,19 +34,19 @@ public abstract class ArmorTrimMixin {
      */
     @ModifyArg(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V", ordinal = 0))
     private Object modifyUpgradeText(Object object) {
-        if (DoormatSettings.compactTrimTooltips.enabled()) {
-            ArmorTrimMaterial material = this.getMaterial().value();
-            ArmorTrimPattern pattern = this.getPattern().value();
-            String ingredient = Translations.tr("compact_tooltip.trim." + material.assetName());
+        if (!DoormatSettings.compactTrimTooltips.enabled())
+            return object;
 
-            boolean onlyPattern = DoormatSettings.compactTrimTooltips == DoormatSettings.TrimTooltipMode.ONLY_PATTERN;
+        ArmorTrimMaterial material = this.getMaterial().value();
+        ArmorTrimPattern pattern = this.getPattern().value();
+        String ingredient = Translations.tr("compact_tooltip.trim." + material.assetName());
 
-            return Text.literal(onlyPattern ? "": ingredient)
-                    .setStyle(material.description().getStyle())
-                    .append(onlyPattern ? Text.empty() : ScreenTexts.space())
-                    .append(pattern.description());
-        }
-        return object;
+        boolean onlyPattern = DoormatSettings.compactTrimTooltips == DoormatSettings.TrimTooltipMode.ONLY_PATTERN;
+
+        return Text.literal(onlyPattern ? "": ingredient)
+            .setStyle(material.description().getStyle())
+            .append(onlyPattern ? Text.empty() : ScreenTexts.space())
+            .append(pattern.description());
     }
 
     @WrapWithCondition(method = "appendTooltip", slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenTexts;space()Lnet/minecraft/text/MutableText;", ordinal = 1)), at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V"))

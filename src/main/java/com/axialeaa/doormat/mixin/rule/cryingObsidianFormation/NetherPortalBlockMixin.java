@@ -23,15 +23,18 @@ public class NetherPortalBlockMixin {
 
     @Inject(method = "randomTick", at = @At("HEAD"))
     private void createCryingObsidian(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (DoormatSettings.cryingObsidianPortalFrames && DoormatSettings.obsidianFrameConversionChance > 0) {
-            for (Direction direction : Direction.values()) {
-                if (direction.getAxis().isVertical() || state.get(AXIS) == direction.getAxis()) {
-                    BlockPos blockPos = pos.offset(direction);
+        if (!DoormatSettings.cryingObsidianPortalFrames || DoormatSettings.obsidianFrameConversionChance <= 0)
+            return;
 
-                    if (world.getBlockState(blockPos).isOf(Blocks.OBSIDIAN) && random.nextFloat() < DoormatSettings.obsidianFrameConversionChance)
-                        world.setBlockState(blockPos, Blocks.CRYING_OBSIDIAN.getDefaultState());
-                }
-            }
+        for (Direction direction : Direction.values()) {
+            if (!direction.getAxis().isVertical() || state.get(AXIS) != direction.getAxis())
+                continue;
+
+            BlockPos blockPos = pos.offset(direction);
+            BlockState blockState = world.getBlockState(blockPos);
+
+            if (blockState.isOf(Blocks.OBSIDIAN) && random.nextFloat() < DoormatSettings.obsidianFrameConversionChance)
+                world.setBlockState(blockPos, Blocks.CRYING_OBSIDIAN.getDefaultState());
         }
     }
 

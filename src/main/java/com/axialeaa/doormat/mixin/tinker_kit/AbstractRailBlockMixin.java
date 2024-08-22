@@ -27,36 +27,42 @@ public abstract class AbstractRailBlockMixin extends AbstractBlockMixin {
 
     @Unique private Block neighbor;
 
-    @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/AbstractRailBlock;updateBlockState(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
-    private void defineTinkerKitBehaviour(AbstractRailBlock instance, BlockState state, World world, BlockPos pos, Block neighbor, Operation<Void> original) {
-        int delay = TinkerKit.getDelay(state, 0);
-
-        if (delay == 0)
-            original.call(instance, state, world, pos, neighbor);
-        else {
-            this.neighbor = neighbor;
-            world.scheduleBlockTick(pos, state.getBlock(), delay, TinkerKit.getTickPriority(state, TickPriority.NORMAL));
-        }
-    }
-
     @WrapOperation(method = "updateBlockState(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Z)Lnet/minecraft/block/BlockState;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnectivity(World instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.isReceivingRedstonePower(instance, pos, state);
+        Block block = state.getBlock();
+        return TinkerKit.isReceivingRedstonePower(instance, pos, block);
     }
 
     @WrapWithCondition(method = "updateCurves", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbor(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;Lnet/minecraft/util/math/BlockPos;Z)V"))
-    private boolean shouldUpdateNeighboursOnUpdateCurves(World instance, BlockState state_, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.shouldUpdateNeighbours(state);
+    private boolean shouldUpdateNeighbours_onUpdateCurves(World instance, BlockState state_, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, @Local(argsOnly = true) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.shouldUpdateNeighbours(block);
     }
 
     @WrapWithCondition(method = "onStateReplaced", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
-    private boolean shouldUpdateNeighboursOnStateReplaced(World instance, BlockPos pos, Block sourceBlock, @Local(argsOnly = true, ordinal = 0) BlockState state) {
-        return TinkerKit.shouldUpdateNeighbours(state);
+    private boolean shouldUpdateNeighbours_onStateReplaced(World instance, BlockPos pos, Block sourceBlock, @Local(argsOnly = true, ordinal = 0) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.shouldUpdateNeighbours(block);
+    }
+
+    @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/AbstractRailBlock;updateBlockState(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
+    private void scheduleOrCall(AbstractRailBlock instance, BlockState state, World world, BlockPos pos, Block neighbor, Operation<Void> original) {
+        int delay = TinkerKit.getDelay(instance, 0);
+
+        if (delay > 0) {
+            this.neighbor = neighbor;
+
+            Block block = state.getBlock();
+            TickPriority tickPriority = TinkerKit.getTickPriority(instance);
+
+            world.scheduleBlockTick(pos, block, delay, tickPriority);
+        }
+        else original.call(instance, state, world, pos, neighbor);
     }
 
     @Override
     public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        this.updateBlockState(state, world, pos, neighbor);
+        this.updateBlockState(state, world, pos, this.neighbor);
     }
 
 }

@@ -18,13 +18,16 @@ public class SpreadableBlockMixin {
 
     @Inject(method = "randomTick", at = @At("HEAD"))
     private void growLongGrass(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (DoormatSettings.grassAgingChance > 0 && state.isOf(Blocks.GRASS_BLOCK) && random.nextFloat() < DoormatSettings.grassAgingChance) {
-            BlockPos blockPos = pos.up();
-            if (world.getBlockState(blockPos).isAir())
-                world.setBlockState(blockPos, Blocks.SHORT_GRASS.getDefaultState());
-            else if (world.getBlockState(blockPos).isOf(Blocks.SHORT_GRASS) && world.getBlockState(blockPos.up()).isAir())
-                TallPlantBlock.placeAt(world, Blocks.TALL_GRASS.getDefaultState(), blockPos, 2);
-        }
+        if (DoormatSettings.grassAgingChance == 0 || random.nextFloat() >= DoormatSettings.grassAgingChance || !state.isOf(Blocks.GRASS_BLOCK))
+            return;
+
+        BlockPos upPos = pos.up();
+        BlockState upState = world.getBlockState(upPos);
+
+        if (upState.isAir())
+            world.setBlockState(upPos, Blocks.SHORT_GRASS.getDefaultState());
+        else if (upState.isOf(Blocks.SHORT_GRASS) && world.getBlockState(upPos.up()).isAir())
+            TallPlantBlock.placeAt(world, Blocks.TALL_GRASS.getDefaultState(), upPos, SpreadableBlock.NOTIFY_LISTENERS);
     }
 
 }

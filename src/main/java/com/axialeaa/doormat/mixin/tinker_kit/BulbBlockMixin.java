@@ -5,6 +5,7 @@ import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BulbBlock;
 import net.minecraft.server.world.ServerWorld;
@@ -22,26 +23,27 @@ public abstract class BulbBlockMixin extends AbstractBlockMixin {
 
     @Shadow public abstract void update(BlockState state, ServerWorld world, BlockPos pos);
 
-    @WrapOperation(method = { "neighborUpdate", "onBlockAdded" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BulbBlock;update(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;)V"))
-    private void scheduleTickOn(BulbBlock instance, BlockState state, ServerWorld world, BlockPos pos, Operation<Void> original) {
-        int delay = TinkerKit.getDelay(state, 0);
-
-        if (delay == 0)
-            original.call(instance, state, world, pos);
-        else {
-            TickPriority tickPriority = TinkerKit.getTickPriority(state, TickPriority.NORMAL);
-            world.scheduleBlockTick(pos, instance, delay, tickPriority);
-        }
+    @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
+    private boolean allowQuasiConnectivity(ServerWorld instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.isReceivingRedstonePower(instance, pos, block);
     }
 
     @ModifyArg(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
-    private int changeUpdateType(int flags, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.getFlags(state, flags);
+    private int modifyUpdateType(int flags, @Local(argsOnly = true) BlockState state) {
+        Block block = state.getBlock();
+        return TinkerKit.getFlags(block, flags);
     }
 
-    @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
-    private boolean allowQuasiConnectivity(ServerWorld instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
-        return TinkerKit.isReceivingRedstonePower(instance, pos, state);
+    @WrapOperation(method = { "neighborUpdate", "onBlockAdded" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BulbBlock;update(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;)V"))
+    private void scheduleOrCall(BulbBlock instance, BlockState state, ServerWorld world, BlockPos pos, Operation<Void> original) {
+        int delay = TinkerKit.getDelay(instance, 0);
+
+        if (delay > 0) {
+            TickPriority tickPriority = TinkerKit.getTickPriority(instance);
+            world.scheduleBlockTick(pos, instance, delay, tickPriority);
+        }
+        else original.call(instance, state, world, pos);
     }
 
     @Override

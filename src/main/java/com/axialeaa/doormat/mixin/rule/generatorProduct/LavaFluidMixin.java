@@ -1,7 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.generatorProduct;
 
 import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helper.BlockIdentifierRuleHelper;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.Block;
@@ -14,7 +13,7 @@ public class LavaFluidMixin {
 
     @WrapOperation(method = "flow", at = @At(value = "FIELD", target = "Lnet/minecraft/block/Blocks;STONE:Lnet/minecraft/block/Block;"))
     private Block modifyStoneGenProduct(Operation<Block> original) {
-        return BlockIdentifierRuleHelper.getBlockFromId(DoormatSettings.stoneGenProduct).orElse(original.call());
+        return DoormatSettings.BlockIdentifierValidator.getBlockFromId(DoormatSettings.stoneGenProduct).orElse(original.call());
     }
 
 }

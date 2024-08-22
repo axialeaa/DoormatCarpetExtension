@@ -27,17 +27,19 @@ public abstract class FallingBlockEntityMixin extends Entity {
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/FallingBlockEntity;discard()V", ordinal = 3, shift = At.Shift.BEFORE), cancellable = true)
     private void placeStandingVariant(CallbackInfo ci, @Local BlockPos blockPos) {
-        if (DoormatSettings.propagulePropagation && this.block.isOf(Blocks.MANGROVE_PROPAGULE) && this.block.get(PropaguleBlock.HANGING)) {
-            World world = this.getWorld();
-            BlockState standing = this.block.with(PropaguleBlock.HANGING, false);
-            BlockState downState = world.getBlockState(blockPos.down());
+        if (!DoormatSettings.propagulePropagation || !this.block.getOrEmpty(PropaguleBlock.HANGING).orElse(true))
+            return;
 
-            if (standing.canPlaceAt(world, blockPos) && !FallingBlock.canFallThrough(downState) && world.setBlockState(blockPos, standing, Block.NOTIFY_ALL)) {
-                ((ServerWorld) world).getChunkManager().chunkLoadingManager.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, world.getBlockState(blockPos)));
-                this.discard();
+        World world = this.getWorld();
 
-                ci.cancel();
-            }
+        BlockState standingState = this.block.with(PropaguleBlock.HANGING, false);
+        BlockState downState = world.getBlockState(blockPos.down());
+
+        if (standingState.canPlaceAt(world, blockPos) && !FallingBlock.canFallThrough(downState) && world.setBlockState(blockPos, standingState, Block.NOTIFY_ALL)) {
+            ((ServerWorld) world).getChunkManager().chunkLoadingManager.sendToOtherNearbyPlayers(this, new BlockUpdateS2CPacket(blockPos, standingState));
+            this.discard();
+
+            ci.cancel();
         }
     }
 
