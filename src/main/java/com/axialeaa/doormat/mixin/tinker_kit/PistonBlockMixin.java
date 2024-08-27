@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = PistonBlock.class, priority = 1500)
-public class PistonBlockMixin extends AbstractBlockMixin {
+public class PistonBlockMixin extends AbstractBlockImplMixin {
 
     @Unique private int type;
     @Unique private int data;

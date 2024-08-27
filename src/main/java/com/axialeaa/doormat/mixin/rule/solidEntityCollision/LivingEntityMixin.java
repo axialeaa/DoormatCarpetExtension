@@ -1,14 +1,14 @@
 package com.axialeaa.doormat.mixin.rule.solidEntityCollision;
 
-import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.mixin.extensibility.EntityMixin;
+import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.mixin.impl.EntityImplMixin;
 import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends EntityMixin {
+public abstract class LivingEntityMixin extends EntityImplMixin {
 
     @Shadow public abstract boolean isAlive();
 

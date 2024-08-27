@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(CommandBlock.class)
+@Mixin(value = CommandBlock.class, priority = 1500)
 public abstract class CommandBlockMixin {
 
     @Shadow protected abstract void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);

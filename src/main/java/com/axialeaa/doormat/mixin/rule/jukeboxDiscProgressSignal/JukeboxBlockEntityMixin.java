@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.jukeboxDiscProgressSignal;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.helper.JukeboxSignalHelper;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.block.Block;

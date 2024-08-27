@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.extensibility;
+package com.axialeaa.doormat.mixin.impl;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @SuppressWarnings("CancellableInjectionUsage")
 @Mixin(Entity.class)
-public abstract class EntityMixin {
+public abstract class EntityImplMixin {
 
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void damageImpl(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {}

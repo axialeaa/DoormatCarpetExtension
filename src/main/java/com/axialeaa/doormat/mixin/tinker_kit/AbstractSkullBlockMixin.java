@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -21,8 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AbstractSkullBlock.class)
-public class AbstractSkullBlockMixin extends AbstractBlockMixin {
+@Mixin(value = AbstractSkullBlock.class, priority = 1500)
+public class AbstractSkullBlockMixin extends AbstractBlockImplMixin {
 
     @Shadow @Final public static BooleanProperty POWERED;
 

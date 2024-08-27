@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.maxMinecartSpeed;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

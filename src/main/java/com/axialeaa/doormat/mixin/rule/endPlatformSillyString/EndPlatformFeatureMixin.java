@@ -1,6 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.endPlatformSillyString;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.settings.enum_options.SillyStringMode;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.Block;
@@ -21,7 +22,7 @@ public class EndPlatformFeatureMixin {
 
     @WrapWithCondition(method = "generate(Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/util/math/BlockPos;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/ServerWorldAccess;breakBlock(Lnet/minecraft/util/math/BlockPos;ZLnet/minecraft/entity/Entity;)Z"))
     private static boolean dropStacks(ServerWorldAccess instance, BlockPos blockPos, boolean b, Entity entity) {
-        if (!DoormatSettings.endPlatformSillyString.enabled())
+        if (!DoormatSettings.endPlatformSillyString.isEnabled())
             return true;
 
         BlockState blockState = instance.getBlockState(blockPos);
@@ -29,7 +30,7 @@ public class EndPlatformFeatureMixin {
         if (!(blockState.getBlock() instanceof AbstractFireBlock))
             instance.syncWorldEvent(WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
 
-        if (DoormatSettings.endPlatformSillyString != DoormatSettings.SillyStringMode.DELETE_STRING || !(blockState.getBlock() instanceof TripwireBlock)) {
+        if (DoormatSettings.endPlatformSillyString != SillyStringMode.DELETE_STRING || !(blockState.getBlock() instanceof TripwireBlock)) {
             BlockEntity blockEntity = blockState.hasBlockEntity() ? instance.getBlockEntity(blockPos) : null;
             Block.dropStacks(blockState, instance, blockPos, blockEntity);
         }

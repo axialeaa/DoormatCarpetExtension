@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
@@ -23,8 +23,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(NoteBlock.class)
-public abstract class NoteBlockMixin extends AbstractBlockMixin {
+@Mixin(value = NoteBlock.class, priority = 1500)
+public abstract class NoteBlockMixin extends AbstractBlockImplMixin {
 
     @Shadow @Final public static BooleanProperty POWERED;
     @Shadow protected abstract void playNote(@Nullable Entity entity, BlockState state, World world, BlockPos pos);

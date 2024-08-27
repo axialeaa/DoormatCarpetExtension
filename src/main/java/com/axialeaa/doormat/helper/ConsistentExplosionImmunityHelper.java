@@ -1,9 +1,10 @@
 package com.axialeaa.doormat.helper;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 /**
  * Helper class for consistentExplosionImmunity logic, with help from <a href="https://github.com/lntricate1">intricate</a>.
@@ -19,10 +20,11 @@ public class ConsistentExplosionImmunityHelper {
         if (!DoormatSettings.consistentExplosionImmunity)
             return true;
 
-        Item item = itemEntity.getStack().getItem();
-        float blastRes = Block.getBlockFromItem(item).getBlastResistance();
+        ItemStack itemStack = itemEntity.getStack();
+        Item item = itemStack.getItem();
 
-        return power * 1.3 > (blastRes + 0.3) * 0.3;
+        float blastResistance = Block.getBlockFromItem(item).getBlastResistance();
+        return power * 1.3 > (blastResistance + 0.3) * 0.3;
     }
 
 }

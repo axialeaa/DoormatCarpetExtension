@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -26,13 +26,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(TrapdoorBlock.class)
-public abstract class TrapdoorBlockMixin extends AbstractBlockMixin {
+@Mixin(value = TrapdoorBlock.class, priority = 1500)
+public abstract class TrapdoorBlockMixin extends AbstractBlockImplMixin {
 
     @Shadow @Final public static BooleanProperty POWERED;
     @Shadow @Final public static BooleanProperty OPEN;
-    @Shadow protected abstract void playToggleSound(@Nullable PlayerEntity player, World world, BlockPos pos, boolean open);
     @Shadow @Final public static BooleanProperty WATERLOGGED;
+
+    @Shadow protected abstract void playToggleSound(@Nullable PlayerEntity player, World world, BlockPos pos, boolean open);
 
     @Unique private boolean isPowered = false;
 
@@ -41,7 +42,7 @@ public abstract class TrapdoorBlockMixin extends AbstractBlockMixin {
         Block block = state.getBlock();
         this.isPowered = TinkerKit.isReceivingRedstonePower(instance, pos, block);
 
-        return isPowered;
+        return this.isPowered;
     }
 
     @ModifyArg(method = "flip", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
@@ -73,20 +74,20 @@ public abstract class TrapdoorBlockMixin extends AbstractBlockMixin {
 
     @Unique
     public void getBehaviour(World world, BlockPos pos, BlockState state) {
-        if (isPowered == state.get(POWERED))
+        if (this.isPowered == state.get(POWERED))
             return;
 
         BlockState blockState = state;
 
-        if (state.get(OPEN) != isPowered) {
-            blockState = state.with(OPEN, isPowered);
-            this.playToggleSound(null, world, pos, isPowered);
+        if (state.get(OPEN) != this.isPowered) {
+            blockState = state.with(OPEN, this.isPowered);
+            this.playToggleSound(null, world, pos, this.isPowered);
         }
 
         Block block = state.getBlock();
         int flags = TinkerKit.getFlags(block, Block.NOTIFY_LISTENERS);
 
-        world.setBlockState(pos, blockState.with(POWERED, isPowered), flags);
+        world.setBlockState(pos, blockState.with(POWERED, this.isPowered), flags);
 
         if (state.get(WATERLOGGED))
             world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));

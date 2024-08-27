@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,8 +18,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(StructureBlock.class)
-public abstract class StructureBlockMixin extends AbstractBlockMixin {
+@Mixin(value = StructureBlock.class, priority = 1500)
+public abstract class StructureBlockMixin extends AbstractBlockImplMixin {
 
     @Shadow protected abstract void doAction(ServerWorld world, StructureBlockBlockEntity blockEntity);
 
@@ -53,12 +53,12 @@ public abstract class StructureBlockMixin extends AbstractBlockMixin {
 
         boolean bl = blockEntity.isPowered();
 
-        if (isPowered == bl)
+        if (this.isPowered == bl)
             return;
 
-        blockEntity.setPowered(isPowered);
+        blockEntity.setPowered(this.isPowered);
 
-        if (isPowered && world instanceof ServerWorld serverWorld)
+        if (this.isPowered && world instanceof ServerWorld serverWorld)
             this.doAction(serverWorld, blockEntity);
     }
 

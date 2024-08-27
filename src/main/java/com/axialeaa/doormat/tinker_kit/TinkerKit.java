@@ -3,7 +3,7 @@ package com.axialeaa.doormat.tinker_kit;
 import carpet.CarpetSettings;
 import carpet.utils.Translations;
 import com.axialeaa.doormat.DoormatServer;
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.util.UpdateType;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.*;
@@ -49,7 +49,7 @@ public class TinkerKit {
     public static String getTranslatedName(Block block) {
         String key = block.getTranslationKey();
         String namespace = Registries.BLOCK.getId(block).getNamespace();
-        String path = String.format("assets/%s/lang/%s.json", namespace, CarpetSettings.language);
+        String path = "assets/%s/lang/%s.json".formatted(namespace, CarpetSettings.language);
 
         return Translations.getTranslationFromResourcePath(path).get(key);
     }
@@ -58,6 +58,9 @@ public class TinkerKit {
         return world.isOutOfHeightLimit(pos) || DoormatSettings.qcSuppressor && world.getBlockState(pos).isOf(Blocks.EMERALD_ORE);
     }
 
+    /**
+     * Safely adds a new entry to a Tinker Kit hashmap of type {@code Map<Type, Map<Block, Object>>}, preventing {@link UnsupportedOperationException} throws when trying to call {@link Map#put(Object, Object)}.
+     */
     private static void putSafelyWithType(Map<Type, Map<Block, Object>> map, @NotNull Type type, @NotNull Block block, @NotNull Object value) {
         if (map == null)
             return;
@@ -70,6 +73,9 @@ public class TinkerKit {
         putSafely(map.get(type), block, value);
     }
 
+    /**
+     * Safely adds a new entry to a Tinker Kit hashmap of type {@code Map<Block, Object>}, preventing {@link UnsupportedOperationException} throws when trying to call {@link Map#put(Object, Object)}.
+     */
     private static void putSafely(Map<Block, Object> map, @NotNull Block block, @NotNull Object value) {
         if (map == null)
             return;
@@ -120,27 +126,27 @@ public class TinkerKit {
     /**
      * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, Block, int)} which takes in a direction--used for redstone torches.
      * <p>
-     * This has been re-implemented due to the semantic difference between {@link RedstoneView#isEmittingRedstonePower(BlockPos, Direction) isEmittingRedstonePower()} and {@link RedstoneView#isReceivingRedstonePower(BlockPos) isReceivingRedstonePower()}. The second will return true if any of the blocks adjacent to the block position are powered, whereas the first checks for only the block position itself. This makes sense for torches and really nothing else, which unpower when the block they're resting on is sourcing power.
+     * This has been re-implemented due to the semantic difference between {@link RedstoneView#isEmittingRedstonePower(BlockPos, Direction) isEmittingRedstonePower()} and {@link RedstoneView#isReceivingRedstonePower(BlockPos) isEmittingRedstonePower()}. The second will return true if any of the blocks adjacent to the block position are powered, whereas the first checks for only the block position itself. This makes sense for torches and really nothing else, which unpower when the block they're resting on is sourcing power.
      * @param world the world this method is called in.
      * @param pos the block position this method is called at.
      * @param direction the direction to check if power is being received.
      * @param i the number to add onto the range check.
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
-    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, Block block, Direction direction, int i) {
+    public static boolean isEmittingRedstonePower(RedstoneView world, BlockPos pos, Block block, Direction direction, int i) {
         return getEmittedRedstonePower(world, pos, block, direction, i) > 0;
     }
 
     /**
      * An alternative implementation of {@link #isReceivingRedstonePower(RedstoneView, BlockPos, Block)} which takes in a direction--used for redstone torches.
      * <p>
-     * This has been re-implemented due to the semantic difference between {@link RedstoneView#isEmittingRedstonePower(BlockPos, Direction) isEmittingRedstonePower()} and {@link RedstoneView#isReceivingRedstonePower(BlockPos) isReceivingRedstonePower()}. The second will return true if any of the blocks adjacent to the block position are powered, whereas the first checks for only the block position itself. This makes sense for torches and really nothing else, which unpower when the block they're resting on is sourcing power.
+     * This has been re-implemented due to the semantic difference between {@link RedstoneView#isEmittingRedstonePower(BlockPos, Direction) isEmittingRedstonePower()} and {@link RedstoneView#isReceivingRedstonePower(BlockPos) isEmittingRedstonePower()}. The second will return true if any of the blocks adjacent to the block position are powered, whereas the first checks for only the block position itself. This makes sense for torches and really nothing else, which unpower when the block they're resting on is sourcing power.
      * @param world the world this method is called in.
      * @param pos the block position this method is called at.
      * @param direction the direction to check if power is being received.
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
-    public static boolean isReceivingRedstonePower(RedstoneView world, BlockPos pos, Block block, Direction direction) {
+    public static boolean isEmittingRedstonePower(RedstoneView world, BlockPos pos, Block block, Direction direction) {
         return getEmittedRedstonePower(world, pos, block, direction, 0) > 0;
     }
 
@@ -225,6 +231,27 @@ public class TinkerKit {
     }
 
     /**
+     * Alternative implementation of {@link TinkerKit#getFlags(Block, int)} that has the ability to set certain bits to 0, effectively bypassing certain types of update regardless of the input.
+     */
+    public static int getFlagsWithRemoved(Block block, int fallback, int removed) {
+        return getFlags(block, fallback) & ~removed;
+    }
+
+    /**
+     * Alternative implementation of {@link TinkerKit#getFlagsWithRemoved(Block, int, int)} that takes in an {@link UpdateType} object instead of an integer.
+     */
+    public static int getFlagsWithRemoved(Block block, int fallback, UpdateType updateType) {
+        return getFlagsWithRemoved(block, fallback, updateType.flags);
+    }
+
+    /**
+     * Alternative implementation of {@link TinkerKit#getFlagsWithRemoved(Block, int, int)} that removes neighbor updates.
+     */
+    public static int getFlagsWithoutNeighborUpdate(Block block, int fallback) {
+        return getFlagsWithRemoved(block, fallback, UpdateType.BLOCK);
+    }
+
+    /**
      * An alternative implementation of {@link World#removeBlock(BlockPos, boolean)}, allowing for custom update flags based on the block passed through {@code state}.
      * @param world The world this method is called in.
      * @param pos The block position this method is called at.
@@ -242,7 +269,7 @@ public class TinkerKit {
      * @return true if the update entries flags of the given blockstate are odd (BLOCK, 1 and BOTH, 3).
      */
     public static boolean shouldUpdateNeighbours(Block block, int fallback) {
-        return (getFlags(block, fallback) & Block.NOTIFY_NEIGHBORS) == 1;
+        return (getFlags(block, fallback) & Block.NOTIFY_NEIGHBORS) == Block.NOTIFY_NEIGHBORS;
     }
 
     /**
@@ -412,7 +439,7 @@ public class TinkerKit {
 
         public void set(Block block, Object value) {
             if (!this.canModify(block))
-                throw new IllegalArgumentException(String.format("Failed to set %s to a new %s value: %s!", getTranslatedName(block), this.name, value));
+                throw new IllegalArgumentException("Failed to set %s to a new %s value: %s!".formatted(getTranslatedName(block), this.name, value));
 
             if (!TRANSIENT_VALUES.containsKey(this)) {
                 TRANSIENT_VALUES.put(this, new HashMap<>(Map.of(block, value)));
@@ -444,18 +471,18 @@ public class TinkerKit {
         /**
          * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
          * @param block The block to assign the values to.
-         * @param qcValue The quasi-connectivity value the <code>block</code> starts out with by default (usually 0).
-         * @param delayValue The delay value the <code>block</code> starts out with by default (usually 0).
-         * @param updateTypeValue The update entries value the <code>block</code> starts out with by default.
-         * @param tickPriorityValue The tick priority value the <code>block</code> starts out with by default.
+         * @param qc The quasi-connectivity value the <code>block</code> starts out with by default (usually 0).
+         * @param delay The delay value the <code>block</code> starts out with by default (usually 0).
+         * @param updateType The update entries value the <code>block</code> starts out with by default.
+         * @param tickPriority The tick priority value the <code>block</code> starts out with by default.
          */
-        public static void putBlock(@NotNull Block block, @Nullable Integer qcValue, @Nullable Integer delayValue, @Nullable UpdateType updateTypeValue, @Nullable TickPriority tickPriorityValue) {
+        public static void putBlock(@NotNull Block block, @Nullable Integer qc, @Nullable Integer delay, @Nullable UpdateType updateType, @Nullable TickPriority tickPriority) {
             for (Type type : Type.values()) {
                 Object value = switch (type) {
-                    case QC -> qcValue;
-                    case DELAY -> delayValue;
-                    case UPDATE_TYPE -> updateTypeValue;
-                    case TICK_PRIORITY -> tickPriorityValue;
+                    case QC -> qc;
+                    case DELAY -> delay;
+                    case UPDATE_TYPE -> updateType;
+                    case TICK_PRIORITY -> tickPriority;
                 };
 
                 if (value == null)
@@ -467,31 +494,31 @@ public class TinkerKit {
 
         /**
          * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
-         * @param defaultQCValue The quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
-         * @param defaultDelayValue The delay value the <code>blocks</code> start out with by default (usually 0).
-         * @param defaultUpdateTypeValue The update entries value the <code>blocks</code> start out with by default.
-         * @param defaultTickPriorityValue The tick priority value the <code>blocks</code> start out with by default.
+         * @param qc The quasi-connectivity value the <code>blocks</code> start out with by default (usually 0).
+         * @param delay The delay value the <code>blocks</code> start out with by default (usually 0).
+         * @param updateType The update entries value the <code>blocks</code> start out with by default.
+         * @param tickPriority The tick priority value the <code>blocks</code> start out with by default.
          * @param blocks a list of blocks to assign the values to.
          */
-        public static void putBlocks(@Nullable Integer defaultQCValue, @Nullable Integer defaultDelayValue, @Nullable UpdateType defaultUpdateTypeValue, @Nullable TickPriority defaultTickPriorityValue, Block... blocks) {
+        public static void putBlocks(@Nullable Integer qc, @Nullable Integer delay, @Nullable UpdateType updateType, @Nullable TickPriority tickPriority, Block... blocks) {
             if (blocks.length == 0)
                 throw new IllegalArgumentException("No blocks found in variable argument list!");
 
             for (Block block : blocks)
-                putBlock(block, defaultQCValue, defaultDelayValue, defaultUpdateTypeValue, defaultTickPriorityValue);
+                putBlock(block, qc, delay, updateType, tickPriority);
         }
 
         /**
          * <strong>Should always be called from {@link ModInitializer#onInitialize()}.</strong>
          * @param blockClass the class of which all child blocks should inherit the following values (eg. DoorBlock.class, 0, 0, UpdateType.SHAPE, null).
-         * @param defaultQCValue The quasi-connectivity value the blocks start out with by default (usually 0).
-         * @param defaultDelayValue The delay value the blocks start out with by default (usually 0).
-         * @param defaultUpdateTypeValue The update entries value the blocks start out with by default.
-         * @param defaultTickPriorityValue The tick priority value the blocks start out with by default.
+         * @param qc The quasi-connectivity value the blocks start out with by default (usually 0).
+         * @param delay The delay value the blocks start out with by default (usually 0).
+         * @param updateType The update entries value the blocks start out with by default.
+         * @param tickPriority The tick priority value the blocks start out with by default.
          */
-        public static void putBlocksByClass(Class<? extends Block> blockClass, @Nullable Integer defaultQCValue, @Nullable Integer defaultDelayValue, @Nullable UpdateType defaultUpdateTypeValue, @Nullable TickPriority defaultTickPriorityValue) {
+        public static void putBlocksByClass(Class<? extends Block> blockClass, @Nullable Integer qc, @Nullable Integer delay, @Nullable UpdateType updateType, @Nullable TickPriority tickPriority) {
             for (Block block : getBlocksByClass(blockClass))
-                putBlock(block, defaultQCValue, defaultDelayValue, defaultUpdateTypeValue, defaultTickPriorityValue);
+                putBlock(block, qc, delay, updateType, tickPriority);
         }
 
         /**

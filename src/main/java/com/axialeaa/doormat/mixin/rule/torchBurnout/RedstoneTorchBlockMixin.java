@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.torchBurnout;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import net.minecraft.block.RedstoneTorchBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;

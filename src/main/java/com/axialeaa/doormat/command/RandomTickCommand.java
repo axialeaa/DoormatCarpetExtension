@@ -2,7 +2,7 @@ package com.axialeaa.doormat.command;
 
 import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;

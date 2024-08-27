@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.extensibility;
+package com.axialeaa.doormat.mixin.impl;
 
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @SuppressWarnings("CancellableInjectionUsage")
 @Mixin(AbstractBlock.class)
-public abstract class AbstractBlockMixin {
+public abstract class AbstractBlockImplMixin {
 
     @Inject(method = "getCollisionShape", at = @At("HEAD"), cancellable = true)
     public void getCollisionShapeImpl(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {}

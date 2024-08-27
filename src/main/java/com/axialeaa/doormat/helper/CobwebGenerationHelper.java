@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.helper;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -16,11 +16,11 @@ public class CobwebGenerationHelper {
     /**
      * For as long as the rule is enabled and the entity inside the spawner is a cave spider, check all positions in the specified area centred on the spawner for adjacent faces. If there are at least 2 adjacent faces, create a cobweb in that position with a commonness that scales with the number of adjacent faces.
      */
-    public static void forBox(World world, BlockPos pos, Entity storedEntity, int hSize, int vSize, int rarity) {
+    public static void forBox(World world, BlockPos pos, Entity storedEntity, int h, int v, int rarity) {
         if (!DoormatSettings.spawnersGenerateCobwebs || !(storedEntity instanceof CaveSpiderEntity))
             return;
 
-        for (BlockPos blockPos : BlockPos.iterate(pos.add(-hSize, -vSize, -hSize), pos.add(hSize, vSize, hSize)))
+        for (BlockPos blockPos : BlockPos.iterate(pos.add(-h, -v, -h), pos.add(h, v, h)))
             placeCobweb(world, blockPos, rarity);
     }
 

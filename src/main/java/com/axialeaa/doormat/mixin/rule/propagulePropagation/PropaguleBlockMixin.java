@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.propagulePropagation;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.PropaguleBlock;

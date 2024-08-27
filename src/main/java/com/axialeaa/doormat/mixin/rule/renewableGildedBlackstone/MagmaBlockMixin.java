@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.renewableGildedBlackstone;
 
-import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MagmaBlock;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MagmaBlock.class)
-public class MagmaBlockMixin extends AbstractBlockMixin {
+public class MagmaBlockMixin extends AbstractBlockImplMixin {
 
     /**
      * As long as the rule is enabled and the block above the magma block is water, replace blackstone for each adjacent direction with gilded blackstone.

@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.campfireRespawning;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.helper.CampfireRespawningHelper;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;

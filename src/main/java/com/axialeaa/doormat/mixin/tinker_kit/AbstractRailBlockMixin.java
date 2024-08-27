@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -20,8 +20,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AbstractRailBlock.class)
-public abstract class AbstractRailBlockMixin extends AbstractBlockMixin {
+@Mixin(value = AbstractRailBlock.class, priority = 1500)
+public abstract class AbstractRailBlockMixin extends AbstractBlockImplMixin {
 
     @Shadow protected abstract void updateBlockState(BlockState state, World world, BlockPos pos, Block neighbor);
 

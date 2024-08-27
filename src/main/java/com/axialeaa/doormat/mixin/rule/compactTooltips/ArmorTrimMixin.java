@@ -1,7 +1,8 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
 import carpet.utils.Translations;
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.settings.enum_options.TrimTooltipMode;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -16,7 +17,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Slice;
-
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
@@ -34,14 +34,14 @@ public abstract class ArmorTrimMixin {
      */
     @ModifyArg(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V", ordinal = 0))
     private Object modifyUpgradeText(Object object) {
-        if (!DoormatSettings.compactTrimTooltips.enabled())
+        if (!DoormatSettings.compactTrimTooltips.isEnabled())
             return object;
 
         ArmorTrimMaterial material = this.getMaterial().value();
         ArmorTrimPattern pattern = this.getPattern().value();
         String ingredient = Translations.tr("compact_tooltip.trim." + material.assetName());
 
-        boolean onlyPattern = DoormatSettings.compactTrimTooltips == DoormatSettings.TrimTooltipMode.ONLY_PATTERN;
+        boolean onlyPattern = DoormatSettings.compactTrimTooltips == TrimTooltipMode.ONLY_PATTERN;
 
         return Text.literal(onlyPattern ? "": ingredient)
             .setStyle(material.description().getStyle())
@@ -51,7 +51,7 @@ public abstract class ArmorTrimMixin {
 
     @WrapWithCondition(method = "appendTooltip", slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/screen/ScreenTexts;space()Lnet/minecraft/text/MutableText;", ordinal = 1)), at = @At(value = "INVOKE", target = "Ljava/util/function/Consumer;accept(Ljava/lang/Object;)V"))
     private boolean shouldApplyExtraLines(Consumer<Text> instance, Object o) {
-        return !DoormatSettings.compactTrimTooltips.enabled();
+        return !DoormatSettings.compactTrimTooltips.isEnabled();
     }
 
 

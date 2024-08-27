@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.ravagersStomp;
 
-import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SnowBlock;
 import net.minecraft.entity.Entity;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SnowBlock.class)
-public class SnowBlockMixin extends AbstractBlockMixin {
+public class SnowBlockMixin extends AbstractBlockImplMixin {
 
     /**
      * Breaks the block at the entity's position if the rule is enabled, mob griefing is on and the entity is a ravager.

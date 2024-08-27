@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(AbstractRedstoneGateBlock.class)
+@Mixin(value = AbstractRedstoneGateBlock.class, priority = 1500)
 public abstract class AbstractRedstoneGateBlockMixin extends HorizontalFacingBlock {
 
     @Shadow protected abstract void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);

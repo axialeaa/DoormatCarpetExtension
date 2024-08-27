@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.crafterSignalLerping;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CrafterBlock;

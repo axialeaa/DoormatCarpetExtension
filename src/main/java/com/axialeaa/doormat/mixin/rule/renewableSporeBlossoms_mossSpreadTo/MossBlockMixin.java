@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.renewableSporeBlossoms_mossSpreadTo;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.feature.DoormatConfiguredFeatures;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;

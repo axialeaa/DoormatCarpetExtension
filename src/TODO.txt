@@ -1,3 +1,1 @@
-add buttons, pressure plates, levers, sculk sensors, etc
-fix openDoubleDoors powering
-add piston easings (?)
+add neighbor update-less getFlags calls to more block state changes

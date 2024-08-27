@@ -1,6 +1,8 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.helper.DoubleDoorHelper;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -14,6 +16,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
@@ -28,12 +31,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(DoorBlock.class)
-public abstract class DoorBlockMixin extends AbstractBlockMixin {
+@Mixin(value = DoorBlock.class, priority = 1500)
+public abstract class DoorBlockMixin extends AbstractBlockImplMixin {
 
     @Shadow @Final public static BooleanProperty POWERED;
     @Shadow @Final public static BooleanProperty OPEN;
     @Shadow @Final public static EnumProperty<DoubleBlockHalf> HALF;
+
     @Shadow protected abstract void playOpenCloseSound(@Nullable Entity entity, World world, BlockPos pos, boolean open);
 
     @Unique private boolean isPowered;
@@ -41,11 +45,9 @@ public abstract class DoorBlockMixin extends AbstractBlockMixin {
     @WrapOperation(method = "getPlacementState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z", ordinal = 0))
     private boolean allowQuasiConnectivity(World instance, BlockPos pos, Operation<Boolean> original) {
         BlockState blockState = instance.getBlockState(pos);
-        Block block = blockState.getBlock();
+        this.isPowered = isDoorPowered(instance, pos, blockState);
 
-        this.isPowered = TinkerKit.isReceivingRedstonePower(instance, pos, block, 1);
-
-        return isPowered;
+        return this.isPowered || isConnectedDoorPowered(instance, pos, blockState);
     }
 
     @ModifyArg(method = { "onUse", "setOpen" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
@@ -57,10 +59,9 @@ public abstract class DoorBlockMixin extends AbstractBlockMixin {
     @Inject(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z", shift = At.Shift.BEFORE), cancellable = true)
     private void scheduleOrCall(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
         Block block = state.getBlock();
-        boolean isLowerHalf = state.get(HALF) == DoubleBlockHalf.LOWER;
 
         int delay = TinkerKit.getDelay(block, 0);
-        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, block, isLowerHalf ? 1 : 0) || (!isLowerHalf && world.isReceivingRedstonePower(pos.down()));
+        this.isPowered = isDoorPowered(world, pos, state);
 
         if (delay > 0) {
             TickPriority tickPriority = TinkerKit.getTickPriority(block);
@@ -78,22 +79,48 @@ public abstract class DoorBlockMixin extends AbstractBlockMixin {
 
     @Unique
     public void getBehaviour(World world, BlockPos pos, BlockState state) {
-        if (isPowered == state.get(POWERED))
-            return;
-
         BlockState blockState = state;
 
-        if (state.get(OPEN) != isPowered) {
-            blockState = state.with(OPEN, isPowered);
+        if (this.isPowered == blockState.get(POWERED))
+            return;
 
-            this.playOpenCloseSound(null, world, pos, isPowered);
-            world.emitGameEvent(null, isPowered ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+        boolean bl = this.isPowered || isConnectedDoorPowered(world, pos, blockState);
+
+        if (bl != state.get(OPEN)) {
+            blockState = state.with(OPEN, bl);
+
+            this.playOpenCloseSound(null, world, pos, bl);
+            world.emitGameEvent(null, bl ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
         }
 
         Block block = state.getBlock();
         int flags = TinkerKit.getFlags(block, Block.NOTIFY_LISTENERS);
 
-        world.setBlockState(pos, blockState.with(POWERED, isPowered), flags);
+        world.setBlockState(pos, blockState.with(POWERED, this.isPowered), flags);
+    }
+
+    @Unique
+    public boolean isDoorPowered(World world, BlockPos pos, BlockState state) {
+        Block block = state.getBlock();
+        boolean lowerHalf = state.get(HALF) == DoubleBlockHalf.LOWER;
+
+        return TinkerKit.isReceivingRedstonePower(world, pos, block, lowerHalf ? 1 : 0) || (!lowerHalf && world.isReceivingRedstonePower(pos.down()));
+    }
+
+    @Unique
+    public boolean isConnectedDoorPowered(World world, BlockPos pos, BlockState state) {
+        if (!DoormatSettings.openDoubleDoors)
+            return false;
+
+        Direction direction = DoubleDoorHelper.getConnectedDoorDirection(state);
+        BlockPos offset = pos.offset(direction);
+
+        BlockState blockState = DoubleDoorHelper.getConnectedDoorState(world, pos, state);
+
+        Block block = blockState.getBlock();
+        boolean lowerHalf = blockState.get(HALF) == DoubleBlockHalf.LOWER;
+
+        return TinkerKit.isReceivingRedstonePower(world, offset, block, lowerHalf ? 1 : 0) || (!lowerHalf && world.isReceivingRedstonePower(offset.down()));
     }
 
 }

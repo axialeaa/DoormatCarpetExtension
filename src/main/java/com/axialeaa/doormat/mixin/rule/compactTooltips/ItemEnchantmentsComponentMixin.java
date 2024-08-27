@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.helper.CompactTooltipHelper;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
@@ -32,7 +32,7 @@ public abstract class ItemEnchantmentsComponentMixin {
      */
     @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item$TooltipContext;getRegistryLookup()Lnet/minecraft/registry/RegistryWrapper$WrapperLookup;", shift = At.Shift.BEFORE), cancellable = true)
     private void appendTooltipCarousel(Item.TooltipContext context, Consumer<Text> tooltip, TooltipType type, CallbackInfo ci) {
-        if (!DoormatSettings.compactEnchantTooltips.enabled() || this.isEmpty())
+        if (!DoormatSettings.compactEnchantTooltips.isEnabled() || this.isEmpty())
             return;
 
         CompactTooltipHelper.LIST_SIZE = this.getSize();

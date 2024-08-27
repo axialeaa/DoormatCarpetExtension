@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.world;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -42,7 +42,7 @@ public class LocalDifficultyMixin {
      * The new condition is wrapped around the above modification, like this:
      * <pre>
      * {@code
-     * if (difficulty == DoormatSettings.peacefulMonsterSpawning.enabled() && (difficulty == Difficulty.PEACEFUL || difficulty == Difficulty.EASY) ? difficulty : Difficulty.EASY) {
+     * if (difficulty == DoormatSettings.peacefulMonsterSpawning.isEnabled() && (difficulty == Difficulty.PEACEFUL || difficulty == Difficulty.EASY) ? difficulty : Difficulty.EASY) {
      *     h *= 0.5F;
      * }
      * }
@@ -50,7 +50,7 @@ public class LocalDifficultyMixin {
      */
     @ModifyExpressionValue(method = "setLocalDifficulty", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;EASY:Lnet/minecraft/world/Difficulty;"))
     private Difficulty modifyReassignment(Difficulty original, @Local(argsOnly = true) Difficulty difficulty) {
-        return DoormatSettings.peacefulMonsterSpawning.enabled() && (difficulty == Difficulty.PEACEFUL || difficulty == Difficulty.EASY) ?
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() && (difficulty == Difficulty.PEACEFUL || difficulty == Difficulty.EASY) ?
             difficulty : original;
     }
 
@@ -60,7 +60,7 @@ public class LocalDifficultyMixin {
      */
     @WrapOperation(method = "setLocalDifficulty", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Difficulty;getId()I"))
     private int capAbovePeacefulId(Difficulty instance, Operation<Integer> original) {
-        return Math.max(original.call(instance), DoormatSettings.peacefulMonsterSpawning.enabled() ? 1 : 0);
+        return Math.max(original.call(instance), DoormatSettings.peacefulMonsterSpawning.isEnabled() ? 1 : 0);
     }
 
 }

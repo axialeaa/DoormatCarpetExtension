@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.block;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.block.NetherPortalBlock;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +15,7 @@ public class NetherPortalBlockMixin {
      */
     @ModifyExpressionValue(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/Difficulty;getId()I"))
     private int capAbovePeacefulId(int original) {
-        return Math.max(original, DoormatSettings.peacefulMonsterSpawning.enabled() ? 1 : 0);
+        return Math.max(original, DoormatSettings.peacefulMonsterSpawning.isEnabled() ? 1 : 0);
     }
 
 }

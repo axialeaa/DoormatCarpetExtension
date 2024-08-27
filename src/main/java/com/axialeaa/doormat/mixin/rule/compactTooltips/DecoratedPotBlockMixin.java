@@ -1,7 +1,8 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
 import carpet.utils.Translations;
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.settings.enum_options.PotTooltipMode;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.api.EnvType;
@@ -18,7 +19,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
@@ -30,7 +30,7 @@ public class DecoratedPotBlockMixin {
 
     @WrapWithCondition(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0))
     private boolean shouldApplyEmptyLine(List<Text> instance, Object e) {
-        return !DoormatSettings.compactPotTooltips.enabled();
+        return !DoormatSettings.compactPotTooltips.isEnabled();
     }
 
     /**
@@ -42,7 +42,7 @@ public class DecoratedPotBlockMixin {
      */
     @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;of([Ljava/lang/Object;)Ljava/util/stream/Stream;", shift = At.Shift.BEFORE))
     private void addLines(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType options, CallbackInfo ci, @Local Sherds sherds) {
-        if (!DoormatSettings.compactPotTooltips.enabled())
+        if (!DoormatSettings.compactPotTooltips.isEnabled())
             return;
 
         Stream<Item> stream = sherds.stream().stream(); // for some reason they named the method to turn the sherds into a list "stream"...
@@ -50,7 +50,7 @@ public class DecoratedPotBlockMixin {
         for (Item sherd : stream.distinct().toList()) { // iterates through a list of distinct items
             int count = Collections.frequency(sherds.stream(), sherd); // and finds the quantity of this item in the original list
 
-            if (DoormatSettings.compactPotTooltips == DoormatSettings.PotTooltipMode.IGNORE_BRICKS && sherd == Items.BRICK)
+            if (DoormatSettings.compactPotTooltips == PotTooltipMode.IGNORE_BRICKS && sherd == Items.BRICK)
                 continue;
 
             String translate = Translations.tr("compact_tooltip.pot." + sherd.getTranslationKey().replace("item.minecraft.", ""));
@@ -61,7 +61,7 @@ public class DecoratedPotBlockMixin {
 
     @WrapWithCondition(method = "appendTooltip", at = @At(value = "INVOKE", target = "Ljava/util/stream/Stream;forEach(Ljava/util/function/Consumer;)V"))
     private boolean shouldIterateThroughSherds(Stream<Item> instance, Consumer<? super Item> consumer) {
-        return !DoormatSettings.compactPotTooltips.enabled();
+        return !DoormatSettings.compactPotTooltips.isEnabled();
     }
 
 }

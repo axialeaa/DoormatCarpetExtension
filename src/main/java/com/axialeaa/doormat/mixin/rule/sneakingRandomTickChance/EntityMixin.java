@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.sneakingRandomTickChance;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;

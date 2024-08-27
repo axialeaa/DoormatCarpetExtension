@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.cryingObsidianPortalFrames;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.dimension.NetherPortal;

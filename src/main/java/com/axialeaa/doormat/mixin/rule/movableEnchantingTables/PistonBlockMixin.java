@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.movableEnchantingTables;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

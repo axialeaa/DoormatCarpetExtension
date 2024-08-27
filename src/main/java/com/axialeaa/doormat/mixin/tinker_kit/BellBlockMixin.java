@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import net.minecraft.block.BellBlock;
 import net.minecraft.block.Block;
@@ -21,8 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(BellBlock.class)
-public abstract class BellBlockMixin extends AbstractBlockMixin {
+@Mixin(value = BellBlock.class, priority = 1500)
+public abstract class BellBlockMixin extends AbstractBlockImplMixin {
 
     @Shadow @Final public static BooleanProperty POWERED;
     @Shadow public abstract boolean ring(World world, BlockPos pos, @Nullable Direction direction);

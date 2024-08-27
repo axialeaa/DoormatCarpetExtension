@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.entity;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -39,11 +39,11 @@ public class HostileEntityMixin {
      */
     @ModifyReturnValue(method = "canSpawnInDark", at = @At("RETURN"))
     private static boolean addSpawnConditionInDark(boolean original, EntityType<? extends HostileEntity> type, ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, pos, spawnReason);
+        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn(world, pos, spawnReason);
     }
     @ModifyReturnValue(method = "canSpawnIgnoreLightLevel", at = @At("RETURN"))
     private static boolean addSpawnConditionIgnoreLightLevel(boolean original, EntityType<? extends HostileEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, pos, spawnReason);
+        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn(world, pos, spawnReason);
     }
 
     /**
@@ -51,7 +51,7 @@ public class HostileEntityMixin {
      */
     @ModifyReturnValue(method = "isAngryAt", at = @At("RETURN"))
     private boolean pacifyInPeaceful(boolean original, PlayerEntity player) {
-        return DoormatSettings.peacefulMonsterSpawning.enabled() ? player.getWorld().getDifficulty() != Difficulty.PEACEFUL : original;
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? player.getWorld().getDifficulty() != Difficulty.PEACEFUL : original;
     }
 
 }

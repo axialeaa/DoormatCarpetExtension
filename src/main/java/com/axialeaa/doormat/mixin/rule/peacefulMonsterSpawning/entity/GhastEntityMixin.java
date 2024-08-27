@@ -1,7 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.entity;
 
-import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -20,12 +19,12 @@ public class GhastEntityMixin {
 
     @ModifyReturnValue(method = "canSpawn", at = @At("RETURN"))
     private static boolean addSpawnCondition(boolean original, EntityType<GhastEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, pos, spawnReason);
+        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn(world, pos, spawnReason);
     }
 
     @WrapOperation(method = "canSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty allowPeacefulSpawns(WorldAccess instance, Operation<Difficulty> original) {
-        return DoormatSettings.peacefulMonsterSpawning.enabled() ? null : original.call(instance);
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original.call(instance);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.helper;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.mixin.rule.fireAspectLighting.TntBlockAccessor;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import net.minecraft.block.*;
@@ -30,8 +30,8 @@ public class FireAspectLightingHelper {
         if (!DoormatSettings.fireAspectLighting)
             return ActionResult.PASS;
 
-        ItemStack stack = ctx.getStack();
         World world = ctx.getWorld();
+        ItemStack stack = ctx.getStack();
 
         if (!hasFireAspect(world, stack))
             return ActionResult.PASS;

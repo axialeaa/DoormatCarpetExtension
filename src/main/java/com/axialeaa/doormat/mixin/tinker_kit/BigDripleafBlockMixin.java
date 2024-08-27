@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(BigDripleafBlock.class)
+@Mixin(value = BigDripleafBlock.class, priority = 1500)
 public class BigDripleafBlockMixin {
 
     @WrapOperation(method = { "onEntityCollision", "scheduledTick", "neighborUpdate" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))

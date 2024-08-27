@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.suspiciousLootAmountFix;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import net.minecraft.block.entity.BrushableBlockEntity;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;

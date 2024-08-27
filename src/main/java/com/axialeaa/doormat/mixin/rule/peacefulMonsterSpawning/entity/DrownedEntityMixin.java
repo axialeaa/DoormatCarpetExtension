@@ -1,6 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.entity;
 
 import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -20,7 +21,7 @@ public class DrownedEntityMixin {
 
     @ModifyReturnValue(method = "canSpawn(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/entity/SpawnReason;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/random/Random;)Z", slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/registry/entry/RegistryEntry;isIn(Lnet/minecraft/registry/tag/TagKey;)Z")), at = @At("RETURN"))
     private static boolean addSpawnCondition(boolean original, EntityType<DrownedEntity> type, ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, pos, spawnReason);
+        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn(world, pos, spawnReason);
     }
 
     @WrapOperation(method = "canSpawn(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/entity/SpawnReason;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/random/Random;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/ServerWorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))

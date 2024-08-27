@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.disableCrossing;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.block.NetherPortalBlock;
 import org.spongepowered.asm.mixin.Mixin;

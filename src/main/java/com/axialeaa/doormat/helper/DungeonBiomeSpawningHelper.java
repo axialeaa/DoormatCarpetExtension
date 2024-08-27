@@ -6,7 +6,6 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.Util;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

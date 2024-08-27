@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.portalForceTicking;
 
-import com.axialeaa.doormat.DoormatSettings;
-import com.axialeaa.doormat.mixin.extensibility.AbstractBlockMixin;
+import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.server.world.ServerWorld;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(NetherPortalBlock.class)
-public class NetherPortalBlockMixin extends AbstractBlockMixin {
+public class NetherPortalBlockMixin extends AbstractBlockImplMixin {
 
     /**
      * Immediately randomTicks the block when it's added into the world, as long as the rule is enabled.

@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.entity;
 
-import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -16,7 +16,7 @@ public class MagmaCubeEntityMixin {
 
     @ModifyReturnValue(method = "canMagmaCubeSpawn", at = @At("RETURN"))
     private static boolean addSpawnCondition(boolean original, EntityType<MagmaCubeEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && PeacefulMonsterSpawningHelper.getSpawningCondition(world, pos, spawnReason);
+        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn(world, pos, spawnReason);
     }
 
 }

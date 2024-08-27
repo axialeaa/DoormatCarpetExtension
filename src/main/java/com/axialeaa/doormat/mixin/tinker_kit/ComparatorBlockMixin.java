@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(ComparatorBlock.class)
+@Mixin(value = ComparatorBlock.class, priority = 1500)
 public abstract class ComparatorBlockMixin {
 
     @Shadow protected abstract int getUpdateDelayInternal(BlockState state);

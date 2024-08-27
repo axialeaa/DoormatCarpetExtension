@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.helper.CompactTooltipHelper;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.component.type.BannerPatternsComponent;
@@ -21,9 +21,12 @@ public class BannerItemMixin {
 
     @Inject(method = "appendBannerTooltip", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(II)I", shift = At.Shift.BEFORE), cancellable = true)
     private static void appendBannerTooltipCarousel(ItemStack stack, List<Text> tooltip, CallbackInfo ci, @Local BannerPatternsComponent bannerPatternsComponent) {
+        if (!DoormatSettings.compactBannerTooltips.isEnabled())
+            return;
+
         List<BannerPatternsComponent.Layer> layers = bannerPatternsComponent.layers();
 
-        if (!DoormatSettings.compactBannerTooltips.enabled() || layers.isEmpty())
+        if (layers.isEmpty())
             return;
 
         CompactTooltipHelper.LIST_SIZE = layers.size();

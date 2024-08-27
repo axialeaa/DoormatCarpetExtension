@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(CrafterBlock.class)
+@Mixin(value = CrafterBlock.class, priority = 1500)
 public abstract class CrafterBlockMixin {
 
     @Shadow protected abstract void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);

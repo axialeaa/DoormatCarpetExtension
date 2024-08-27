@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.cryingObsidianFormation;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherPortalBlock;

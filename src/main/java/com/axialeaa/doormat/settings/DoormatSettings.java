@@ -1,26 +1,15 @@
-package com.axialeaa.doormat;
+package com.axialeaa.doormat.settings;
 
 import carpet.CarpetSettings;
-import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Rule;
-import carpet.api.settings.Validator;
 import carpet.api.settings.Validators;
-import net.minecraft.block.Block;
-import net.minecraft.block.spawner.EntityDetector;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.Optional;
+import com.axialeaa.doormat.settings.enum_options.*;
+import com.axialeaa.doormat.settings.enum_options.function.*;
+import com.axialeaa.doormat.settings.validators.*;
 
 import static carpet.api.settings.RuleCategory.*;
 
 public class DoormatSettings {
-
-    /**<h1>CATEGORIES</h1>*/
 
     public static final String DOORMAT = "doormat";
     public static final String PARITY = "parity";
@@ -28,172 +17,6 @@ public class DoormatSettings {
     public static final String APRIL_FOOLS = "april_fools";
     public static final String RETRO = "retro";
     public static final String TINKERING = "tinkering";
-
-    /**<h1>VALIDATORS</h1>*/
-
-    private static class TimeFromOneValidator extends Validator<Integer> {
-
-        @Override
-        public Integer validate(ServerCommandSource source, CarpetRule<Integer> currentRule, Integer newValue, String typedString) {
-            return (newValue >= 1 && newValue <= 1200) ? newValue : null;
-        }
-
-        @Override
-        public String description() {
-            return "You must choose a value from 1 to 1200";
-        }
-
-    }
-
-    private static class TimeFromZeroValidator extends Validator<Integer> {
-
-        @Override
-        public Integer validate(ServerCommandSource source, CarpetRule<Integer> currentRule, Integer newValue, String typedString) {
-            return (newValue >= 0 && newValue <= 1200) ? newValue : null;
-        }
-
-        @Override
-        public String description() {
-            return "You must choose a value from 0 to 1200";
-        }
-
-    }
-
-    private static class OverworldHeightValidator extends Validator<Integer> {
-
-        @Override
-        public Integer validate(ServerCommandSource source, CarpetRule<Integer> changingRule, Integer newValue, String userInput) {
-            int minRange = 0;
-            int maxRange = 1;
-
-            if (source != null && source.getServer().isLoading()) {
-                World overworld = source.getServer().getOverworld();
-
-                minRange = Math.min(minRange, overworld.getBottomY() + 1);
-                maxRange = Math.max(maxRange, overworld.getTopY());
-            }
-            else {
-                minRange = Integer.MIN_VALUE;
-                maxRange = Integer.MAX_VALUE;
-            }
-
-            return (newValue >= minRange && newValue <= maxRange) ? newValue : null;
-        }
-
-        @Override
-        public String description() {
-            return "You must choose a value within overworld height limit";
-        }
-
-    }
-
-    public static class BlockIdentifierValidator extends Validator<String> {
-
-        @Override
-        public String validate(@Nullable ServerCommandSource source, CarpetRule<String> changingRule, String newValue, String userInput) {
-            List<String> list = Registries.BLOCK.getIds().stream().map(String::valueOf).toList();
-            return list.contains(newValue) ? newValue : null;
-        }
-
-        @Override
-        public String description() {
-            return "You must choose a valid block ID";
-        }
-
-        public static Optional<Block> getBlockFromId(String id) {
-            Identifier parsedId = Identifier.tryParse(id);
-            return parsedId == null ? Optional.empty() : Optional.of(Registries.BLOCK.get(parsedId));
-        }
-
-    }
-
-    /**<h1>ENUMS</h1>*/
-
-    public enum PetAttackMode {
-
-        FALSE, TRUE, OWNED;
-
-        public boolean enabled() {
-            return this != FALSE;
-        }
-
-    }
-
-    public enum PeacefulMonstersMode {
-
-        FALSE, TRUE, BELOW_SURFACE, BELOW_SEA, UNNATURAL;
-
-        public boolean enabled() {
-            return this != FALSE;
-        }
-
-    }
-
-    public enum PotTooltipMode {
-
-        FALSE, TRUE, IGNORE_BRICKS;
-
-        public boolean enabled() {
-            return this != FALSE;
-        }
-
-    }
-
-    public enum TrimTooltipMode {
-
-        FALSE, TRUE, ONLY_PATTERN;
-
-        public boolean enabled() {
-            return this != FALSE;
-        }
-
-    }
-
-    public enum CarouselTooltipMode {
-
-        FALSE, TRUE, BAR;
-
-        public boolean enabled() {
-            return this != FALSE;
-        }
-
-    }
-
-    public enum ChiseledBookshelfSignalMode {
-
-        FALSE, TRUE, LERPED
-
-    }
-
-    public enum EntityDetectorMode {
-
-        SURVIVAL_PLAYERS      (EntityDetector.SURVIVAL_PLAYERS),
-        NON_SPECTATOR_PLAYERS (EntityDetector.NON_SPECTATOR_PLAYERS),
-        SHEEP                 (EntityDetector.SHEEP);
-
-        private final EntityDetector detector;
-
-        EntityDetectorMode(EntityDetector detector) {
-            this.detector = detector;
-        }
-
-        public EntityDetector getDetector() {
-            return detector;
-        }
-
-    }
-
-    public enum SillyStringMode {
-
-        FALSE, TRUE, DELETE_STRING;
-
-        public boolean enabled() {
-            return this != FALSE;
-        }
-
-    }
-
-    /**<h1>RULES</h1>*/
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean accurateAzaleaLeafDistribution = false;
@@ -372,7 +195,7 @@ public class DoormatSettings {
     @Rule( options = { "4.0", "6.0" }, validators = Validators.NonNegativeNumber.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static double maxMinecartSpeedWater = 4.0;
 
-    @Rule( options = { "3" }, validators = OverworldHeightValidator.class, strict = false, categories = { TINKERING, DOORMAT } )
+    @Rule( options = "3", validators = OverworldHeightValidator.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static int maxSugarcaneGrowthHeight = 3;
 
     @SuppressWarnings("unused")
@@ -411,6 +234,9 @@ public class DoormatSettings {
 
     @Rule( options = { "63", "127", "255" }, validators = OverworldHeightValidator.class, strict = false, categories = { SURVIVAL, DOORMAT } )
     public static int phantomMinSpawnAltitude = 63;
+
+    @Rule( categories = { CREATIVE, DOORMAT } )
+    public static PiglinBlockGuardingMode piglinBlockGuarding = PiglinBlockGuardingMode.INTERACTED;
 
     @Rule( options = "2", validators = TimeFromOneValidator.class, strict = false, categories = { TINKERING, DOORMAT } )
     public static int pistonMovementTime = 2;
@@ -510,8 +336,6 @@ public class DoormatSettings {
 
     @Rule( options = { "0.0", "0.1", "1.0" }, validators = Validators.Probablity.class, strict = false, categories = { FEATURE, DOORMAT } )
     public static double zoglinPortalSpawnChance = 0.0;
-
-    /**<h2>COMMANDS</h2>*/
 
     @Rule( categories = { COMMAND, TINKERING, DOORMAT } )
     public static String commandQC = "true";

@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.snowFormsUnderLeaves;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

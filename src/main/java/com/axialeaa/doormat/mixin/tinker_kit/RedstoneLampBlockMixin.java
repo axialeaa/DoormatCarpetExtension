@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 
-@Mixin(RedstoneLampBlock.class)
+@Mixin(value = RedstoneLampBlock.class, priority = 1500)
 public abstract class RedstoneLampBlockMixin {
 
     @Shadow protected abstract void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);

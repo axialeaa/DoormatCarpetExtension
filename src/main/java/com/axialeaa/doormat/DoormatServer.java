@@ -5,6 +5,7 @@ import carpet.CarpetServer;
 import carpet.utils.Translations;
 import com.axialeaa.doormat.command.*;
 import com.axialeaa.doormat.command.tinker_kit.*;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.tinker_kit.ConfigFile;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.axialeaa.doormat.util.UpdateType;
@@ -34,7 +35,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static int MAX_QC_RANGE = 1;
 
-	public static List<AbstractTinkerKitCommand<?>> TINKER_KIT_COMMANDS = List.of(
+	public static final List<AbstractTinkerKitCommand<?>> TINKER_KIT_COMMANDS = List.of(
 		new QuasiConnectivityCommand(),
 		new DelayCommand(),
 		new UpdateTypeCommand(),
@@ -72,19 +73,45 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 		TinkerKit.Registry.putBlocksByClass(HopperBlock.class, 0, 0, UpdateType.SHAPE, TickPriority.NORMAL);
 		TinkerKit.Registry.putBlocksByClass(CommandBlock.class, 0, 1, null, TickPriority.NORMAL);
 		TinkerKit.Registry.putBlocksByClass(StructureBlock.class, 0, 1, null, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(PressurePlateBlock.class, null, 20, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(WeightedPressurePlateBlock.class, null, 10, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(TripwireHookBlock.class, null, 10, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(TargetBlock.class, null, 20, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(DaylightDetectorBlock.class, null, 20, UpdateType.BOTH, null);
+		TinkerKit.Registry.putBlocksByClass(LightningRodBlock.class, null, 8, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(LecternBlock.class, null, 2, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(DetectorRailBlock.class, null, 20, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(TrappedChestBlock.class, null, null, UpdateType.BOTH, null);
 		TinkerKit.Registry.putBlocksByClass(BarrelBlock.class, 0, 0, UpdateType.SHAPE, TickPriority.NORMAL);
 
-		TinkerKit.Registry.putBlock(Blocks.RAIL, null, 0, UpdateType.BOTH, TickPriority.NORMAL);
-		TinkerKit.Registry.putBlocks(0, 0, UpdateType.BOTH, TickPriority.NORMAL,
-			Blocks.ACTIVATOR_RAIL,
-			Blocks.POWERED_RAIL
-		);
-		TinkerKit.Registry.putBlock(Blocks.CRAFTER, 0, 4, UpdateType.SHAPE, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(RailBlock.class, null, 0, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(PoweredRailBlock.class, 0, 0, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(CrafterBlock.class, 0, 4, UpdateType.SHAPE, TickPriority.NORMAL);
 
-		TinkerKit.Registry.putBlock(Blocks.OBSERVER, null, 2, UpdateType.SHAPE, TickPriority.NORMAL);
-		TinkerKit.Registry.putBlock(Blocks.REDSTONE_TORCH, null, 2, UpdateType.BOTH, TickPriority.NORMAL);
-		TinkerKit.Registry.putBlock(Blocks.REDSTONE_WALL_TORCH, 0, 2, UpdateType.BOTH, TickPriority.NORMAL);
-		TinkerKit.Registry.putBlock(Blocks.BIG_DRIPLEAF, 0, null, UpdateType.SHAPE, null);
+		TinkerKit.Registry.putBlocksByClass(ObserverBlock.class, null, 2, UpdateType.SHAPE, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(RedstoneTorchBlock.class, null, 2, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(WallRedstoneTorchBlock.class, 0, 2, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlocksByClass(BigDripleafBlock.class, 0, null, UpdateType.SHAPE, null);
+
+		TinkerKit.Registry.putBlock(Blocks.SCULK_SENSOR, null, 30, UpdateType.BOTH, TickPriority.NORMAL);
+		TinkerKit.Registry.putBlock(Blocks.CALIBRATED_SCULK_SENSOR, null, 10, UpdateType.BOTH, TickPriority.NORMAL);
+
+		TinkerKit.Registry.putBlocks(null, 30, UpdateType.BOTH, TickPriority.NORMAL,
+			Blocks.BAMBOO_BUTTON,
+			Blocks.BIRCH_BUTTON,
+			Blocks.CHERRY_BUTTON,
+			Blocks.CRIMSON_BUTTON,
+			Blocks.DARK_OAK_BUTTON,
+			Blocks.JUNGLE_BUTTON,
+			Blocks.MANGROVE_BUTTON,
+			Blocks.OAK_BUTTON,
+			Blocks.SPRUCE_BUTTON,
+			Blocks.WARPED_BUTTON
+		);
+		TinkerKit.Registry.putBlocks(null, 20, UpdateType.BOTH, TickPriority.NORMAL,
+			Blocks.STONE_BUTTON,
+			Blocks.POLISHED_BLACKSTONE_BUTTON
+		);
 	}
 
 	@Override
@@ -117,7 +144,7 @@ public class DoormatServer implements ModInitializer, CarpetExtension {
 
 	@Override
 	public Map<String, String> canHasTranslations(String lang) {
-		String path = String.format("assets/%s/lang/%s.json", MOD_ID, lang);
+		String path = "assets/%s/lang/%s.json".formatted(MOD_ID, lang);
 		return Translations.getTranslationFromResourcePath(path);
 	}
 

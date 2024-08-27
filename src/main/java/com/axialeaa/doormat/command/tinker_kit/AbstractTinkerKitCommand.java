@@ -23,7 +23,7 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 /**
- * Defines an instance for a new Tinker Kit command, simplifying the registration process of a new one.
+ * Defines an instance for a e Tinker Kit command, simplifying the registration process of a e one.
  * @param <T> The object entries used as an input for the command.
  */
 public abstract class AbstractTinkerKitCommand<T> {
@@ -36,7 +36,7 @@ public abstract class AbstractTinkerKitCommand<T> {
     public abstract TinkerKit.Type getType();
 
     /**
-     * @return The argument entries for this command's input value. Should be defined as a new instance of an argument entries class, for example {@link IntegerArgumentType#integer()}.
+     * @return The argument entries for this command's input value. Should be defined as a e instance of an argument entries class, for example {@link IntegerArgumentType#integer()}.
      */
     public abstract ArgumentType<T> getArgumentType();
 
@@ -134,17 +134,17 @@ public abstract class AbstractTinkerKitCommand<T> {
      */
     private int set(ServerCommandSource source, Block block, Object value) {
         if (!this.getType().canModify(block)) {
-            Messenger.m(source, String.format("r \"%s\" is not a valid redstone component!", TinkerKit.getTranslatedName(block)));
+            Messenger.m(source, "r \"%s\" is not a valid redstone component!".formatted(TinkerKit.getTranslatedName(block)));
             return 0;
         }
 
         if (value == null) {
-            Messenger.m(source, String.format("r Invalid %s value!", this.ALIAS));
+            Messenger.m(source, "r Invalid %s value!".formatted(this.ALIAS));
             return 0;
         }
 
         if (this.getType().getValue(block) == value) {
-            Messenger.m(source, String.format("r %s %s value is already set to %s!", TinkerKit.getTranslatedName(block), this.ALIAS, value));
+            Messenger.m(source, "r %s %s value is already set to %s!".formatted(TinkerKit.getTranslatedName(block), this.ALIAS, value));
             return 0;
         }
 
@@ -153,7 +153,7 @@ public abstract class AbstractTinkerKitCommand<T> {
         if (!this.updateFile(source))
             return 0;
 
-        Messenger.m(source, String.format("w Set %s %s value to %s", TinkerKit.getTranslatedName(block), this.ALIAS, value));
+        Messenger.m(source, "w Set %s %s value to %s".formatted(TinkerKit.getTranslatedName(block), this.ALIAS, value));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -172,14 +172,14 @@ public abstract class AbstractTinkerKitCommand<T> {
         }
 
         if (!wasModified) {
-            Messenger.m(source, String.format("r All %s values match %s. Try tweaking some settings first!", this.ALIAS, value));
+            Messenger.m(source, "r All %s values match %s. Try tweaking some settings first!".formatted(this.ALIAS, value));
             return 0;
         }
 
         if (!this.updateFile(source))
             return 0;
 
-        Messenger.m(source, String.format("w Set all %s values to %s", this.ALIAS, value));
+        Messenger.m(source, "w Set all %s values to %s".formatted(this.ALIAS, value));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -188,12 +188,12 @@ public abstract class AbstractTinkerKitCommand<T> {
      */
     private int get(ServerCommandSource source, Block block) {
         if (!this.getType().canModify(block)) {
-            Messenger.m(source, String.format("r %s is not a valid redstone component!", TinkerKit.getTranslatedName(block)));
+            Messenger.m(source, "r %s is not a valid redstone component!".formatted(TinkerKit.getTranslatedName(block)));
             return 0;
         }
 
         Object value = this.getType().getValue(block);
-        Messenger.m(source, String.format("w %s %s value is set to %s (%s value)", TinkerKit.getTranslatedName(block), this.ALIAS, value, this.getType().isDefaultValue(block) ? "default" : "modified"));
+        Messenger.m(source, "w %s %s value is set to %s (%s value)".formatted(TinkerKit.getTranslatedName(block), this.ALIAS, value, this.getType().isDefaultValue(block) ? "default" : "modified"));
 
         return Command.SINGLE_SUCCESS;
     }
@@ -205,20 +205,20 @@ public abstract class AbstractTinkerKitCommand<T> {
         Messenger.m(source, "");
 
         if (this.getType().hasBeenModified()) {
-            String cmd = String.format("?/%s reset all", this.ALIAS);
-            Messenger.m(source, String.format("bui %s values:", StringUtils.capitalize(this.ALIAS)), cmd, "^g Restore default values?");
+            String cmd = "?/%s reset all".formatted(this.ALIAS);
+            Messenger.m(source, "bui %s values:".formatted(StringUtils.capitalize(this.ALIAS)), cmd, "^g Restore default values?");
         }
-        else Messenger.m(source, String.format("bu %s values:", StringUtils.capitalize(this.ALIAS)));
+        else Messenger.m(source, "bu %s values:".formatted(StringUtils.capitalize(this.ALIAS)));
 
         for (Block block : this.getType().getBlocks()) {
             Object value = this.getType().getValue(block);
-            String s = String.format("%s: %s", TinkerKit.getTranslatedName(block), value);
+            String s = "%s: %s".formatted(TinkerKit.getTranslatedName(block), value);
 
             if (this.getType().isDefaultValue(block))
-                Messenger.m(source, String.format("g - %s (default value)", s));
+                Messenger.m(source, "g - %s (default value)".formatted(s));
             else {
-                String cmd = String.format("?/%s reset %s", this.ALIAS, TinkerKit.getKey(block));
-                Messenger.m(source, "w - ", String.format("wi %s (modified value)", s), cmd, "^g Restore default value?");
+                String cmd = "?/%s reset %s".formatted(this.ALIAS, TinkerKit.getKey(block));
+                Messenger.m(source, "w - ", "wi %s (modified value)".formatted(s), cmd, "^g Restore default value?");
             }
         }
 
@@ -230,12 +230,12 @@ public abstract class AbstractTinkerKitCommand<T> {
      */
     private int reset(ServerCommandSource source, Block block) {
         if (!this.getType().canModify(block)) {
-            Messenger.m(source, String.format("r %s is not a valid component!", TinkerKit.getTranslatedName(block)));
+            Messenger.m(source, "r %s is not a valid component!".formatted(TinkerKit.getTranslatedName(block)));
             return 0;
         }
 
         if (this.getType().isDefaultValue(block)) {
-            Messenger.m(source, String.format("r %s %s value is already set to default!", TinkerKit.getTranslatedName(block), this.ALIAS));
+            Messenger.m(source, "r %s %s value is already set to default!".formatted(TinkerKit.getTranslatedName(block), this.ALIAS));
             return 0;
         }
 
@@ -244,7 +244,7 @@ public abstract class AbstractTinkerKitCommand<T> {
         if (!this.updateFile(source))
             return 0;
 
-        Messenger.m(source, String.format("w Restored default %s %s value", TinkerKit.getTranslatedName(block), this.ALIAS));
+        Messenger.m(source, "w Restored default %s %s value".formatted(TinkerKit.getTranslatedName(block), this.ALIAS));
         return Command.SINGLE_SUCCESS;
     }
 
@@ -263,14 +263,14 @@ public abstract class AbstractTinkerKitCommand<T> {
         }
 
         if (!wasModified) {
-            Messenger.m(source, String.format("r %s values are already set to default. Try tweaking some settings first!", StringUtils.capitalize(this.ALIAS)));
+            Messenger.m(source, "r %s values are already set to default. Try tweaking some settings first!".formatted(StringUtils.capitalize(this.ALIAS)));
             return 0;
         }
 
         if (!this.updateFile(source))
             return 0;
 
-        Messenger.m(source, String.format("w Restored default %s values", ALIAS));
+        Messenger.m(source, "w Restored default %s values".formatted(this.ALIAS));
         return Command.SINGLE_SUCCESS;
     }
 

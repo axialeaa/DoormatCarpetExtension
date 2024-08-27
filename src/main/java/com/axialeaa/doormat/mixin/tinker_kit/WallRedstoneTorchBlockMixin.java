@@ -12,13 +12,13 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(WallRedstoneTorchBlock.class)
+@Mixin(value = WallRedstoneTorchBlock.class, priority = 1500)
 public class WallRedstoneTorchBlockMixin {
 
     @ModifyReturnValue(method = "shouldUnpower", at = @At("RETURN"))
     private boolean allowQuasiConnectivity(boolean original, World world, BlockPos pos, BlockState state, @Local Direction direction) {
         Block block = state.getBlock();
-        return TinkerKit.isReceivingRedstonePower(world, pos, block, direction);
+        return TinkerKit.isEmittingRedstonePower(world, pos, block, direction);
     }
 
 }

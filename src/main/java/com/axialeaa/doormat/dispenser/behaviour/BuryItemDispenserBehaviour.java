@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.dispenser.behaviour;
 
-import com.axialeaa.doormat.DoormatSettings;
+import com.axialeaa.doormat.settings.DoormatSettings;
 import com.axialeaa.doormat.fake.SingleStackSetter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
