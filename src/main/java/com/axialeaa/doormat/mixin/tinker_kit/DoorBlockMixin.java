@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.DoubleDoorHelper;
 import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
@@ -102,6 +102,10 @@ public abstract class DoorBlockMixin extends AbstractBlockImplMixin {
     @Unique
     public boolean isDoorPowered(World world, BlockPos pos, BlockState state) {
         Block block = state.getBlock();
+
+        if (!(block instanceof DoorBlock))
+            return false;
+
         boolean lowerHalf = state.get(HALF) == DoubleBlockHalf.LOWER;
 
         return TinkerKit.isReceivingRedstonePower(world, pos, block, lowerHalf ? 1 : 0) || (!lowerHalf && world.isReceivingRedstonePower(pos.down()));
@@ -109,13 +113,16 @@ public abstract class DoorBlockMixin extends AbstractBlockImplMixin {
 
     @Unique
     public boolean isConnectedDoorPowered(World world, BlockPos pos, BlockState state) {
-        if (!DoormatSettings.openDoubleDoors)
+        if (!DoormatSettings.openDoubleDoors || !(state.getBlock() instanceof DoorBlock))
             return false;
 
         Direction direction = DoubleDoorHelper.getConnectedDoorDirection(state);
         BlockPos offset = pos.offset(direction);
 
         BlockState blockState = DoubleDoorHelper.getConnectedDoorState(world, pos, state);
+
+        if (blockState == null)
+            return false;
 
         Block block = blockState.getBlock();
         boolean lowerHalf = blockState.get(HALF) == DoubleBlockHalf.LOWER;

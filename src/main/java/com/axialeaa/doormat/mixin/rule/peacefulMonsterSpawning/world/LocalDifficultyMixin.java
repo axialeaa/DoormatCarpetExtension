@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.world;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

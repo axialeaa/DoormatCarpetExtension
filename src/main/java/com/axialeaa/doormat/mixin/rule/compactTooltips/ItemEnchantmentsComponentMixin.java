@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.CompactTooltipHelper;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;

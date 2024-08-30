@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.powderSnowPortalBreaking;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

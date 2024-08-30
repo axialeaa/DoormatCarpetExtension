@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.propagulePropagation;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.PropaguleBlock;
@@ -8,7 +8,6 @@ import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,12 +31,8 @@ public class PropaguleBlockMixin {
 
         BlockState upState = world.getBlockState(pos.up());
 
-        if (!upState.getOrEmpty(LeavesBlock.PERSISTENT).orElse(false)) {
-            BlockPos.Mutable mutable = pos.mutableCopy();
-            FallingBlockEntity.spawnFromBlock(world, mutable, state);
-
-            mutable.move(Direction.DOWN);
-        }
+        if (!upState.getOrEmpty(LeavesBlock.PERSISTENT).orElse(false))
+            FallingBlockEntity.spawnFromBlock(world, pos, state);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.renewableSporeBlossoms_mossSpreadTo;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
-import com.axialeaa.doormat.feature.DoormatConfiguredFeatures;
+import com.axialeaa.doormat.setting.DoormatSettings;
+import com.axialeaa.doormat.registry.DoormatConfiguredFeatures;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.block.BlockState;
@@ -41,7 +41,6 @@ public class MossBlockMixin {
      */
     @SuppressWarnings({
         "UnresolvedMixinReference",
-        "OptionalUsedAsFieldOrParameterType",
         "MixinAnnotationTarget"
     })
     @WrapWithCondition(method = "grow", slice = @Slice(from = @At(value = "FIELD", target = "Lnet/minecraft/world/gen/feature/UndergroundConfiguredFeatures;MOSS_PATCH_BONEMEAL:Lnet/minecraft/registry/RegistryKey;")), at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V", ordinal = 0))
@@ -50,24 +49,30 @@ public class MossBlockMixin {
     }
 
     /**
-     * Now we can add our custom features with help from {@link MossBlockMixin#generateAbove(boolean, RegistryKey, ServerWorld, Random, BlockPos)}.
+     * Now we can add our custom features with help from {@link MossBlockMixin#generate(ServerWorld, BlockPos, Random, RegistryKey)}.
      */
     @Inject(method = "grow", at = @At("HEAD"))
     public void addCustomFeatures(ServerWorld world, Random random, BlockPos pos, BlockState state, CallbackInfo ci) {
-        generateAbove(DoormatSettings.mossSpreadToCobblestone, DoormatConfiguredFeatures.MOSSY_COBBLESTONE_PATCH, world, random, pos);
-        generateAbove(DoormatSettings.mossSpreadToStoneBricks, DoormatConfiguredFeatures.MOSSY_STONE_BRICKS_PATCH, world, random, pos);
         if (DoormatSettings.renewableSporeBlossoms && world.getBlockState(pos.down()).isAir())
             world.setBlockState(pos.down(), Blocks.SPORE_BLOSSOM.getDefaultState());
+
+        BlockPos up = pos.up();
+
+        if (!world.getBlockState(up).isAir())
+            return;
+
+        if (DoormatSettings.mossSpreadToCobblestone)
+            generate(world, up, random, DoormatConfiguredFeatures.MOSSY_COBBLESTONE_PATCH);
+
+        if (DoormatSettings.mossSpreadToStoneBricks)
+            generate(world, up, random, DoormatConfiguredFeatures.MOSSY_STONE_BRICKS_PATCH);
     }
 
     @Unique
-    private void generateAbove(boolean rule, RegistryKey<ConfiguredFeature<?, ?>> feature, ServerWorld world, Random random, BlockPos pos) {
-        if (!rule || !world.getBlockState(pos.up()).isAir())
-            return;
-
+    private void generate(ServerWorld world, BlockPos pos, Random random, RegistryKey<ConfiguredFeature<?, ?>> key) {
         world.getRegistryManager().getOptional(RegistryKeys.CONFIGURED_FEATURE).flatMap(registry ->
-            registry.getEntry(feature)).ifPresent(reference ->
-            reference.value().generate(world, world.getChunkManager().getChunkGenerator(), random, pos.up()));
+            registry.getEntry(key)).ifPresent(reference ->
+            reference.value().generate(world, world.getChunkManager().getChunkGenerator(), random, pos));
     }
 
 }

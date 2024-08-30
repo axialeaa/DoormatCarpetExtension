@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.stickyStickyPistons;
 
 import carpet.fakes.BlockPistonBehaviourInterface;
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PistonBlock;
 import net.minecraft.util.math.BlockPos;

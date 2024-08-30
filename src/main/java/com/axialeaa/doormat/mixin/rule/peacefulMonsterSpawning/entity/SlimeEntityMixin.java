@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.entity;
 
 import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.entity.EntityType;

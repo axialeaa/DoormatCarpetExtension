@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.helper;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.mixin.rule.forceGrassSpreading.SpreadableBlockAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

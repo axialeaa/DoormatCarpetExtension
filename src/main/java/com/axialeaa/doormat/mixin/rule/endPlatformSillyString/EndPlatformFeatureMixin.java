@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.endPlatformSillyString;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
-import com.axialeaa.doormat.settings.enum_options.SillyStringMode;
+import com.axialeaa.doormat.setting.DoormatSettings;
+import com.axialeaa.doormat.setting.enum_option.EndPlatformSillyStringMode;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.Block;
@@ -30,7 +30,7 @@ public class EndPlatformFeatureMixin {
         if (!(blockState.getBlock() instanceof AbstractFireBlock))
             instance.syncWorldEvent(WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
 
-        if (DoormatSettings.endPlatformSillyString != SillyStringMode.DELETE_STRING || !(blockState.getBlock() instanceof TripwireBlock)) {
+        if (DoormatSettings.endPlatformSillyString != EndPlatformSillyStringMode.DELETE_STRING || !(blockState.getBlock() instanceof TripwireBlock)) {
             BlockEntity blockEntity = blockState.hasBlockEntity() ? instance.getBlockEntity(blockPos) : null;
             Block.dropStacks(blockState, instance, blockPos, blockEntity);
         }

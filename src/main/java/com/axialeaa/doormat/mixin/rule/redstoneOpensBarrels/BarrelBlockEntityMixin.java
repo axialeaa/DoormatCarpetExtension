@@ -2,7 +2,7 @@ package com.axialeaa.doormat.mixin.rule.redstoneOpensBarrels;
 
 import com.axialeaa.doormat.helper.BarrelItemDumpingHelper;
 import com.axialeaa.doormat.mixin.impl.BlockEntityImplMixin;
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;

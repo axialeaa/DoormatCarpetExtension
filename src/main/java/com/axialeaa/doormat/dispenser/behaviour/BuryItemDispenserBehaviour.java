@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.dispenser.behaviour;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.fake.SingleStackSetter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -32,17 +32,16 @@ public class BuryItemDispenserBehaviour extends FallibleItemDispenserBehavior {
         else if (blockState.isOf(Blocks.GRAVEL))
             block = Blocks.SUSPICIOUS_GRAVEL;
 
-        if (block != null && !stack.isEmpty()) {
-            serverWorld.setBlockState(blockPos, block.getDefaultState(), Block.NOTIFY_ALL);
-            MinecraftClient.getInstance().particleManager.addBlockBreakParticles(blockPos, block.getDefaultState());
-
-            if (serverWorld.getBlockEntity(blockPos) instanceof SingleStackSetter singleStackSetter)
-                singleStackSetter.setStack(DoormatSettings.suspiciousLootAmountFix ? stack.copyAndEmpty() : stack.split(10));
-
+        if (block == null || stack.isEmpty()) {
+            this.setSuccess(false);
             return stack;
         }
 
-        this.setSuccess(false);
+        serverWorld.setBlockState(blockPos, block.getDefaultState(), Block.NOTIFY_ALL);
+        MinecraftClient.getInstance().particleManager.addBlockBreakParticles(blockPos, block.getDefaultState());
+
+        if (serverWorld.getBlockEntity(blockPos) instanceof SingleStackSetter singleStackSetter)
+            singleStackSetter.setStack(DoormatSettings.suspiciousLootAmountFix ? stack.copyAndEmpty() : stack.split(10));
 
         return stack;
     }

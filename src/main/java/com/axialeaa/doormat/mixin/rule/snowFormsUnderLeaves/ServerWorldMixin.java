@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.snowFormsUnderLeaves;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.server.world.ServerWorld;

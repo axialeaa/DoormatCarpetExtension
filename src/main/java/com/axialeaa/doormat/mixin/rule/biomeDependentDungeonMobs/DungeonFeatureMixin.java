@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.biomeDependentDungeonMobs;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.DungeonBiomeSpawningHelper;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;

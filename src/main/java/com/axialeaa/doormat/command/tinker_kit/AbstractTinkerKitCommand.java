@@ -2,7 +2,7 @@ package com.axialeaa.doormat.command.tinker_kit;
 
 import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
-import com.axialeaa.doormat.DoormatServer;
+import com.axialeaa.doormat.Doormat;
 import com.axialeaa.doormat.tinker_kit.ConfigFile;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.mojang.brigadier.Command;
@@ -23,7 +23,7 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 /**
- * Defines an instance for a e Tinker Kit command, simplifying the registration process of a e one.
+ * Defines an instance for a new Tinker Kit command, simplifying the registration process of a new one.
  * @param <T> The object entries used as an input for the command.
  */
 public abstract class AbstractTinkerKitCommand<T> {
@@ -36,7 +36,7 @@ public abstract class AbstractTinkerKitCommand<T> {
     public abstract TinkerKit.Type getType();
 
     /**
-     * @return The argument entries for this command's input value. Should be defined as a e instance of an argument entries class, for example {@link IntegerArgumentType#integer()}.
+     * @return The argument entries for this command's input value. Should be defined as a new instance of an argument entries class, for example {@link IntegerArgumentType#integer()}.
      */
     public abstract ArgumentType<T> getArgumentType();
 
@@ -122,7 +122,7 @@ public abstract class AbstractTinkerKitCommand<T> {
                 )
             )
             .then(literal("file")
-                .requires(source -> DoormatServer.IS_DEBUG)
+                .requires(source -> Doormat.IS_DEBUG)
                 .then(literal("load").executes(ctx -> this.load(ctx.getSource())))
                 .then(literal("update").executes(ctx -> this.update(ctx.getSource())))
             )

@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.dispenser;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.dispenser.behaviour.BuryItemDispenserBehaviour;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

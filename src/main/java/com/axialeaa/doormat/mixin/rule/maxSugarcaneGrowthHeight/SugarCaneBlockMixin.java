@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.maxSugarcaneGrowthHeight;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import net.minecraft.block.SugarCaneBlock;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;

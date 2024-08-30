@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.campfireRespawning;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.CampfireRespawningHelper;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;
@@ -29,14 +29,13 @@ public abstract class PlayerEntityMixin {
 
         Optional<Vec3d> optional = CampfireRespawningHelper.findRespawnPosition(EntityType.PLAYER, world, pos);
 
-        if (!blockState.isOf(Blocks.SOUL_CAMPFIRE) && !forced && !alive && optional.isPresent()) {
-            CampfireBlock.extinguish(null, world, pos, blockState);
+        if (blockState.isOf(Blocks.SOUL_CAMPFIRE) || forced || alive || optional.isEmpty())
+            cir.setReturnValue(optional);
 
-            world.setBlockState(pos, blockState.with(CampfireBlock.LIT, false));
-            world.syncWorldEvent(null, WorldEvents.FIRE_EXTINGUISHED, pos, 0);
-        }
+        CampfireBlock.extinguish(null, world, pos, blockState);
 
-        cir.setReturnValue(optional);
+        world.setBlockState(pos, blockState.with(CampfireBlock.LIT, false));
+        world.syncWorldEvent(null, WorldEvents.FIRE_EXTINGUISHED, pos, 0);
     }
 
 }

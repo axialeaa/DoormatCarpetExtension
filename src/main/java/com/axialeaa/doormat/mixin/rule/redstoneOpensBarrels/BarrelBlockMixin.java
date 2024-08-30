@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.redstoneOpensBarrels;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.BarrelItemDumpingHelper;
 import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;

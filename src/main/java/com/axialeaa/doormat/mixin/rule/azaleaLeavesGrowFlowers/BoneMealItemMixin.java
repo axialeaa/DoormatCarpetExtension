@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.azaleaLeavesGrowFlowers;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.BoneMealItem;
@@ -21,12 +21,13 @@ public class BoneMealItemMixin {
     private static void convertLeavesOnUse(ItemStack stack, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         BlockState blockState = world.getBlockState(pos);
 
-        if (DoormatSettings.azaleaLeavesGrowFlowers && blockState.isOf(Blocks.AZALEA_LEAVES)) {
-            world.setBlockState(pos, Blocks.FLOWERING_AZALEA_LEAVES.getStateWithProperties(blockState));
-            ParticleUtil.spawnParticlesAround(world, pos, 15, ParticleTypes.HAPPY_VILLAGER);
+        if (!DoormatSettings.azaleaLeavesGrowFlowers || !blockState.isOf(Blocks.AZALEA_LEAVES))
+            return;
 
-            cir.setReturnValue(true);
-        }
+        world.setBlockState(pos, Blocks.FLOWERING_AZALEA_LEAVES.getStateWithProperties(blockState));
+        ParticleUtil.spawnParticlesAround(world, pos, 15, ParticleTypes.HAPPY_VILLAGER);
+
+        cir.setReturnValue(true);
     }
 
 }

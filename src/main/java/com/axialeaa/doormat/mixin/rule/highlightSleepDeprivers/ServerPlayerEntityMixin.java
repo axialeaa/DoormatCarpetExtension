@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.highlightSleepDeprivers;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.entity.effect.StatusEffectInstance;

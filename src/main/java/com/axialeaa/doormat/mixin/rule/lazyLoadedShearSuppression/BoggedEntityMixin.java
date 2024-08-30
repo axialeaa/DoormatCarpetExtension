@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.lazyLoadedShearSuppression;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.entity.mob.BoggedEntity;
 import net.minecraft.server.world.ServerWorld;

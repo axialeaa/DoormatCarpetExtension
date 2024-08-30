@@ -1,8 +1,8 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
 import carpet.utils.Translations;
-import com.axialeaa.doormat.settings.DoormatSettings;
-import com.axialeaa.doormat.settings.enum_options.TrimTooltipMode;
+import com.axialeaa.doormat.setting.DoormatSettings;
+import com.axialeaa.doormat.setting.enum_option.CompactTrimTooltipsMode;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -41,7 +41,7 @@ public abstract class ArmorTrimMixin {
         ArmorTrimPattern pattern = this.getPattern().value();
         String ingredient = Translations.tr("compact_tooltip.trim." + material.assetName());
 
-        boolean onlyPattern = DoormatSettings.compactTrimTooltips == TrimTooltipMode.ONLY_PATTERN;
+        boolean onlyPattern = DoormatSettings.compactTrimTooltips == CompactTrimTooltipsMode.ONLY_PATTERN;
 
         return Text.literal(onlyPattern ? "": ingredient)
             .setStyle(material.description().getStyle())

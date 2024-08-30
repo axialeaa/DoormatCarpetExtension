@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

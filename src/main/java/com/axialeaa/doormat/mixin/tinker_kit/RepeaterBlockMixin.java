@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;

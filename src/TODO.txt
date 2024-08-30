@@ -1,6 +1,0 @@
-add neighbor update-less getFlags calls to more block state changes
-make enum option class names more intuitive
-change settings and functions packages to setting and function respectively
-make piglinBlockGuarding boolean
-add wall connecting rule (manifesting home at desk)
-check peaceful monster spawning

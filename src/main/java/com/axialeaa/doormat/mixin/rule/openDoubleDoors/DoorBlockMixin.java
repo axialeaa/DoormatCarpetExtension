@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.openDoubleDoors;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.DoubleDoorHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;

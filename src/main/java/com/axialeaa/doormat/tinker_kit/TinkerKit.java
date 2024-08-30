@@ -2,8 +2,8 @@ package com.axialeaa.doormat.tinker_kit;
 
 import carpet.CarpetSettings;
 import carpet.utils.Translations;
-import com.axialeaa.doormat.DoormatServer;
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.Doormat;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.util.UpdateType;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.block.*;
@@ -25,11 +25,11 @@ import java.util.stream.Stream;
 public class TinkerKit {
 
     /**
-     * A hashmap which stores all valid blocks alongside their default values. This is put-to in {@link DoormatServer#onInitialize()}, and accommodates other mods doing the same.
+     * A hashmap which stores all valid blocks alongside their default values. This is put-to in {@link Doormat#onInitialize()}, and accommodates other mods doing the same.
      */
     static final Map<Type, Map<Block, Object>> DEFAULT_VALUES = new HashMap<>();
     /**
-     * This hashmap is a little different to {@link TinkerKit#DEFAULT_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link DoormatServer#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
+     * This hashmap is a little different to {@link TinkerKit#DEFAULT_VALUES} as it stores the blocks alongside their dynamic, modified values. While the registry map is put-to in {@link Doormat#onInitialize()} and changes only when the game starts up, this can change at any time during gameplay.
      * @implNote This falls back to the values specified in the registry map before amending itself later on in runtime, thanks to {@link ConfigFile#loadFromFile(MinecraftServer)}. This just adds a level of robustness in case the game crashes!
      */
     static final Map<Type, Map<Block, Object>> TRANSIENT_VALUES = new HashMap<>();

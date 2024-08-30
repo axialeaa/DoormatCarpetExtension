@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.huskWashing;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import net.minecraft.entity.mob.HuskEntity;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.item.ItemStack;
@@ -19,14 +19,9 @@ public class HuskEntityMixin extends ZombieEntity {
         super(world);
     }
 
-    /**
-     * If both the rule and mob loot are enabled and the husk is an adult, drops between 1 and 3 sand.
-     */
     @Inject(method = "convertInWater", at = @At("HEAD"))
-    private void onConvertInWater(CallbackInfo info) {
-        GameRules gameRules = this.getWorld().getGameRules();
-
-        if (DoormatSettings.huskWashing && gameRules.getBoolean(GameRules.DO_MOB_LOOT) && !this.isBaby())
+    private void dropItemsOnConvert(CallbackInfo info) {
+        if (DoormatSettings.huskWashing && this.getWorld().getGameRules().getBoolean(GameRules.DO_MOB_LOOT) && !this.isBaby())
             dropStack(new ItemStack(Items.SAND, random.nextBetween(1, 3)));
     }
 

@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.hopperTransferTime;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.entity.HopperBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;

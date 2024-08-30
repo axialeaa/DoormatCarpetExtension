@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.retroRepeaterDelay;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BlockState;

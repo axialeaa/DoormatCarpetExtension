@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.helper;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import net.minecraft.world.Difficulty;
 
 public class PeacefulMonsterSpawningHelper {

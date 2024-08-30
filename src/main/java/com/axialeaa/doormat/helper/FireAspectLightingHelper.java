@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.helper;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.mixin.rule.fireAspectLighting.TntBlockAccessor;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import net.minecraft.block.*;

@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.world;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

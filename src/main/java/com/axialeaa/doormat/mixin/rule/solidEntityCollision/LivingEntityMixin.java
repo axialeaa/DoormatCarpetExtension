@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.solidEntityCollision;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.mixin.impl.EntityImplMixin;
 import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;

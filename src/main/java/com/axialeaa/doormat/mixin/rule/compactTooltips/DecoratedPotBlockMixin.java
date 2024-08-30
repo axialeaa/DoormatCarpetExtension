@@ -1,8 +1,8 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
 import carpet.utils.Translations;
-import com.axialeaa.doormat.settings.DoormatSettings;
-import com.axialeaa.doormat.settings.enum_options.PotTooltipMode;
+import com.axialeaa.doormat.setting.DoormatSettings;
+import com.axialeaa.doormat.setting.enum_option.CompactPotTooltipsMode;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.api.EnvType;
@@ -50,7 +50,7 @@ public class DecoratedPotBlockMixin {
         for (Item sherd : stream.distinct().toList()) { // iterates through a list of distinct items
             int count = Collections.frequency(sherds.stream(), sherd); // and finds the quantity of this item in the original list
 
-            if (DoormatSettings.compactPotTooltips == PotTooltipMode.IGNORE_BRICKS && sherd == Items.BRICK)
+            if (DoormatSettings.compactPotTooltips == CompactPotTooltipsMode.IGNORE_BRICKS && sherd == Items.BRICK)
                 continue;
 
             String translate = Translations.tr("compact_tooltip.pot." + sherd.getTranslationKey().replace("item.minecraft.", ""));

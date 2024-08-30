@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.disableMaceKnockback;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;

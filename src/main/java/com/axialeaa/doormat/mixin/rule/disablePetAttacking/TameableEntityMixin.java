@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.rule.disablePetAttacking;
 
 import com.axialeaa.doormat.mixin.impl.EntityImplMixin;
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.TameableEntity;

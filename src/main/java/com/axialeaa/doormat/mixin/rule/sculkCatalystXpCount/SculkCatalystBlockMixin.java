@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.sculkCatalystXpCount;
 
-import com.axialeaa.doormat.settings.DoormatSettings;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import net.minecraft.block.SculkCatalystBlock;
 import net.minecraft.util.math.intprovider.ConstantIntProvider;
 import net.minecraft.util.math.intprovider.IntProvider;

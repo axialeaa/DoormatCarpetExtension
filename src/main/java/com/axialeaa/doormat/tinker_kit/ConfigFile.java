@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.tinker_kit;
 
-import com.axialeaa.doormat.DoormatServer;
+import com.axialeaa.doormat.Doormat;
 import com.axialeaa.doormat.util.UpdateType;
 import com.google.gson.*;
 import net.minecraft.block.Block;
@@ -26,7 +26,7 @@ import static com.axialeaa.doormat.tinker_kit.TinkerKit.getKey;
 @ApiStatus.Internal
 public class ConfigFile {
 
-    public static final String FILE_NAME = DoormatServer.MOD_ID + ".json";
+    public static final String FILE_NAME = Doormat.MOD_ID + ".json";
 
     private static File getWorldDirectory(MinecraftServer server) {
         return server.getSavePath(WorldSavePath.ROOT).toFile();
@@ -40,7 +40,7 @@ public class ConfigFile {
 
         JsonObject root = new JsonObject();
 
-        root.addProperty("mod_version", DoormatServer.MOD_VERSION.getFriendlyString());
+        root.addProperty("mod_version", Doormat.MOD_VERSION.getFriendlyString());
         root.addProperty("notice", "This file is used for saving values across server restarts. If you delete an entry here (or set it to something invalid), it will reset to the default value the next time you enter the world!");
 
         for (Type type : Type.values())
@@ -93,13 +93,13 @@ public class ConfigFile {
             writer.close();
 
             if (file.exists() && file.isFile() && !file.delete())
-                DoormatServer.LOGGER.warn("Could not delete the file at {}!", file.getAbsolutePath());
+                Doormat.LOGGER.warn("Could not delete the file at {}!", file.getAbsolutePath());
 
             if (!temp.renameTo(file))
                 throw new Exception();
         }
         catch (Exception e) {
-            DoormatServer.LOGGER.warn("Could not write data to file at {}!", temp.getAbsolutePath(), e);
+            Doormat.LOGGER.warn("Could not write data to file at {}!", temp.getAbsolutePath(), e);
             return false;
         }
 
@@ -121,7 +121,7 @@ public class ConfigFile {
             elem = JsonParser.parseReader(reader);
         }
         catch (IOException e) {
-            DoormatServer.LOGGER.warn("Failed to parse the file at {}!", file.getAbsolutePath(), e);
+            Doormat.LOGGER.warn("Failed to parse the file at {}!", file.getAbsolutePath(), e);
             return false;
         }
 
@@ -156,7 +156,7 @@ public class ConfigFile {
                 continue;
 
             type.set(block, switch (type) {
-                case QC -> clampInt(obj, block, 0, DoormatServer.MAX_QC_RANGE);
+                case QC -> clampInt(obj, block, 0, Doormat.MAX_QC_RANGE);
                 case DELAY -> clampInt(obj, block, 0, 72000);
                 case UPDATE_TYPE -> UpdateType.valueOf(JsonHelper.getString(obj, getKey(block)));
                 case TICK_PRIORITY -> clampInt(obj, block, TickPriority.EXTREMELY_HIGH.getIndex(), TickPriority.EXTREMELY_LOW.getIndex());

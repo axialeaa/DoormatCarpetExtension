@@ -45,11 +45,15 @@
     "rule.disableDragonEggTeleportation.DragonEggBlockMixin",
     "rule.disableMaceKnockback.MaceItemMixin",
     "rule.disablePetAttacking.TameableEntityMixin",
+    "rule.disablePiglinBlockGuarding.PiglinBrainMixin",
     "rule.disablePrematureBlockFalling.Falling_BrushableBlockMixin",
     "rule.disableShulkerReproduction.ShulkerEntityMixin",
     "rule.dispensersBuryItems.BrushableBlockEntityMixin",
     "rule.endExitIgnoreLeaves.EntityMixin",
     "rule.endPlatformSillyString.EndPlatformFeatureMixin",
+    "rule.expandedFenceConnectivity.FenceBlockMixin",
+    "rule.expandedFenceConnectivity.PaneBlockMixin",
+    "rule.expandedFenceConnectivity.WallBlockMixin",
     "rule.fastLeafDecaying.LeavesBlockMixin",
     "rule.fireAspectLighting.Item_BlockItemMixin",
     "rule.fireAspectLighting.TntBlockAccessor",
@@ -72,7 +76,6 @@
     "rule.lazyLoadedShearSuppression.SheepEntityMixin",
     "rule.lazyLoadedShearSuppression.SnowGolemEntityMixin",
     "rule.leavesNoCollision.LeavesBlockMixin",
-    "rule.maxMinecartSpeed.AbstractMinecartEntityMixin",
     "rule.maxSugarcaneGrowthHeight.SugarCaneBlockMixin",
     "rule.moreTimeArgumentUnits.TimeArgumentTypeAccessor",
     "rule.movableEnchantingTables.PistonBlockMixin",
@@ -101,7 +104,6 @@
     "rule.persistentRespawnAnchorCharge.PlayerEntityMixin",
     "rule.persistentRespawnAnchorCharge.PlayerManagerMixin",
     "rule.phantomMinSpawnAltitude.PhantomSpawnerMixin",
-    "rule.piglinBlockGuarding.PiglinBrainMixin",
     "rule.pistonMovementTime.PistonBlockEntityMixin",
     "rule.playersDropAllXp.PlayerEntityMixin",
     "rule.portalForceTicking.NetherPortalBlockMixin",
@@ -185,5 +187,6 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "plugin": "com.axialeaa.doormat.mixin.DoormatMixinPlugin"
 }
