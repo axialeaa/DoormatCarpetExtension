@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.setting.enum_option.function;
 
-import com.axialeaa.doormat.function.ToBooleanTriFunction;
+import com.mojang.datafixers.util.Function3;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
@@ -15,14 +15,14 @@ public enum PeacefulMonsterSpawningMode {
     BELOW_SEA     ((world, pos, reason) -> pos.getY() < world.getSeaLevel()),
     UNNATURAL     ((world, pos, reason) -> reason != SpawnReason.NATURAL && reason != SpawnReason.CHUNK_GENERATION);
 
-    private final ToBooleanTriFunction<WorldAccess, BlockPos, SpawnReason> function;
+    private final Function3<WorldAccess, BlockPos, SpawnReason, Boolean> function;
 
-    PeacefulMonsterSpawningMode(ToBooleanTriFunction<WorldAccess, BlockPos, SpawnReason> function) {
+    PeacefulMonsterSpawningMode(Function3<WorldAccess, BlockPos, SpawnReason, Boolean> function) {
         this.function = function;
     }
 
     public boolean canSpawn(WorldAccess world, BlockPos pos, SpawnReason reason) {
-        return this.function.applyAsBoolean(world, pos, reason);
+        return this.function.apply(world, pos, reason);
     }
 
     public boolean isEnabled() {
