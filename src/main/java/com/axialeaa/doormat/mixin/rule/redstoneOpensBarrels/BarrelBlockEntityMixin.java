@@ -42,7 +42,7 @@ public abstract class BarrelBlockEntityMixin extends BlockEntityImplMixin {
         BlockState blockState = this.getCachedState();
 
         if (blockState.get(BarrelBlock.OPEN))
-            BarrelItemDumpingHelper.dumpItemStacks(this.getWorld(), this.getPos(), blockState, (BarrelBlockEntity) (Object) this);
+            BarrelItemDumpingHelper.dumpItemStacks(this.getWorld(), this.getPos(), blockState, BarrelBlockEntity.class.cast(this));
     }
 
 }

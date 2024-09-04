@@ -10,6 +10,7 @@ import net.minecraft.entity.mob.SlimeEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,7 +20,7 @@ public class SlimeEntityMixin {
 
     @ModifyReturnValue(method = "canSpawn", at = {@At(value = "RETURN", ordinal = 0), @At(value = "RETURN", ordinal = 2)})
     private static boolean addSpawnCondition(boolean original, EntityType<SlimeEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn(world, pos, spawnReason);
+        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn((World) world, pos, spawnReason);
     }
 
     @ModifyExpressionValue(method = "canSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))

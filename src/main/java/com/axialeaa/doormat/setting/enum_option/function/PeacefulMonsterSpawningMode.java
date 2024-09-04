@@ -1,27 +1,61 @@
 package com.axialeaa.doormat.setting.enum_option.function;
 
-import com.mojang.datafixers.util.Function3;
+import com.axialeaa.doormat.function.ToBooleanTriFunction;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.World;
 
+/**
+ * @see <a href="https://github.com/axialeaa/DoormatCarpetExtension/wiki/Using-peacefulMonsterSpawning">Using peacefulMonsterSpawning</a>
+ */
 public enum PeacefulMonsterSpawningMode {
 
-    FALSE         ((world, pos, reason) -> false),
-    TRUE          ((world, pos, reason) -> true),
-    BELOW_SURFACE ((world, pos, reason) -> pos.getY() < world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, pos).getY()),
-    @SuppressWarnings("deprecation")
-    BELOW_SEA     ((world, pos, reason) -> pos.getY() < world.getSeaLevel()),
-    UNNATURAL     ((world, pos, reason) -> reason != SpawnReason.NATURAL && reason != SpawnReason.CHUNK_GENERATION);
+    /**
+     * Retains vanilla peaceful mode behaviour.
+     */
+    FALSE (false),
+    /**
+     * Spawns the entity the same as it would spawn in {@link net.minecraft.world.Difficulty#EASY Difficulty.EASY}.
+     */
+    TRUE (true),
+    /**
+     * Spawns the entity if the spawn position is anywhere below the maximum y level as read by the {@link Heightmap.Type#MOTION_BLOCKING_NO_LEAVES} heightmap.
+     * @see <a href="https://github.com/axialeaa/DoormatCarpetExtension/wiki/Using-peacefulMonsterSpawning#below_surface-and-heightmaps">Using peacefulMonsterSpawning§Below Surface and Heightmaps</a>
+     */
+    BELOW_SURFACE ((world, pos, reason) -> {
+        Heightmap.Type heightmap = Heightmap.Type.MOTION_BLOCKING_NO_LEAVES;
+        BlockPos topPos = world.getTopPosition(heightmap, pos);
 
-    private final Function3<WorldAccess, BlockPos, SpawnReason, Boolean> function;
+        return pos.getY() < topPos.getY();
+    }),
+    /**
+     * Spawns the entity if the spawn position is anywhere below the sea level.
+     * @see <a href="https://github.com/axialeaa/DoormatCarpetExtension/wiki/Using-peacefulMonsterSpawning#below_sea-and-the-sea-level">Using peacefulMonsterSpawning§Below Sea and the Sea Level</a>
+     */
+    BELOW_SEA ((world, pos, reason) -> pos.getY() < world.getSeaLevel()),
+    /**
+     * Spawns the entity if the {@link SpawnReason} is anything other than {@link SpawnReason#NATURAL} or {@link SpawnReason#CHUNK_GENERATION}.
+     * @see <a href="https://github.com/axialeaa/DoormatCarpetExtension/wiki/Using-peacefulMonsterSpawning#unnatural-and-spawn-types">Using peacefulMonsterSpawning§Unnatural and Spawn Types</a>
+     */
+    UNNATURAL ((world, pos, reason) -> {
+        boolean natural = reason == SpawnReason.NATURAL;
+        boolean chunkGen = reason == SpawnReason.CHUNK_GENERATION;
 
-    PeacefulMonsterSpawningMode(Function3<WorldAccess, BlockPos, SpawnReason, Boolean> function) {
+        return !natural && !chunkGen;
+    });
+
+    private final ToBooleanTriFunction<World, BlockPos, SpawnReason> function;
+
+    PeacefulMonsterSpawningMode(boolean canSpawn) {
+        this.function = (world, pos, reason) -> canSpawn;
+    }
+
+    PeacefulMonsterSpawningMode(ToBooleanTriFunction<World, BlockPos, SpawnReason> function) {
         this.function = function;
     }
 
-    public boolean canSpawn(WorldAccess world, BlockPos pos, SpawnReason reason) {
+    public boolean canSpawn(World world, BlockPos pos, SpawnReason reason) {
         return this.function.apply(world, pos, reason);
     }
 

@@ -7,6 +7,7 @@ import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.MagmaCubeEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,7 +17,7 @@ public class MagmaCubeEntityMixin {
 
     @ModifyReturnValue(method = "canMagmaCubeSpawn", at = @At("RETURN"))
     private static boolean addSpawnCondition(boolean original, EntityType<MagmaCubeEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn(world, pos, spawnReason);
+        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn((World) world, pos, spawnReason);
     }
 
 }

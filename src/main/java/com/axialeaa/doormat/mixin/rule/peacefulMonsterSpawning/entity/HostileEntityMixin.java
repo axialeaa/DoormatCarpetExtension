@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,11 +40,11 @@ public class HostileEntityMixin {
      */
     @ModifyReturnValue(method = "canSpawnInDark", at = @At("RETURN"))
     private static boolean addSpawnConditionInDark(boolean original, EntityType<? extends HostileEntity> type, ServerWorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn(world, pos, spawnReason);
+        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn((World) world, pos, spawnReason);
     }
     @ModifyReturnValue(method = "canSpawnIgnoreLightLevel", at = @At("RETURN"))
     private static boolean addSpawnConditionIgnoreLightLevel(boolean original, EntityType<? extends HostileEntity> type, WorldAccess world, SpawnReason spawnReason, BlockPos pos, Random random) {
-        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn(world, pos, spawnReason);
+        return original && DoormatSettings.peacefulMonsterSpawning.canSpawn((World) world, pos, spawnReason);
     }
 
     /**

@@ -2,7 +2,6 @@ package com.axialeaa.doormat.mixin.rule.disablePetAttacking;
 
 import com.axialeaa.doormat.mixin.impl.EntityImplMixin;
 import com.axialeaa.doormat.setting.DoormatSettings;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,18 +16,11 @@ import java.util.UUID;
 public abstract class TameableEntityMixin extends EntityImplMixin {
 
     @Shadow @Nullable public abstract UUID getOwnerUuid();
+    @Shadow public abstract boolean isTamed();
 
-    /**
-     * Disables entity damage if the rule is enabled and the instigator fits the criteria for the rule setting.
-     * @param source the entries of damage to be dealt to the entity
-     * @param amount the amount of damage to be dealt to the entity
-     * @param cir returnable callback info parameter, since this method is instantiated from the original handler method in {@link EntityImplMixin}
-     */
     @Override
     public void damageImpl(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        Entity attacker = source.getAttacker();
-
-        if (!(attacker instanceof PlayerEntity player))
+        if (!this.isTamed() || !(source.getAttacker() instanceof PlayerEntity player))
             return;
 
         Optional<UUID> optional = Optional.ofNullable(this.getOwnerUuid());
@@ -36,7 +28,7 @@ public abstract class TameableEntityMixin extends EntityImplMixin {
         if (optional.isEmpty())
             return;
 
-        if (DoormatSettings.disablePetAttacking.shouldBypassDamage(optional.get(), player))
+        if (DoormatSettings.disablePetAttacking.shouldNegateDamage(player, TameableEntity.class.cast(this)))
             cir.setReturnValue(false);
     }
 

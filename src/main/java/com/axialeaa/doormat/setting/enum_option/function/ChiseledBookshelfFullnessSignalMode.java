@@ -6,9 +6,23 @@ import java.util.function.ToIntFunction;
 
 public enum ChiseledBookshelfFullnessSignalMode {
 
-    FALSE   (blockEntity -> blockEntity.getLastInteractedSlot() + 1),
-    TRUE    (ChiseledBookshelfBlockEntity::getFilledSlotCount),
-    LERPED  (blockEntity -> MathHelper.lerpPositive(TRUE.getOutput(blockEntity) / (float) blockEntity.size(), 0, 15));
+    /**
+     * Retains the vanilla behaviour of outputting a signal strength equivalent to the ordinal of the slot previously extracted from or inserted into.
+     */
+    FALSE (blockEntity -> blockEntity.getLastInteractedSlot() + 1),
+    /**
+     * Outputs a signal strength equivalent to the number of books in the bookshelf.
+     */
+    TRUE (ChiseledBookshelfBlockEntity::getFilledSlotCount),
+    /**
+     * Outputs a signal strength equivalent to the number of books in the bookshelf lerped between 0 and 15; 6 books creates a signal strength of 15.
+     */
+    LERPED (blockEntity -> {
+        int bookCount = TRUE.getOutput(blockEntity);
+        int size = blockEntity.size();
+
+        return MathHelper.lerpPositive(bookCount / (float) size, 0, 15);
+    });
 
     private final ToIntFunction<ChiseledBookshelfBlockEntity> function;
 

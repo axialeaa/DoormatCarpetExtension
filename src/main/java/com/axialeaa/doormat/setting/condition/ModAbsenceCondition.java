@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.setting.conditions;
+package com.axialeaa.doormat.setting.condition;
 
 import carpet.api.settings.Rule;
 import com.axialeaa.doormat.Doormat;

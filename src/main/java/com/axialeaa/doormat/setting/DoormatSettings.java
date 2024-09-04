@@ -3,8 +3,7 @@ package com.axialeaa.doormat.setting;
 import carpet.CarpetSettings;
 import carpet.api.settings.Rule;
 import carpet.api.settings.Validators;
-import com.axialeaa.doormat.setting.conditions.ReachAroundBridgingCondition;
-import com.axialeaa.doormat.setting.conditions.SporeBlossomDuplicationCondition;
+import com.axialeaa.doormat.setting.condition.*;
 import com.axialeaa.doormat.setting.enum_option.*;
 import com.axialeaa.doormat.setting.enum_option.function.*;
 import com.axialeaa.doormat.setting.validator.*;
@@ -123,7 +122,7 @@ public class DoormatSettings {
     public static DisablePetAttackingMode disablePetAttacking = DisablePetAttackingMode.FALSE;
 
     @Rule( categories = { CREATIVE, DOORMAT } )
-    public static boolean disablePiglinBlockGuarding = false;
+    public static DisablePiglinBlockGuardingMode disablePiglinBlockGuarding = DisablePiglinBlockGuardingMode.FALSE;
 
     @Rule( categories = { BUGFIX, OPTIMIZATION, DOORMAT } )
     public static boolean disablePrematureBlockFalling = false;

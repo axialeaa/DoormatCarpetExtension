@@ -41,11 +41,11 @@ public abstract class ArmorTrimMixin {
         ArmorTrimPattern pattern = this.getPattern().value();
         String ingredient = Translations.tr("compact_tooltip.trim." + material.assetName());
 
-        boolean onlyPattern = DoormatSettings.compactTrimTooltips == CompactTrimTooltipsMode.ONLY_PATTERN;
+        boolean noMaterial = DoormatSettings.compactTrimTooltips == CompactTrimTooltipsMode.NO_MATERIAL;
 
-        return Text.literal(onlyPattern ? "": ingredient)
+        return Text.literal(noMaterial ? "": ingredient)
             .setStyle(material.description().getStyle())
-            .append(onlyPattern ? Text.empty() : ScreenTexts.space())
+            .append(noMaterial ? Text.empty() : ScreenTexts.space())
             .append(pattern.description());
     }
 

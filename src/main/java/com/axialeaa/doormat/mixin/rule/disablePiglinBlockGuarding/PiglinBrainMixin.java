@@ -13,7 +13,7 @@ public class PiglinBrainMixin {
 
     @Inject(method = "onGuardedBlockInteracted", at = @At("HEAD"), cancellable = true)
     private static void cancelAttack(PlayerEntity player, boolean blockOpen, CallbackInfo ci) {
-        if (DoormatSettings.disablePiglinBlockGuarding)
+        if (DoormatSettings.disablePiglinBlockGuarding.shouldNegateAnger(player, blockOpen))
             ci.cancel();
     }
 
