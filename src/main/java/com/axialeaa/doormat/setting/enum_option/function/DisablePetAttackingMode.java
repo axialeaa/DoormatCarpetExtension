@@ -4,8 +4,6 @@ import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.apache.commons.lang3.function.ToBooleanBiFunction;
 
-import java.util.UUID;
-
 public enum DisablePetAttackingMode {
 
     /**
@@ -19,12 +17,7 @@ public enum DisablePetAttackingMode {
     /**
      * Disables attacking pets that belong to you, but allows you to hit other players' pets.
      */
-    OWNED ((player, pet) -> {
-        UUID playerUuid = player.getUuid();
-        UUID ownerUuid = pet.getOwnerUuid();
-
-        return playerUuid.equals(ownerUuid);
-    });
+    OWNED ((player, pet) -> pet.isOwner(player));
 
     private final ToBooleanBiFunction<PlayerEntity, TameableEntity> function;
 

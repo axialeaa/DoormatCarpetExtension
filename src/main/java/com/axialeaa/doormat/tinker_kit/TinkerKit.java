@@ -147,7 +147,7 @@ public class TinkerKit {
      * @return true if any of the block positions in the specified range are receiving power, otherwise false.
      */
     public static boolean isEmittingRedstonePower(RedstoneView world, BlockPos pos, Block block, Direction direction) {
-        return getEmittedRedstonePower(world, pos, block, direction, 0) > 0;
+        return isEmittingRedstonePower(world, pos, block, direction, 0);
     }
 
     /**

@@ -188,5 +188,5 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "plugin": "com.axialeaa.doormat.mixin.DoormatMixinPlugin"
+  "plugin": "com.axialeaa.doormat.DoormatMixinPlugin"
 }

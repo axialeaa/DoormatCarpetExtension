@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin;
+package com.axialeaa.doormat;
 
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
@@ -15,7 +15,7 @@ public class DoormatMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public String getRefMapperConfig() {
-        return "";
+        return null;
     }
 
     @Override
@@ -34,7 +34,7 @@ public class DoormatMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public List<String> getMixins() {
-        return List.of();
+        return null;
     }
 
     @Override

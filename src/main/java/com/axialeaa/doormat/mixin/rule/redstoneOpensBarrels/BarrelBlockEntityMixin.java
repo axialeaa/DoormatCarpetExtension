@@ -16,11 +16,14 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BarrelBlockEntity.class)
 public abstract class BarrelBlockEntityMixin extends BlockEntityImplMixin {
+
+    @Unique private final BarrelBlockEntity thisBlockEntity = BarrelBlockEntity.class.cast(this);
 
     /**
      * Stops players from being able to change the open state of the barrel while it's activated by redstone.
@@ -34,15 +37,19 @@ public abstract class BarrelBlockEntityMixin extends BlockEntityImplMixin {
     @WrapWithCondition(method = "playSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"))
     private boolean shouldPlaySound(World world, PlayerEntity source, double x, double y, double z, SoundEvent sound, SoundCategory category, float volume, float pitch, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return !DoormatSettings.redstoneOpensBarrels || !TinkerKit.isReceivingRedstonePower(world, this.getPos(), block);
+        return !DoormatSettings.redstoneOpensBarrels || !TinkerKit.isReceivingRedstonePower(world, thisBlockEntity.getPos(), block);
     }
 
     @Override
     public void markDirtyImpl(CallbackInfo ci) {
-        BlockState blockState = this.getCachedState();
+        BlockState blockState = thisBlockEntity.getCachedState();
 
-        if (blockState.get(BarrelBlock.OPEN))
-            BarrelItemDumpingHelper.dumpItemStacks(this.getWorld(), this.getPos(), blockState, BarrelBlockEntity.class.cast(this));
+        if (blockState.get(BarrelBlock.OPEN)) {
+            World world = thisBlockEntity.getWorld();
+            BlockPos blockPos = thisBlockEntity.getPos();
+
+            BarrelItemDumpingHelper.dumpItemStacks(world, blockPos, blockState, thisBlockEntity);
+        }
     }
 
 }
