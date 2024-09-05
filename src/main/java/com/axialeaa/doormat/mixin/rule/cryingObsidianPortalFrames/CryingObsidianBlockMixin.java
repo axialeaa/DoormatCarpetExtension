@@ -11,7 +11,7 @@ public class CryingObsidianBlockMixin implements NetherPortalFrameBlock {
 
     @Override
     public boolean isValid(BlockState state) {
-        return DoormatSettings.cryingObsidianPortalFrames;
+        return DoormatSettings.cryingObsidianPortalFrames.isEnabled();
     }
 
 }

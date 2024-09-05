@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.setting.validator;
 
-public class PortalWidthValidator extends IntegerRangeValidator {
+public class PortalSizeValidator extends IntegerRangeValidator {
 
     @Override
     int getMin() {
@@ -9,7 +9,7 @@ public class PortalWidthValidator extends IntegerRangeValidator {
 
     @Override
     int getMax() {
-        return 128;
+        return 128; // Subject to change
     }
 
 }

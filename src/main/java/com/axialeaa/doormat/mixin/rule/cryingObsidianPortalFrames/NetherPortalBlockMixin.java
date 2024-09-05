@@ -1,6 +1,7 @@
-package com.axialeaa.doormat.mixin.rule.cryingObsidianFormation;
+package com.axialeaa.doormat.mixin.rule.cryingObsidianPortalFrames;
 
 import com.axialeaa.doormat.setting.DoormatSettings;
+import com.axialeaa.doormat.setting.enum_option.CryingObsidianPortalFramesMode;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherPortalBlock;
@@ -23,7 +24,7 @@ public class NetherPortalBlockMixin {
 
     @Inject(method = "randomTick", at = @At("HEAD"))
     private void createCryingObsidian(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (!DoormatSettings.cryingObsidianPortalFrames || DoormatSettings.obsidianFrameConversionChance <= 0)
+        if (DoormatSettings.cryingObsidianPortalFrames != CryingObsidianPortalFramesMode.CONVERT)
             return;
 
         for (Direction direction : Direction.values()) {
@@ -33,7 +34,7 @@ public class NetherPortalBlockMixin {
             BlockPos blockPos = pos.offset(direction);
             BlockState blockState = world.getBlockState(blockPos);
 
-            if (blockState.isOf(Blocks.OBSIDIAN) && random.nextFloat() < DoormatSettings.obsidianFrameConversionChance)
+            if (blockState.isOf(Blocks.OBSIDIAN) && random.nextFloat() < 0.01)
                 world.setBlockState(blockPos, Blocks.CRYING_OBSIDIAN.getDefaultState());
         }
     }

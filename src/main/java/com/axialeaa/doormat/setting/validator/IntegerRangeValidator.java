@@ -21,21 +21,29 @@ public abstract class IntegerRangeValidator extends Validator<String> {
         if (split.length != 2)
             return null;
 
-        int min = Integer.parseInt(split[0]);
-        int max = Integer.parseInt(split[1]);
+        int small = Integer.parseInt(split[0]);
+        int large = Integer.parseInt(split[1]);
 
-        if (min < this.getMin() || max > this.getMax() || min > max)
+        if (small < this.getMin() || large > this.getMax() || small > large)
             return null;
 
         return newValue;
     }
 
-    public static int getMinFromString(String string) {
+    /**
+     * @param string The string input, consisting of two integers separated by a dash, e.g. {@code "1-20"}.
+     * @return The integer to the left of the dash.
+     */
+    public static int getSmall(String string) {
         String[] split = string.split("-");
         return Integer.parseInt(split[0]);
     }
 
-    public static int getMaxFromString(String string) {
+    /**
+     * @param string The string input, consisting of two integers separated by a dash, e.g. {@code "1-20"}.
+     * @return The integer to the right of the dash.
+     */
+    public static int getLarge(String string) {
         String[] split = string.split("-");
         return Integer.parseInt(split[1]);
     }

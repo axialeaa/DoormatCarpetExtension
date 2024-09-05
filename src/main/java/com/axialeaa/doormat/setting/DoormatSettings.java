@@ -92,7 +92,7 @@ public class DoormatSettings {
     public static boolean crafterSignalLerping = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
-    public static boolean cryingObsidianPortalFrames = false;
+    public static CryingObsidianPortalFramesMode cryingObsidianPortalFrames = CryingObsidianPortalFramesMode.FALSE;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean deepslateDungeons = false;
@@ -221,9 +221,6 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean openDoubleDoors = false;
 
-    @Rule( options = { "0.0", "0.01", "1.0" }, validators = Validators.Probablity.class, strict = false, categories = { FEATURE, DOORMAT } )
-    public static double obsidianFrameConversionChance = 0.0;
-
     @Rule( options = "minecraft:obsidian", validators = BlockIdentifierValidator.class, strict = false, categories = { TINKERING, APRIL_FOOLS, EXPERIMENTAL, DOORMAT } )
     public static String obsidianGenProduct = "minecraft:obsidian";
 
@@ -245,10 +242,10 @@ public class DoormatSettings {
     @Rule( categories = { PARITY, DOORMAT } )
     public static boolean portalForceTicking = false;
 
-    @Rule( options = "3-21", validators = PortalHeightValidator.class, strict = false, categories = { EXPERIMENTAL, DOORMAT })
+    @Rule( options = "3-21", validators = PortalSizeValidator.class, strict = false, categories = { EXPERIMENTAL, DOORMAT })
     public static String portalHeight = "3-21";
 
-    @Rule( options = "2-21", validators = PortalWidthValidator.class, strict = false, categories = { EXPERIMENTAL, DOORMAT })
+    @Rule( options = "2-21", validators = PortalSizeValidator.class, strict = false, categories = { EXPERIMENTAL, DOORMAT })
     public static String portalWidth = "2-21";
 
     @Rule( categories = { PARITY, DOORMAT } )

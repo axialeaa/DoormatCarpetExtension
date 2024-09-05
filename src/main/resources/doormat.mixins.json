@@ -33,7 +33,7 @@
     "rule.consistentWaterlogPushing.PistonBlockEntityMixin",
     "rule.copperBulbOxidationSignal.BulbBlockMixin",
     "rule.crafterSignalLerping.CrafterBlockMixin",
-    "rule.cryingObsidianFormation.NetherPortalBlockMixin",
+    "rule.cryingObsidianPortalFrames.NetherPortalBlockMixin",
     "rule.cryingObsidianPortalFrames.CryingObsidianBlockMixin",
     "rule.cryingObsidianPortalFrames.impl.AbstractFireBlockMixin",
     "rule.cryingObsidianPortalFrames.impl.NetherPortalMixin",

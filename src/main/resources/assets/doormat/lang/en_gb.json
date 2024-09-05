@@ -1,9 +1,9 @@
 {
   "carpet.rule.azaleaLeavesGrowFlowers.desc": "Azalea leaves grow flowers when fertilised",
   "carpet.rule.chiseledBookshelfFullnessSignal.desc": "Comparators measure the number of books in chiselled bookshelves instead of the last slot interacted with",
-  "carpet.rule.compactTrimTooltips.extra.0": "\"no_material\" removes the material text but leaves the colour formatting.",
+  "carpet.rule.compactTrimTooltips.extra.0": "\"No material\" removes the material text but leaves the colour formatting.",
   "carpet.rule.consistentWaterlogPushing.extra.0": "Despite the intentional behaviour clearly being for the water to vanish, this rule partly satisfies this open report: https://bugs.mojang.com/browse/MC-130202",
-  "carpet.rule.endPlatformSillyString.extra.0": "\"no_drops\" prevents the intersecting blocks from dropping as items, for the most part restoring pre-1.21 behaviour.",
+  "carpet.rule.endPlatformSillyString.extra.0": "\"No drops\" prevents the intersecting blocks from dropping as items, for the most part restoring pre-1.21 behaviour.",
   "carpet.rule.fastLeafDecayingChance.extra.0": "0 restores vanilla randomTick behaviour, and 0.075 is the value that matches the behaviour of Vanilla Tweaks' datapack.",
   "carpet.rule.forceGrassSpreading.desc": "Grass and mycelium can instantly spread to adjacent dirt, when the dirt is fertilised with bonemeal",
   "carpet.rule.grassAgingChance.extra.0": "0 restores vanilla grass block behaviour, i.e. not growing any short or tall grass naturally.",
