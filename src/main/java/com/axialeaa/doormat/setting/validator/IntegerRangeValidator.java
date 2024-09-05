@@ -4,6 +4,8 @@ import carpet.api.settings.CarpetRule;
 import carpet.api.settings.Validator;
 import net.minecraft.server.command.ServerCommandSource;
 import org.jetbrains.annotations.Nullable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class IntegerRangeValidator extends Validator<String> {
 
@@ -13,16 +15,14 @@ public abstract class IntegerRangeValidator extends Validator<String> {
 
     @Override
     public String validate(@Nullable ServerCommandSource source, CarpetRule<String> changingRule, String newValue, String userInput) {
-        if (!newValue.matches("^[0-9-]+$"))
+        Pattern pattern = Pattern.compile("^(\\d+)-(\\d+)$");
+        Matcher matcher = pattern.matcher(newValue);
+
+        if (!matcher.matches())
             return null;
 
-        String[] split = newValue.split("-");
-
-        if (split.length != 2)
-            return null;
-
-        int small = Integer.parseInt(split[0]);
-        int large = Integer.parseInt(split[1]);
+        int small = Integer.parseInt(matcher.group(1));
+        int large = Integer.parseInt(matcher.group(2));
 
         if (small < this.getMin() || large > this.getMax() || small > large)
             return null;
