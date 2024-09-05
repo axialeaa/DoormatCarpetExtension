@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.fake.CommandBlockWorldTimeChecker;
+import com.axialeaa.doormat.util.CommandBlockTimeChecker;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.CommandBlockExecutor;
 import org.spongepowered.asm.mixin.Mixin;
@@ -8,12 +8,12 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(CommandBlockExecutor.class)
-public class CommandBlockExecutorMixin implements CommandBlockWorldTimeChecker {
+public class CommandBlockExecutorMixin implements CommandBlockTimeChecker {
 
     @Unique private boolean shouldCheckTime = true;
 
     @Override
-    public void setShouldCheckTime(boolean shouldCheckTime) {
+    public void set(boolean shouldCheckTime) {
         this.shouldCheckTime = shouldCheckTime;
     }
 

@@ -1,6 +1,5 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.entity;
 
-import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
 import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -27,7 +26,7 @@ public class DrownedEntityMixin {
 
     @WrapOperation(method = "canSpawn(Lnet/minecraft/entity/EntityType;Lnet/minecraft/world/ServerWorldAccess;Lnet/minecraft/entity/SpawnReason;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/util/math/random/Random;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/ServerWorldAccess;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty allowPeacefulSpawns(ServerWorldAccess instance, Operation<Difficulty> original) {
-        return PeacefulMonsterSpawningHelper.bypassCheck(original.call(instance));
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original.call(instance);
     }
 
 }

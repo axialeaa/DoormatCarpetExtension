@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.block;
 
-import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.entity.SculkShriekerBlockEntity;
@@ -17,7 +17,7 @@ public class SculkShriekerBlockEntityMixin {
      */
     @WrapOperation(method = "canWarn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private Difficulty allowPeacefulSpawns(ServerWorld instance, Operation<Difficulty> original) {
-        return PeacefulMonsterSpawningHelper.bypassCheck(original.call(instance));
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original.call(instance);
     }
 
 }

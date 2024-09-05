@@ -1,8 +1,8 @@
-package com.axialeaa.doormat.mixin.rule.redstoneOpensBarrels;
+package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.BarrelItemDumpingHelper;
 import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BarrelBlock;

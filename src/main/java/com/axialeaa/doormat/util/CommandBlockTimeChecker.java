@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.fake;
+package com.axialeaa.doormat.util;
 
 import com.axialeaa.doormat.mixin.tinker_kit.CommandBlockExecutorMixin;
 import com.axialeaa.doormat.mixin.tinker_kit.CommandBlockMixin;
@@ -9,8 +9,8 @@ import net.minecraft.world.World;
  * @see CommandBlockMixin
  * @see CommandBlockExecutorMixin
  */
-public interface CommandBlockWorldTimeChecker {
+public interface CommandBlockTimeChecker {
 
-    void setShouldCheckTime(boolean shouldCheckTime);
+    void set(boolean shouldCheckTime);
 
 }

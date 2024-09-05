@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.setting.enum_option.function;
 
-import com.axialeaa.doormat.function.ToBooleanTriFunction;
+import com.axialeaa.doormat.util.function.ToBooleanTriFunction;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;

@@ -1,6 +1,8 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
+import com.axialeaa.doormat.helper.SoftInversionHelper;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -22,6 +24,11 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 public abstract class RedstoneTorchBlockMixin {
 
     @Shadow protected abstract void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random);
+
+    @ModifyReturnValue(method = "shouldUnpower", at = @At("RETURN"))
+    private boolean unpowerOnPistonExtend(boolean original, @Local(argsOnly = true) World world, @Local(argsOnly = true) BlockPos pos) {
+        return original || SoftInversionHelper.isPistonExtended(world, pos.down());
+    }
 
     @ModifyArg(method = "scheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int modifyUpdateType(int original, @Local(argsOnly = true) BlockState state) {

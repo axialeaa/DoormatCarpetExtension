@@ -245,6 +245,12 @@ public class DoormatSettings {
     @Rule( categories = { PARITY, DOORMAT } )
     public static boolean portalForceTicking = false;
 
+    @Rule( options = "3-21", validators = PortalHeightValidator.class, strict = false, categories = { EXPERIMENTAL, DOORMAT })
+    public static String portalHeight = "3-21";
+
+    @Rule( options = "2-21", validators = PortalWidthValidator.class, strict = false, categories = { EXPERIMENTAL, DOORMAT })
+    public static String portalWidth = "2-21";
+
     @Rule( categories = { PARITY, DOORMAT } )
     public static boolean powderSnowPortalBreaking = false;
 
@@ -295,6 +301,9 @@ public class DoormatSettings {
 
     @Rule( categories = { APRIL_FOOLS, DOORMAT } )
     public static boolean solidEntityCollision = false;
+
+    @Rule( categories = { PARITY, DOORMAT } )
+    public static boolean solidHoney = false;
 
     @Rule( categories = { FEATURE, DOORMAT }, conditions = SporeBlossomDuplicationCondition.class )
     public static boolean sporeBlossomDuplication = false;

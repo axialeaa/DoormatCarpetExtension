@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.fake;
+package com.axialeaa.doormat.util;
 
 import com.axialeaa.doormat.mixin.rule.dispensersBuryItems.BrushableBlockEntityMixin;
 import net.minecraft.block.entity.BrushableBlockEntity;

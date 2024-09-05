@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.peacefulMonsterSpawning.block;
 
-import com.axialeaa.doormat.helper.PeacefulMonsterSpawningHelper;
+import com.axialeaa.doormat.setting.DoormatSettings;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.block.spawner.TrialSpawnerLogic;
 import net.minecraft.world.Difficulty;
@@ -15,7 +15,7 @@ public class TrialSpawnerLogicMixin {
      */
     @ModifyExpressionValue(method = "canActivate", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;PEACEFUL:Lnet/minecraft/world/Difficulty;"))
     private Difficulty allowPeacefulSpawns(Difficulty original) {
-        return PeacefulMonsterSpawningHelper.bypassCheck(original);
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original;
     }
 
 }

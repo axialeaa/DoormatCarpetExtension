@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.fake.CommandBlockWorldTimeChecker;
+import com.axialeaa.doormat.util.CommandBlockTimeChecker;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -38,8 +38,8 @@ public abstract class CommandBlockMixin {
             instance.scheduleBlockTick(pos, block, delay, tickPriority);
         }
         else if (instance instanceof ServerWorld serverWorld) {
-            CommandBlockWorldTimeChecker checker = (CommandBlockWorldTimeChecker) commandBlockBlockEntity.getCommandExecutor();
-            checker.setShouldCheckTime(false);
+            CommandBlockTimeChecker checker = (CommandBlockTimeChecker) commandBlockBlockEntity.getCommandExecutor();
+            checker.set(false);
 
             this.scheduledTick(state, serverWorld, pos, serverWorld.getRandom());
         }

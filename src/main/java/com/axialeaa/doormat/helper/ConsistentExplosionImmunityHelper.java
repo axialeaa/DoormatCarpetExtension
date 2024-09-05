@@ -23,8 +23,9 @@ public class ConsistentExplosionImmunityHelper {
         ItemStack itemStack = itemEntity.getStack();
         Item item = itemStack.getItem();
 
-        float blastResistance = Block.getBlockFromItem(item).getBlastResistance();
-        return power * 1.3 > (blastResistance + 0.3) * 0.3;
+        float blastRes = Block.getBlockFromItem(item).getBlastResistance();
+
+        return power * 1.3 > (blastRes + 0.3) * 0.3;
     }
 
 }

@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.function;
+package com.axialeaa.doormat.util.function;
 
 @FunctionalInterface
 public interface ToBooleanTriFunction<T1, T2, T3> {

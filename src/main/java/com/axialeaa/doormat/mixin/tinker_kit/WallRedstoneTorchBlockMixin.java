@@ -1,5 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
+import com.axialeaa.doormat.helper.SoftInversionHelper;
 import com.axialeaa.doormat.tinker_kit.TinkerKit;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -18,7 +19,9 @@ public class WallRedstoneTorchBlockMixin {
     @ModifyReturnValue(method = "shouldUnpower", at = @At("RETURN"))
     private boolean allowQuasiConnectivity(boolean original, World world, BlockPos pos, BlockState state, @Local Direction direction) {
         Block block = state.getBlock();
-        return TinkerKit.isEmittingRedstonePower(world, pos.offset(direction), block, direction);
+        BlockPos blockPos = pos.offset(direction);
+
+        return TinkerKit.isEmittingRedstonePower(world, blockPos, block, direction) || SoftInversionHelper.isPistonExtended(world, blockPos);
     }
 
 }

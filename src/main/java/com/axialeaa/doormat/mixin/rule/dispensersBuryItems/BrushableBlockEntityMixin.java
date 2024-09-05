@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.rule.dispensersBuryItems;
 
-import com.axialeaa.doormat.fake.SingleStackSetter;
+import com.axialeaa.doormat.util.SingleStackSetter;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;

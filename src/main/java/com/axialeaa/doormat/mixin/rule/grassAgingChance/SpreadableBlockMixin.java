@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.mixin.rule.grassAging;
+package com.axialeaa.doormat.mixin.rule.grassAgingChance;
 
 import com.axialeaa.doormat.setting.DoormatSettings;
 import net.minecraft.block.BlockState;
