@@ -52,7 +52,7 @@ public class BannerItemMixin {
                     mutableText.append(CompactTooltipHelper.format(Text.literal(dot)));
                 }
 
-                tooltip.add(CompactTooltipHelper.format(mutableText.append(" (" + CompactTooltipHelper.getFraction() + ")")));
+                tooltip.add(CompactTooltipHelper.format(mutableText.append(" (%s)".formatted(CompactTooltipHelper.getFraction()))));
             }
         }
 

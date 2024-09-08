@@ -39,7 +39,7 @@ public abstract class ArmorTrimMixin {
 
         ArmorTrimMaterial material = this.getMaterial().value();
         ArmorTrimPattern pattern = this.getPattern().value();
-        String ingredient = Translations.tr("compact_tooltip.trim." + material.assetName());
+        String ingredient = Translations.tr("compact_tooltip.trim.%s".formatted(material.assetName()));
 
         boolean noMaterial = DoormatSettings.compactTrimTooltips == CompactTrimTooltipsMode.NO_MATERIAL;
 

@@ -70,7 +70,7 @@ public class RandomTickCommand {
         }
 
         SCHEDULED_POSITIONS.putIfAbsent(pos, count);
-        Messenger.m(source, "w Sent " + count + " random tick(s) to the block at ", Messenger.tp("c", pos));
+        Messenger.m(source, "w Sent %s random tick(s) to the block at ".formatted(count), Messenger.tp("c", pos));
 
         return Command.SINGLE_SUCCESS;
     }

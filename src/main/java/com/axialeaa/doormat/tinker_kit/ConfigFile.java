@@ -26,7 +26,7 @@ import static com.axialeaa.doormat.tinker_kit.TinkerKit.getKey;
 @ApiStatus.Internal
 public class ConfigFile {
 
-    public static final String FILE_NAME = Doormat.MOD_ID + ".json";
+    public static final String FILE_NAME = "%s.json".formatted(Doormat.MOD_ID);
 
     private static File getWorldDirectory(MinecraftServer server) {
         return server.getSavePath(WorldSavePath.ROOT).toFile();
@@ -81,10 +81,10 @@ public class ConfigFile {
      */
     private static boolean writeToFile(JsonObject root, File file) {
         File parent = file.getParentFile();
-        File temp = new File(parent, file.getName() + ".tmp");
+        File temp = new File(parent, "%s.tmp".formatted(file.getName()));
 
         if (temp.exists())
-            temp = new File(parent, UUID.randomUUID() + ".tmp");
+            temp = new File(parent, "%s.tmp".formatted(UUID.randomUUID()));
 
         try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(temp), StandardCharsets.UTF_8)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();

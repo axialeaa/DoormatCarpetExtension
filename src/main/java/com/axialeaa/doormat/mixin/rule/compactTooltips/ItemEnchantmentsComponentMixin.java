@@ -60,7 +60,7 @@ public abstract class ItemEnchantmentsComponentMixin {
                     mutableText.append(CompactTooltipHelper.format(Text.literal(dot), barEnchantment));
                 }
 
-                tooltip.accept(CompactTooltipHelper.format(mutableText.append(" (" + CompactTooltipHelper.getFraction() + ")")));
+                tooltip.accept(CompactTooltipHelper.format(mutableText.append(" (%s)".formatted(CompactTooltipHelper.getFraction()))));
             }
         }
 

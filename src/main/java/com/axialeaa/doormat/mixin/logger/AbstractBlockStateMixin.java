@@ -55,22 +55,22 @@ public abstract class AbstractBlockStateMixin {
             List<Text> messages = new ArrayList<>();
 
             if (newTick)
-                messages.add(c("wb tick : ", "d " + time));
+                messages.add(c("wb tick : ", "d %d".formatted(time)));
 
             Block block = this.getBlock();
             String key = TinkerKit.getKey(block);
 
             if ("brief".equals(option))
-                messages.add(c("d #" + count, "gb ->", tp("l", pos), "m (" + key + ")"));
+                messages.add(c("d #%d".formatted(count), "gb ->", tp("l", pos), "m (%s)".formatted(key)));
             else if ("full".equals(option)) {
-                messages.add(c("d #" + count, "gb ->", tp("l", pos)));
+                messages.add(c("d #%d".formatted(count), "gb ->", tp("l", pos)));
 
                 ChunkPos chunkPos = world.getChunk(pos).getPos();
                 String dimension = world.getDimensionEntry().getIdAsString();
 
-                messages.add(c("w   block: ", "m " + key));
-                messages.add(c("w   chunk: ", "c " + chunkPos));
-                messages.add(c("w   dimension: ", "m " + dimension));
+                messages.add(c("w   block: ", "m %s".formatted(key)));
+                messages.add(c("w   chunk: ", "c %s".formatted(chunkPos)));
+                messages.add(c("w   dimension: ", "m %s".formatted(dimension)));
             }
 
             return messages.toArray(new Text[0]);

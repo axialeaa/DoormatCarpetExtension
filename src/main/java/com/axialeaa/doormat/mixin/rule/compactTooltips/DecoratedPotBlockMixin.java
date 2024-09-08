@@ -53,8 +53,9 @@ public class DecoratedPotBlockMixin {
             if (DoormatSettings.compactPotTooltips == CompactPotTooltipsMode.IGNORE_BRICKS && sherd == Items.BRICK)
                 continue;
 
-            String translate = Translations.tr("compact_tooltip.pot." + sherd.getTranslationKey().replace("item.minecraft.", ""));
-            tooltip.add(Text.literal(count > 1 ? translate + " x" + count : translate) // add a numerical tag at the end if there are more than 1 of this entries
+            String translate = Translations.tr("compact_tooltip.pot.%s".formatted(sherd.getTranslationKey().replace("item.minecraft.", "")));
+
+            tooltip.add(Text.literal(count > 1 ? "%s x%d".formatted(translate, count) : translate) // add a numerical tag at the end if there are more than 1 of this entries
                 .formatted(Formatting.GRAY));
         }
     }

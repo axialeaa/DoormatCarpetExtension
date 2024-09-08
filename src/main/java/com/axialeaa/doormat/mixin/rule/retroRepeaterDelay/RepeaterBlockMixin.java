@@ -28,7 +28,7 @@ public class RepeaterBlockMixin {
             case 2 -> 4;
             case 3 -> 10;
             case 4 -> 14;
-            default -> throw new IllegalStateException("Unexpected value: " + delay);
+            default -> throw new IllegalStateException("Unexpected value: %d".formatted(delay));
         };
     }
 

@@ -13,10 +13,10 @@ public class DoormatLoggers {
 
     static Logger createLogger(String logName, String defaultOption, String [] options, boolean strictOptions) {
         try {
-            return new Logger(DoormatLoggers.class.getField("__" + logName), logName, defaultOption, options, strictOptions);
+            return new Logger(DoormatLoggers.class.getField("__%s".formatted(logName)), logName, defaultOption, options, strictOptions);
         }
         catch (NoSuchFieldException e) {
-            throw new RuntimeException("Failed to create logger " + logName);
+            throw new RuntimeException("Failed to create logger %s".formatted(logName));
         }
     }
 

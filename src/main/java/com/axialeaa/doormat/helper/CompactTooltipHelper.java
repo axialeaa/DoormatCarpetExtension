@@ -43,7 +43,7 @@ public class CompactTooltipHelper {
     }
 
     public static String getFraction() {
-        return getNumerator() + "/" + getDenominator();
+        return "%d / %d".formatted(getNumerator(), getDenominator());
     }
 
     public static MutableText getFormattedFraction() {
