@@ -242,11 +242,12 @@ public class DoormatSettings {
     @Rule( categories = { PARITY, DOORMAT } )
     public static boolean portalForceTicking = false;
 
-    @Rule( options = "3-21", validators = PortalSizeValidator.class, strict = false, categories = { EXPERIMENTAL, DOORMAT })
-    public static String portalHeight = "3-21";
-
-    @Rule( options = "2-21", validators = PortalSizeValidator.class, strict = false, categories = { EXPERIMENTAL, DOORMAT })
-    public static String portalWidth = "2-21";
+//      WIP
+//    @Rule( options = "3-21", validators = PortalSizeValidator.class, strict = false, categories = { EXPERIMENTAL, DOORMAT })
+//    public static String portalHeight = "3-21";
+//
+//    @Rule( options = "2-21", validators = PortalSizeValidator.class, strict = false, categories = { EXPERIMENTAL, DOORMAT })
+//    public static String portalWidth = "2-21";
 
     @Rule( categories = { PARITY, DOORMAT } )
     public static boolean powderSnowPortalBreaking = false;
