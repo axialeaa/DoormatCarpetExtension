@@ -1,9 +1,11 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.DoubleDoorHelper;
 import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.registry.DoormatTinkerTypes;
+import com.axialeaa.doormat.setting.DoormatSettings;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -27,9 +29,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = DoorBlock.class, priority = 1500)
 public abstract class DoorBlockMixin extends AbstractBlockImplMixin {
@@ -53,28 +53,32 @@ public abstract class DoorBlockMixin extends AbstractBlockImplMixin {
     @ModifyArg(method = { "onUse", "setOpen" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int modifyUpdateType(int original, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.getFlags(block, original) | Block.REDRAW_ON_MAIN_THREAD;
+        return TinkerKitUtils.getFlags(block, original) | Block.REDRAW_ON_MAIN_THREAD;
     }
 
-    @Inject(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z", shift = At.Shift.BEFORE), cancellable = true)
-    private void scheduleOrCall(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
+    @WrapMethod(method = "neighborUpdate")
+    protected void scheduleOrCall(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, Operation<Void> original) {
         Block block = state.getBlock();
 
-        int delay = TinkerKit.getDelay(block, 0);
+        if (!DoormatTinkerTypes.QC.canModify(block)) {
+            original.call(state, world, pos, sourceBlock, sourcePos, notify);
+            return;
+        }
+
+        int delay = TinkerKitUtils.getDelay(block, 0);
         this.isPowered = isDoorPowered(world, pos, state);
 
         if (delay > 0) {
-            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
             world.scheduleBlockTick(pos, block, delay, tickPriority);
         }
-        else getBehaviour(world, pos, state);
-
-        ci.cancel();
+        else this.getBehaviour(world, pos, state);
     }
 
     @Override
-    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        getBehaviour(world, pos, state);
+    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, Operation<Void> original) {
+        this.getBehaviour(world, pos, state);
+        original.call(state, world, pos, random);
     }
 
     @Unique
@@ -94,7 +98,7 @@ public abstract class DoorBlockMixin extends AbstractBlockImplMixin {
         }
 
         Block block = state.getBlock();
-        int flags = TinkerKit.getFlags(block, Block.NOTIFY_LISTENERS);
+        int flags = TinkerKitUtils.getFlags(block, Block.NOTIFY_LISTENERS);
 
         world.setBlockState(pos, blockState.with(POWERED, this.isPowered), flags);
     }
@@ -108,7 +112,7 @@ public abstract class DoorBlockMixin extends AbstractBlockImplMixin {
 
         boolean lowerHalf = state.get(HALF) == DoubleBlockHalf.LOWER;
 
-        return TinkerKit.isReceivingRedstonePower(world, pos, block, lowerHalf ? 1 : 0) || (!lowerHalf && world.isReceivingRedstonePower(pos.down()));
+        return TinkerKitUtils.isReceivingRedstonePower(world, pos, block, lowerHalf ? 1 : 0) || (!lowerHalf && world.isReceivingRedstonePower(pos.down()));
     }
 
     @Unique
@@ -127,7 +131,7 @@ public abstract class DoorBlockMixin extends AbstractBlockImplMixin {
         Block block = blockState.getBlock();
         boolean lowerHalf = blockState.get(HALF) == DoubleBlockHalf.LOWER;
 
-        return TinkerKit.isReceivingRedstonePower(world, offset, block, lowerHalf ? 1 : 0) || (!lowerHalf && world.isReceivingRedstonePower(offset.down()));
+        return TinkerKitUtils.isReceivingRedstonePower(world, offset, block, lowerHalf ? 1 : 0) || (!lowerHalf && world.isReceivingRedstonePower(offset.down()));
     }
 
 }

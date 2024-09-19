@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
 import com.axialeaa.doormat.helper.SoftInversionHelper;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -33,21 +33,21 @@ public abstract class RedstoneTorchBlockMixin {
     @ModifyArg(method = "scheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int modifyUpdateType(int original, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.getFlags(block, original);
+        return TinkerKitUtils.getFlags(block, original);
     }
 
     @WrapWithCondition(method = { "onBlockAdded", "onStateReplaced" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
     private boolean shouldUpdateNeighbours(World instance, BlockPos pos, Block sourceBlock, @Local(argsOnly = true, ordinal = 0) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.shouldUpdateNeighbours(block);
+        return TinkerKitUtils.shouldUpdateNeighbours(block);
     }
 
     @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
     private void scheduleOrCall(World instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
-        int delay = TinkerKit.getDelay(block, i);
+        int delay = TinkerKitUtils.getDelay(block, i);
 
         if (delay > 0) {
-            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
             instance.scheduleBlockTick(pos, block, delay, tickPriority);
         }
         else if (instance instanceof ServerWorld serverWorld)

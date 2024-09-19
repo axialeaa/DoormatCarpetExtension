@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
 import com.axialeaa.doormat.util.CommandBlockTimeChecker;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -26,15 +26,15 @@ public abstract class CommandBlockMixin {
     @WrapOperation(method = { "neighborUpdate", "onPlaced" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnectivity(World instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.isReceivingRedstonePower(instance, pos, block);
+        return TinkerKitUtils.isReceivingRedstonePower(instance, pos, block);
     }
 
     @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
     private void scheduleOrCall(World instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state, @Local CommandBlockBlockEntity commandBlockBlockEntity) {
-        int delay = TinkerKit.getDelay(block, i);
+        int delay = TinkerKitUtils.getDelay(block, i);
 
         if (delay > 0) {
-            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
             instance.scheduleBlockTick(pos, block, delay, tickPriority);
         }
         else if (instance instanceof ServerWorld serverWorld) {
@@ -47,8 +47,8 @@ public abstract class CommandBlockMixin {
 
     @WrapOperation(method = "scheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
     private void modifyLoopSpeed(ServerWorld instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state, @Local(argsOnly = true) Random random) {
-        int delay = Math.max(TinkerKit.getDelay(block, i), 1);
-        TickPriority tickPriority = TinkerKit.getTickPriority(block);
+        int delay = Math.max(TinkerKitUtils.getDelay(block, i), 1);
+        TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
 
         instance.scheduleBlockTick(pos, block, delay, tickPriority);
     }

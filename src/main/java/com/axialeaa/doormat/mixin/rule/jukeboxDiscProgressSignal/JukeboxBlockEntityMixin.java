@@ -9,7 +9,6 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.JukeboxBlockEntity;
 import net.minecraft.block.jukebox.JukeboxManager;
 import net.minecraft.block.jukebox.JukeboxSong;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -24,7 +23,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class JukeboxBlockEntityMixin extends BlockEntity {
 
     @Shadow public abstract BlockEntity asBlockEntity();
-    @Shadow public abstract ItemStack getStack();
 
     @Unique private final JukeboxBlockEntity thisBlockEntity = (JukeboxBlockEntity) this.asBlockEntity();
 

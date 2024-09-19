@@ -3,8 +3,9 @@ package com.axialeaa.doormat.mixin.tinker_kit;
 import com.axialeaa.doormat.helper.BarrelItemDumpingHelper;
 import com.axialeaa.doormat.mixin.impl.BlockEntityImplMixin;
 import com.axialeaa.doormat.setting.DoormatSettings;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BarrelBlock;
 import net.minecraft.block.Block;
@@ -19,7 +20,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = BarrelBlockEntity.class, priority = 1500)
 public class BarrelBlockEntityMixin extends BlockEntityImplMixin {
@@ -29,23 +29,23 @@ public class BarrelBlockEntityMixin extends BlockEntityImplMixin {
     @ModifyArg(method = "setOpen", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int modifyUpdateType(int original, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.getFlags(block, original);
+        return TinkerKitUtils.getFlags(block, original);
     }
 
     @WrapWithCondition(method = "setOpen", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private boolean shouldChangeState(World world, BlockPos pos, BlockState state, int flags) {
         Block block = state.getBlock();
-        return !DoormatSettings.redstoneOpensBarrels || !TinkerKit.isReceivingRedstonePower(world, pos, block);
+        return !DoormatSettings.redstoneOpensBarrels || !TinkerKitUtils.isReceivingRedstonePower(world, pos, block);
     }
 
     @WrapWithCondition(method = "playSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"))
     private boolean shouldPlaySound(World world, PlayerEntity source, double x, double y, double z, SoundEvent sound, SoundCategory category, float volume, float pitch, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return !DoormatSettings.redstoneOpensBarrels || !TinkerKit.isReceivingRedstonePower(world, thisBlockEntity.getPos(), block);
+        return !DoormatSettings.redstoneOpensBarrels || !TinkerKitUtils.isReceivingRedstonePower(world, thisBlockEntity.getPos(), block);
     }
 
     @Override
-    public void markDirtyImpl(CallbackInfo ci) {
+    public void markDirtyImpl(Operation<Void> original) {
         BlockState blockState = thisBlockEntity.getCachedState();
 
         if (blockState.get(BarrelBlock.OPEN)) {
@@ -54,6 +54,8 @@ public class BarrelBlockEntityMixin extends BlockEntityImplMixin {
 
             BarrelItemDumpingHelper.dumpItemStacks(world, blockPos, blockState, thisBlockEntity);
         }
+
+        original.call();
     }
 
 }

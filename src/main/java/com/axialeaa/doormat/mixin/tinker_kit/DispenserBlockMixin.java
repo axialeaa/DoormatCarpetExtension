@@ -1,6 +1,7 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.registry.DoormatTinkerTypes;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.bawnorton.mixinsquared.TargetHandler;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -34,18 +35,18 @@ public abstract class DispenserBlockMixin {
         BlockState blockState = instance.getBlockState(pos);
         Block block = blockState.getBlock();
 
-        if (!TinkerKit.Type.QC.canModify(block))
+        if (!DoormatTinkerTypes.QC.canModify(block))
             return original.call(instance, pos);
 
-        var value = TinkerKit.Type.QC.getValue(block);
+        var value = DoormatTinkerTypes.QC.getValue(block);
 
-        if (value == null || (int) value < 1)
+        if (value == null || value < 1)
             return false;
 
-        for (int i = 1; i <= (int) value; i++) {
+        for (int i = 1; i <= value; i++) {
             BlockPos blockPos = pos.up(i);
 
-            if (TinkerKit.cannotQC(instance, blockPos))
+            if (TinkerKitUtils.cannotQC(instance, blockPos))
                 break;
 
             if (instance.isReceivingRedstonePower(blockPos))
@@ -58,15 +59,15 @@ public abstract class DispenserBlockMixin {
     @ModifyArg(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int modifyUpdateType(int original, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.getFlags(block, original);
+        return TinkerKitUtils.getFlags(block, original);
     }
 
     @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
     private void scheduleOrCall(World instance, BlockPos pos, Block block, int i, Operation<Void> original, @Local(argsOnly = true) BlockState state) {
-        int delay = TinkerKit.getDelay(block, i);
+        int delay = TinkerKitUtils.getDelay(block, i);
 
         if (delay > 0) {
-            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
             instance.scheduleBlockTick(pos, block, delay, tickPriority);
         }
         else if (instance instanceof ServerWorld serverWorld)

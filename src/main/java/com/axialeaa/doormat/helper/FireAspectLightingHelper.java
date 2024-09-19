@@ -2,7 +2,7 @@ package com.axialeaa.doormat.helper;
 
 import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.mixin.rule.fireAspectLighting.TntBlockAccessor;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import net.minecraft.block.*;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
@@ -45,7 +45,7 @@ public class FireAspectLightingHelper {
         if (block instanceof TntBlock) {
             TntBlockAccessor.invokePrimeTnt(world, blockPos, player);
 
-            int flags = TinkerKit.getFlags(block, Block.NOTIFY_ALL) | Block.REDRAW_ON_MAIN_THREAD;
+            int flags = TinkerKitUtils.getFlags(block, Block.NOTIFY_ALL) | Block.REDRAW_ON_MAIN_THREAD;
             world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), flags);
         }
         else if (CampfireBlock.canBeLit(blockState) || CandleBlock.canBeLit(blockState) || CandleCakeBlock.canBeLit(blockState)) {

@@ -1,7 +1,9 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
-import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.CompactTooltipHelper;
+import com.axialeaa.doormat.setting.DoormatSettings;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
@@ -9,12 +11,9 @@ import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -27,13 +26,17 @@ public abstract class ItemEnchantmentsComponentMixin {
 
     @Shadow public abstract boolean isEmpty();
 
+    @Shadow @Final boolean showInTooltip;
+
     /**
      * Cycles the displayed line using the logic in {@link CompactTooltipHelper}.
      */
-    @Inject(method = "appendTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item$TooltipContext;getRegistryLookup()Lnet/minecraft/registry/RegistryWrapper$WrapperLookup;", shift = At.Shift.BEFORE), cancellable = true)
-    private void appendTooltipCarousel(Item.TooltipContext context, Consumer<Text> tooltip, TooltipType type, CallbackInfo ci) {
-        if (!DoormatSettings.compactEnchantTooltips.isEnabled() || this.isEmpty())
+    @WrapMethod(method = "appendTooltip")
+    private void appendTooltipCarousel(Item.TooltipContext context, Consumer<Text> tooltip, TooltipType type, Operation<Void> original) {
+        if (!DoormatSettings.compactEnchantTooltips.isEnabled() || !this.showInTooltip || this.isEmpty()) {
+            original.call(context, tooltip, type);
             return;
+        }
 
         CompactTooltipHelper.LIST_SIZE = this.getSize();
 
@@ -42,7 +45,7 @@ public abstract class ItemEnchantmentsComponentMixin {
 
         if (CompactTooltipHelper.LIST_SIZE == 1) {
             tooltip.accept(name);
-            ci.cancel();
+            return;
         }
 
         switch (DoormatSettings.compactEnchantTooltips) {
@@ -63,8 +66,6 @@ public abstract class ItemEnchantmentsComponentMixin {
                 tooltip.accept(CompactTooltipHelper.format(mutableText.append(" (%s)".formatted(CompactTooltipHelper.getFraction()))));
             }
         }
-
-        ci.cancel();
     }
 
 }

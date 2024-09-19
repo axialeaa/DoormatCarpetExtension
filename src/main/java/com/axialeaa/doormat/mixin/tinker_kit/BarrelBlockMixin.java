@@ -3,7 +3,8 @@ package com.axialeaa.doormat.mixin.tinker_kit;
 import com.axialeaa.doormat.helper.BarrelItemDumpingHelper;
 import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
 import com.axialeaa.doormat.setting.DoormatSettings;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.BarrelBlock;
 import net.minecraft.block.Block;
@@ -27,7 +28,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BarrelBlock.class)
@@ -42,29 +42,27 @@ public class BarrelBlockMixin extends AbstractBlockImplMixin {
         BarrelItemDumpingHelper.dumpItemStacks(world, pos, state, (BarrelBlockEntity) blockEntity);
     }
 
-    /**
-     * If the rule is enabled, flips the open blockstate of the barrel when it receives a neighbour update and the open state doesn't match whether or not it's powered.
-     */
     @Override
-    public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
-        if (!DoormatSettings.redstoneOpensBarrels)
+    public void neighborUpdateImpl(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, Operation<Void> original) {
+        if (!DoormatSettings.redstoneOpensBarrels || world.isClient())
             return;
 
         Block block = state.getBlock();
-        int delay = TinkerKit.getDelay(block, 0);
+        int delay = TinkerKitUtils.getDelay(block, 0);
 
-        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, block);
+        this.isPowered = TinkerKitUtils.isReceivingRedstonePower(world, pos, block);
 
         if (delay > 0) {
-            TickPriority tickPriority = TinkerKit.getTickPriority(block, TickPriority.NORMAL);
+            TickPriority tickPriority = TinkerKitUtils.getTickPriority(block, TickPriority.NORMAL);
             world.scheduleBlockTick(pos, state.getBlock(), delay, tickPriority);
         }
-        else getBehaviour(world, pos, state);
+        else this.getBehaviour(world, pos, state);
     }
 
     @Override
-    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        getBehaviour(world, pos, state);
+    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, Operation<Void> original) {
+        this.getBehaviour(world, pos, state);
+        original.call(state, world, pos, random);
     }
 
     @Unique
@@ -72,7 +70,7 @@ public class BarrelBlockMixin extends AbstractBlockImplMixin {
         if (state.get(OPEN) == this.isPowered)
             return;
 
-        int flags = TinkerKit.getFlags(state.getBlock(), Block.NOTIFY_ALL);
+        int flags = TinkerKitUtils.getFlags(state.getBlock(), Block.NOTIFY_ALL);
         world.setBlockState(pos, state.with(OPEN, this.isPowered), flags);
 
         if (state.get(OPEN) && world.getBlockEntity(pos) instanceof BarrelBlockEntity blockEntity)

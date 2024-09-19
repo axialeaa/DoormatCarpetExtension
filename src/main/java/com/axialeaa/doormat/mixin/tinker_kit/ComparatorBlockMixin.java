@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -36,7 +36,7 @@ public abstract class ComparatorBlockMixin {
     @ModifyReturnValue(method = "getUpdateDelayInternal", at = @At("RETURN"))
     private int modifyDelay(int original, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.getDelay(block, original);
+        return TinkerKitUtils.getDelay(block, original);
     }
 
 }

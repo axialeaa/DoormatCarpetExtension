@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
 import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = BulbBlock.class, priority = 1500)
 public abstract class BulbBlockMixin extends AbstractBlockImplMixin {
@@ -26,29 +25,30 @@ public abstract class BulbBlockMixin extends AbstractBlockImplMixin {
     @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnectivity(ServerWorld instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.isReceivingRedstonePower(instance, pos, block);
+        return TinkerKitUtils.isReceivingRedstonePower(instance, pos, block);
     }
 
     @ModifyArg(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int modifyUpdateType(int flags, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.getFlags(block, flags);
+        return TinkerKitUtils.getFlags(block, flags);
     }
 
     @WrapOperation(method = { "neighborUpdate", "onBlockAdded" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/block/BulbBlock;update(Lnet/minecraft/block/BlockState;Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/BlockPos;)V"))
     private void scheduleOrCall(BulbBlock instance, BlockState state, ServerWorld world, BlockPos pos, Operation<Void> original) {
-        int delay = TinkerKit.getDelay(instance, 0);
+        int delay = TinkerKitUtils.getDelay(instance, 0);
 
         if (delay > 0) {
-            TickPriority tickPriority = TinkerKit.getTickPriority(instance);
+            TickPriority tickPriority = TinkerKitUtils.getTickPriority(instance);
             world.scheduleBlockTick(pos, instance, delay, tickPriority);
         }
         else original.call(instance, state, world, pos);
     }
 
     @Override
-    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
+    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, Operation<Void> original) {
         this.update(state, world, pos);
+        original.call(state, world, pos, random);
     }
 
 }

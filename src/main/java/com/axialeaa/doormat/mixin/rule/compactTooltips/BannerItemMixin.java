@@ -1,8 +1,10 @@
 package com.axialeaa.doormat.mixin.rule.compactTooltips;
 
-import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.helper.CompactTooltipHelper;
-import com.llamalad7.mixinextras.sugar.Local;
+import com.axialeaa.doormat.setting.DoormatSettings;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.BannerPatternsComponent;
 import net.minecraft.item.BannerItem;
 import net.minecraft.item.ItemStack;
@@ -10,24 +12,29 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
 import java.util.List;
 
 @Mixin(BannerItem.class)
 public class BannerItemMixin {
 
-    @Inject(method = "appendBannerTooltip", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(II)I", shift = At.Shift.BEFORE), cancellable = true)
-    private static void appendBannerTooltipCarousel(ItemStack stack, List<Text> tooltip, CallbackInfo ci, @Local BannerPatternsComponent bannerPatternsComponent) {
-        if (!DoormatSettings.compactBannerTooltips.isEnabled())
+    @WrapMethod(method = "appendBannerTooltip")
+    private static void appendBannerTooltipCarousel(ItemStack stack, List<Text> tooltip, Operation<Void> original) {
+        if (!DoormatSettings.compactBannerTooltips.isEnabled()) {
+            original.call(stack, tooltip);
+            return;
+        }
+
+        BannerPatternsComponent bannerPatternsComponent = stack.get(DataComponentTypes.BANNER_PATTERNS);
+
+        if (bannerPatternsComponent == null)
             return;
 
         List<BannerPatternsComponent.Layer> layers = bannerPatternsComponent.layers();
 
-        if (layers.isEmpty())
+        if (layers.isEmpty()) {
+            original.call(stack, tooltip);
             return;
+        }
 
         CompactTooltipHelper.LIST_SIZE = layers.size();
 
@@ -36,7 +43,7 @@ public class BannerItemMixin {
 
         if (CompactTooltipHelper.LIST_SIZE == 1) {
             tooltip.add(name);
-            ci.cancel();
+            return;
         }
 
         switch (DoormatSettings.compactBannerTooltips) {
@@ -55,8 +62,6 @@ public class BannerItemMixin {
                 tooltip.add(CompactTooltipHelper.format(mutableText.append(" (%s)".formatted(CompactTooltipHelper.getFraction()))));
             }
         }
-
-        ci.cancel();
     }
 
 }

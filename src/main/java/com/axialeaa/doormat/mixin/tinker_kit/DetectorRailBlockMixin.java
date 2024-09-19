@@ -1,6 +1,6 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -26,25 +26,25 @@ public abstract class DetectorRailBlockMixin {
     @ModifyArg(method = "updatePoweredStatus", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private int modifyUpdateType(int original, @Local(ordinal = 1) BlockState blockState) {
         Block block = blockState.getBlock();
-        return TinkerKit.getFlags(block, original);
+        return TinkerKitUtils.getFlags(block, original);
     }
 
     @WrapWithCondition(method = "updateNearbyRails", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbor(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;Lnet/minecraft/util/math/BlockPos;Z)V"))
     private boolean shouldUpdateNeighbours(World instance, BlockState state, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        return TinkerKit.shouldUpdateNeighbours(sourceBlock);
+        return TinkerKitUtils.shouldUpdateNeighbours(sourceBlock);
     }
 
     @WrapWithCondition(method = "updatePoweredStatus", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
     private boolean shouldUpdateNeighbours(World instance, BlockPos pos, Block sourceBlock) {
-        return TinkerKit.shouldUpdateNeighbours(sourceBlock);
+        return TinkerKitUtils.shouldUpdateNeighbours(sourceBlock);
     }
 
     @WrapOperation(method = "updatePoweredStatus", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
     private void modifyDelay(World instance, BlockPos pos, Block block, int i, Operation<Void> original) {
-        int delay = TinkerKit.getDelay(block, i);
+        int delay = TinkerKitUtils.getDelay(block, i);
 
         if (delay > 0) {
-            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
             instance.scheduleBlockTick(pos, block, delay, tickPriority);
         }
         else if (instance instanceof ServerWorld serverWorld) {

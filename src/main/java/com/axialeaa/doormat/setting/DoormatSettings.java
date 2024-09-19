@@ -142,7 +142,7 @@ public class DoormatSettings {
     @Rule( categories = { RETRO, DOORMAT } )
     public static EndPlatformSillyStringMode endPlatformSillyString = EndPlatformSillyStringMode.FALSE;
 
-    @Rule( categories = { CREATIVE, DOORMAT } )
+    @Rule( categories = { CREATIVE, DOORMAT } ) // change to FEATURE
     public static boolean expandedFenceConnectivity = true;
 
     @Rule( options = { "0.0", "0.075" }, validators = Validators.Probablity.class, strict = false, categories = { FEATURE, DOORMAT } )

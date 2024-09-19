@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
 import com.axialeaa.doormat.setting.DoormatSettings;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
@@ -25,7 +25,7 @@ public class RepeaterBlockMixin {
 
         Block block = state.getBlock();
 
-        return state.get(DELAY) * TinkerKit.getDelay(block, original);
+        return state.get(DELAY) * TinkerKitUtils.getDelay(block, original);
     }
 
 }

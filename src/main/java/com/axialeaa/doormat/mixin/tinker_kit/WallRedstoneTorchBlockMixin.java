@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
 import com.axialeaa.doormat.helper.SoftInversionHelper;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.block.Block;
@@ -21,7 +21,7 @@ public class WallRedstoneTorchBlockMixin {
         Block block = state.getBlock();
         BlockPos blockPos = pos.offset(direction);
 
-        return TinkerKit.isEmittingRedstonePower(world, blockPos, block, direction) || SoftInversionHelper.isPistonExtended(world, blockPos);
+        return TinkerKitUtils.isEmittingRedstonePower(world, blockPos, block, direction) || SoftInversionHelper.isPistonExtended(world, blockPos);
     }
 
 }

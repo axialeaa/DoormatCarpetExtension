@@ -1,7 +1,8 @@
 package com.axialeaa.doormat.mixin.rule.leavesNoCollision;
 
-import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
+import com.axialeaa.doormat.setting.DoormatSettings;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.block.ShapeContext;
@@ -10,15 +11,16 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LeavesBlock.class)
 public class LeavesBlockMixin extends AbstractBlockImplMixin {
 
     @Override
-    public void getCollisionShapeImpl(BlockState state, BlockView world, BlockPos pos, ShapeContext context, CallbackInfoReturnable<VoxelShape> cir) {
+    public VoxelShape getCollisionShapeImpl(BlockState state, BlockView world, BlockPos pos, ShapeContext context, Operation<VoxelShape> original) {
         if (DoormatSettings.leavesNoCollision)
-            cir.setReturnValue(VoxelShapes.empty());
+            return VoxelShapes.empty();
+
+        return original.call(state, world, pos, context);
     }
 
 }

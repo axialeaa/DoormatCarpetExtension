@@ -1,8 +1,8 @@
 package com.axialeaa.doormat.mixin.logger;
 
 import carpet.logging.LoggerRegistry;
-import com.axialeaa.doormat.DoormatLoggers;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.registry.DoormatLoggers;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
@@ -12,6 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -33,48 +34,50 @@ public abstract class AbstractBlockStateMixin {
 
     @Unique private static long prevTime = 0;
     @Unique private static int count = 0;
-    @Unique private static boolean newTick;
 
     @Inject(method = "randomTick", at = @At("HEAD"))
     private void printRandomTickLogLine(ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        if (!DoormatLoggers.__randomTicks)
+        if (!DoormatLoggers.randomTicks)
             return;
 
-        LoggerRegistry.getLogger("randomTicks").log(option -> {
-            long time = world.getTime();
+        LoggerRegistry.getLogger("randomTicks").log(option -> this.getMessagesArray(world, pos, option));
+    }
 
-            newTick = false;
+    @Unique
+    private Text[] getMessagesArray(World world, BlockPos pos, String option) {
+        long time = world.getTime();
 
-            if (prevTime != time) {
-                count = 0;
-                prevTime = time;
-                newTick = true;
-            }
+        boolean newTick = false;
 
-            count++;
-            List<Text> messages = new ArrayList<>();
+        if (prevTime != time) {
+            count = 0;
+            prevTime = time;
+            newTick = true;
+        }
 
-            if (newTick)
-                messages.add(c("wb tick : ", "d %d".formatted(time)));
+        count++;
+        List<Text> messages = new ArrayList<>();
 
-            Block block = this.getBlock();
-            String key = TinkerKit.getKey(block);
+        if (newTick)
+            messages.add(c("wb tick : ", "d %d".formatted(time)));
 
-            if ("brief".equals(option))
-                messages.add(c("d #%d".formatted(count), "gb ->", tp("l", pos), "m (%s)".formatted(key)));
-            else if ("full".equals(option)) {
-                messages.add(c("d #%d".formatted(count), "gb ->", tp("l", pos)));
+        Block block = this.getBlock();
+        String key = TinkerKitUtils.getKey(block);
 
-                ChunkPos chunkPos = world.getChunk(pos).getPos();
-                String dimension = world.getDimensionEntry().getIdAsString();
+        if ("brief".equals(option))
+            messages.add(c("d #%d".formatted(count), "gb ->", tp("l", pos), "m (%s)".formatted(key)));
+        else if ("full".equals(option)) {
+            messages.add(c("d #%d".formatted(count), "gb ->", tp("l", pos)));
 
-                messages.add(c("w   block: ", "m %s".formatted(key)));
-                messages.add(c("w   chunk: ", "c %s".formatted(chunkPos)));
-                messages.add(c("w   dimension: ", "m %s".formatted(dimension)));
-            }
+            ChunkPos chunkPos = world.getChunk(pos).getPos();
+            String dimension = world.getDimensionEntry().getIdAsString();
 
-            return messages.toArray(new Text[0]);
-        });
+            messages.add(c("w   block: ", "m %s".formatted(key)));
+            messages.add(c("w   chunk: ", "c %s".formatted(chunkPos)));
+            messages.add(c("w   dimension: ", "m %s".formatted(dimension)));
+        }
+
+        return messages.toArray(new Text[0]);
     }
 
 }

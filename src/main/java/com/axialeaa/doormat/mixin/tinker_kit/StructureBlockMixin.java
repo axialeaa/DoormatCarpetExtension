@@ -1,7 +1,10 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
 import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.registry.DoormatTinkerTypes;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.StructureBlock;
@@ -14,9 +17,6 @@ import net.minecraft.world.tick.TickPriority;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = StructureBlock.class, priority = 1500)
 public abstract class StructureBlockMixin extends AbstractBlockImplMixin {
@@ -25,25 +25,32 @@ public abstract class StructureBlockMixin extends AbstractBlockImplMixin {
 
     @Unique private boolean isPowered = false;
 
-    @Inject(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z", shift = At.Shift.BEFORE), cancellable = true)
-    private void allowQuasiConnectivity(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, CallbackInfo ci) {
-        Block block = state.getBlock();
-        int delay = TinkerKit.getDelay(block, 0);
+    @WrapMethod(method = "neighborUpdate")
+    protected void scheduleOrCall(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, Operation<Void> original) {
+        if (!(world instanceof ServerWorld))
+            return;
 
-        this.isPowered = TinkerKit.isReceivingRedstonePower(world, pos, block);
+        Block block = state.getBlock();
+
+        if (!DoormatTinkerTypes.QC.canModify(block)) {
+            original.call(state, world, pos, sourceBlock, sourcePos, notify);
+            return;
+        }
+
+        int delay = TinkerKitUtils.getDelay(block, 0);
+        this.isPowered = TinkerKitUtils.isReceivingRedstonePower(world, pos, block);
 
         if (delay > 0) {
-            TickPriority tickPriority = TinkerKit.getTickPriority(block);
+            TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
             world.scheduleBlockTick(pos, block, delay, tickPriority);
         }
-        else getBehaviour(world, pos);
-
-        ci.cancel();
+        else this.getBehaviour(world, pos);
     }
 
     @Override
-    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        getBehaviour(world, pos);
+    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, Operation<Void> original) {
+        this.getBehaviour(world, pos);
+        original.call(state, world, pos, random);
     }
 
     @Unique

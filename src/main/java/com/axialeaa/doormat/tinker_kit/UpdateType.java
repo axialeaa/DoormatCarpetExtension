@@ -1,4 +1,4 @@
-package com.axialeaa.doormat.util;
+package com.axialeaa.doormat.tinker_kit;
 
 import net.minecraft.block.Block;
 

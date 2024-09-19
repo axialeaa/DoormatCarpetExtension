@@ -1,7 +1,8 @@
 package com.axialeaa.doormat.mixin.rule.renewableGildedBlackstone;
 
-import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
+import com.axialeaa.doormat.setting.DoormatSettings;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MagmaBlock;
@@ -12,19 +13,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MagmaBlock.class)
 public class MagmaBlockMixin extends AbstractBlockImplMixin {
 
-    /**
-     * As long as the rule is enabled and the block above the magma block is water, replace blackstone for each adjacent direction with gilded blackstone.
-     */
     @Override
-    public void randomTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
-        FluidState upFluidState = world.getFluidState(pos.up());
+    public void randomTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, Operation<Void> original) {
+        FluidState fluidState = world.getFluidState(pos.up());
 
-        if (DoormatSettings.renewableGildedBlackstone <= 0 || !upFluidState.isOf(Fluids.WATER))
+        if (DoormatSettings.renewableGildedBlackstone <= 0 || !fluidState.isOf(Fluids.WATER))
             return;
 
         for (Direction direction : Direction.values()) {
@@ -34,6 +31,8 @@ public class MagmaBlockMixin extends AbstractBlockImplMixin {
             if (blockState.isOf(Blocks.BLACKSTONE) && random.nextFloat() < DoormatSettings.renewableGildedBlackstone)
                 world.setBlockState(blockPos, Blocks.GILDED_BLACKSTONE.getDefaultState());
         }
+
+        original.call(state, world, pos, random);
     }
 
 }

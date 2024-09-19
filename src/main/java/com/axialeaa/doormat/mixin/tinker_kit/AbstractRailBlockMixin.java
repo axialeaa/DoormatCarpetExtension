@@ -1,7 +1,7 @@
 package com.axialeaa.doormat.mixin.tinker_kit;
 
 import com.axialeaa.doormat.mixin.impl.AbstractBlockImplMixin;
-import com.axialeaa.doormat.tinker_kit.TinkerKit;
+import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -18,7 +18,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = AbstractRailBlock.class, priority = 1500)
 public abstract class AbstractRailBlockMixin extends AbstractBlockImplMixin {
@@ -30,30 +29,30 @@ public abstract class AbstractRailBlockMixin extends AbstractBlockImplMixin {
     @WrapOperation(method = "updateBlockState(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Z)Lnet/minecraft/block/BlockState;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;isReceivingRedstonePower(Lnet/minecraft/util/math/BlockPos;)Z"))
     private boolean allowQuasiConnectivity(World instance, BlockPos pos, Operation<Boolean> original, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.isReceivingRedstonePower(instance, pos, block);
+        return TinkerKitUtils.isReceivingRedstonePower(instance, pos, block);
     }
 
     @WrapWithCondition(method = "updateCurves", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighbor(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;Lnet/minecraft/util/math/BlockPos;Z)V"))
     private boolean shouldUpdateNeighbours_onUpdateCurves(World instance, BlockState state_, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify, @Local(argsOnly = true) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.shouldUpdateNeighbours(block);
+        return TinkerKitUtils.shouldUpdateNeighbours(block);
     }
 
     @WrapWithCondition(method = "onStateReplaced", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;updateNeighborsAlways(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
     private boolean shouldUpdateNeighbours_onStateReplaced(World instance, BlockPos pos, Block sourceBlock, @Local(argsOnly = true, ordinal = 0) BlockState state) {
         Block block = state.getBlock();
-        return TinkerKit.shouldUpdateNeighbours(block);
+        return TinkerKitUtils.shouldUpdateNeighbours(block);
     }
 
     @WrapOperation(method = "neighborUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/block/AbstractRailBlock;updateBlockState(Lnet/minecraft/block/BlockState;Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;)V"))
     private void scheduleOrCall(AbstractRailBlock instance, BlockState state, World world, BlockPos pos, Block neighbor, Operation<Void> original) {
-        int delay = TinkerKit.getDelay(instance, 0);
+        int delay = TinkerKitUtils.getDelay(instance, 0);
 
         if (delay > 0) {
             this.neighbor = neighbor;
 
             Block block = state.getBlock();
-            TickPriority tickPriority = TinkerKit.getTickPriority(instance);
+            TickPriority tickPriority = TinkerKitUtils.getTickPriority(instance);
 
             world.scheduleBlockTick(pos, block, delay, tickPriority);
         }
@@ -61,8 +60,9 @@ public abstract class AbstractRailBlockMixin extends AbstractBlockImplMixin {
     }
 
     @Override
-    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, CallbackInfo ci) {
+    public void scheduledTickImpl(BlockState state, ServerWorld world, BlockPos pos, Random random, Operation<Void> original) {
         this.updateBlockState(state, world, pos, this.neighbor);
+        original.call(state, world, pos, random);
     }
 
 }
