@@ -3,25 +3,20 @@ package com.axialeaa.doormat.command;
 import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
 import com.axialeaa.doormat.Doormat;
-import com.axialeaa.doormat.registry.DoormatTinkerTypes;
-import com.axialeaa.doormat.setting.DoormatSettings;
+import com.axialeaa.doormat.registry.DoormatTinkerTypeCommands;
 import com.axialeaa.doormat.tinker_kit.ConfigFile;
 import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
 import com.axialeaa.doormat.tinker_kit.TinkerType;
-import com.axialeaa.doormat.tinker_kit.UpdateType;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.block.Block;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.world.tick.TickPriority;
 import org.apache.commons.lang3.StringUtils;
-
 import java.lang.constant.ConstantDesc;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -33,39 +28,7 @@ import static net.minecraft.server.command.CommandManager.literal;
  * Defines an instance for a new Tinker Kit command, simplifying the registration process of a new one.
  * @param <W> Write
  */
-public class TinkerKitCommand<W extends ConstantDesc, R> {
-
-    public static final TinkerKitCommand<Integer, Integer> QC = new TinkerKitCommand<>(
-        DoormatTinkerTypes.QC,
-        DoormatSettings.commandQC,
-        Integer.class,
-        Stream.of(0, 1),
-        IntegerArgumentType.integer(0, Doormat.MAX_QC_RANGE)
-    );
-
-    public static final TinkerKitCommand<Integer, Integer> DELAY = new TinkerKitCommand<>(
-        DoormatTinkerTypes.DELAY,
-        DoormatSettings.commandDelay,
-        Integer.class,
-        Stream.of(0, 2, 4),
-        IntegerArgumentType.integer(0, 72000)
-    );
-
-    public static final TinkerKitCommand<String, UpdateType> UPDATE_TYPE = new TinkerKitCommand<>(
-        DoormatTinkerTypes.UPDATE_TYPE,
-        DoormatSettings.commandUpdateType,
-        String.class,
-        Stream.of(UpdateType.values()).map(updateType -> updateType.name().toLowerCase()),
-        StringArgumentType.string()
-    );
-
-    public static final TinkerKitCommand<Integer, TickPriority> TICK_PRIORITY = new TinkerKitCommand<>(
-        DoormatTinkerTypes.TICK_PRIORITY,
-        DoormatSettings.commandTickPriority,
-        Integer.class,
-        Stream.of(TickPriority.values()).map(TickPriority::getIndex),
-        IntegerArgumentType.integer(TickPriority.EXTREMELY_HIGH.getIndex(), TickPriority.EXTREMELY_LOW.getIndex())
-    );
+public class TinkerTypeCommand<W extends ConstantDesc, R> {
 
     /**
      * The {@link TinkerType} associated with this command. Controls the command aliases, chat outputs and maps, among other things.
@@ -87,7 +50,7 @@ public class TinkerKitCommand<W extends ConstantDesc, R> {
 
     private final String ALIAS;
 
-    public TinkerKitCommand(TinkerType<W, R> type, String rule, Class<W> writeClass, Stream<W> suggestions, ArgumentType<W> argumentType) {
+    public TinkerTypeCommand(TinkerType<W, R> type, String rule, Class<W> writeClass, Stream<W> suggestions, ArgumentType<W> argumentType) {
         this.type = type;
         this.rule = rule;
         this.writeClass = writeClass;
@@ -95,24 +58,26 @@ public class TinkerKitCommand<W extends ConstantDesc, R> {
         this.argumentType = argumentType;
 
         this.ALIAS = this.type.name;
+
+        DoormatTinkerTypeCommands.LIST.add(this);
     }
 
     /**
      *<pre> .
-     *└── /{@link TinkerKitCommand#ALIAS}
-     *    ├──{@link TinkerKitCommand#list(ServerCommandSource) list}
+     *└── /{@link TinkerTypeCommand#ALIAS}
+     *    ├──{@link TinkerTypeCommand#list(ServerCommandSource) list}
      *    ├── get
-     *    │   └──{@link TinkerKitCommand#get(ServerCommandSource, Block) &lt;block&gt;}
+     *    │   └──{@link TinkerTypeCommand#get(ServerCommandSource, Block) &lt;block&gt;}
      *    ├── set
      *    │   └── &lt;value&gt;
-     *    │       ├──{@link TinkerKitCommand#setAll(ServerCommandSource, R) all}
-     *    │       └──{@link TinkerKitCommand#set(ServerCommandSource, Block, R) &lt;block&gt;}
+     *    │       ├──{@link TinkerTypeCommand#setAll(ServerCommandSource, R) all}
+     *    │       └──{@link TinkerTypeCommand#set(ServerCommandSource, Block, R) &lt;block&gt;}
      *    ├── reset
-     *    │   ├──{@link TinkerKitCommand#resetAll(ServerCommandSource) all}
-     *    │   └──{@link TinkerKitCommand#reset(ServerCommandSource, Block) &lt;block&gt;}
+     *    │   ├──{@link TinkerTypeCommand#resetAll(ServerCommandSource) all}
+     *    │   └──{@link TinkerTypeCommand#reset(ServerCommandSource, Block) &lt;block&gt;}
      *    └── file
-     *        ├──{@link TinkerKitCommand#load(ServerCommandSource) load}
-     *        └──{@link TinkerKitCommand#update(ServerCommandSource) update} </pre>
+     *        ├──{@link TinkerTypeCommand#load(ServerCommandSource) load}
+     *        └──{@link TinkerTypeCommand#update(ServerCommandSource) update} </pre>
      */
     public void register(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
         dispatcher.register(literal(this.ALIAS)

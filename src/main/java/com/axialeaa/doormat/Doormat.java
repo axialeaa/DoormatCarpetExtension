@@ -4,8 +4,9 @@ import carpet.CarpetExtension;
 import carpet.CarpetServer;
 import carpet.utils.Translations;
 import com.axialeaa.doormat.command.RandomTickCommand;
-import com.axialeaa.doormat.command.TinkerKitCommand;
+import com.axialeaa.doormat.command.TinkerTypeCommand;
 import com.axialeaa.doormat.registry.DoormatLoggers;
+import com.axialeaa.doormat.registry.DoormatTinkerTypeCommands;
 import com.axialeaa.doormat.registry.DoormatTinkerTypes;
 import com.axialeaa.doormat.setting.DoormatSettings;
 import com.axialeaa.doormat.tinker_kit.*;
@@ -48,7 +49,9 @@ public class Doormat implements ModInitializer, CarpetExtension {
 		CarpetServer.manageExtension(new Doormat());
 
         LOGGER.info("{} initialized. Wipe your feet!", MOD_NAME);
+
 		DoormatTinkerTypes.init();
+		DoormatTinkerTypeCommands.init();
 
 		// Handles all instances of most blocks for automatic inter-mod compatibility.
 		// Modders should not need to add their own variants manually if the block in question extends any of these classes.
@@ -140,10 +143,8 @@ public class Doormat implements ModInitializer, CarpetExtension {
 	public void registerCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
 		RandomTickCommand.register(dispatcher);
 
-		TinkerKitCommand.QC.register(dispatcher, registryAccess);
-		TinkerKitCommand.DELAY.register(dispatcher, registryAccess);
-		TinkerKitCommand.UPDATE_TYPE.register(dispatcher, registryAccess);
-		TinkerKitCommand.TICK_PRIORITY.register(dispatcher, registryAccess);
+		for (TinkerTypeCommand<?, ?> tinkerTypeCommand : DoormatTinkerTypeCommands.LIST)
+			tinkerTypeCommand.register(dispatcher, registryAccess);
 	}
 
 	@Override
