@@ -7,14 +7,4 @@ public class ReachAroundBridgingCondition extends ModAbsenceCondition {
         return "bedrockify";
     }
 
-    @Override
-    public String getModName() {
-        return "BedrockIfy";
-    }
-
-    @Override
-    public String getRuleName() {
-        return "reachAroundBridging";
-    }
-
 }

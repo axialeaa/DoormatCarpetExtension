@@ -18,7 +18,7 @@ public class LocalDifficultyMixin {
      */
     @ModifyExpressionValue(method = "setLocalDifficulty", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;PEACEFUL:Lnet/minecraft/world/Difficulty;"))
     private Difficulty bypassPeacefulCheck(Difficulty original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original;
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? Difficulty.EASY : original;
     }
 
     /**

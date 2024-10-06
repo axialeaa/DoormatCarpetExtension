@@ -37,15 +37,9 @@ public abstract class AbstractPressurePlateBlockMixin {
     @WrapOperation(method = "updatePlateState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
     private void modifyDelay(World instance, BlockPos pos, Block block, int i, Operation<Void> original) {
         int delay = TinkerKitUtils.getDelay(block, i);
+        TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
 
-        if (delay > 0) {
-            TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
-            instance.scheduleBlockTick(pos, block, delay, tickPriority);
-        }
-        else if (instance instanceof ServerWorld serverWorld) {
-            BlockState blockState = serverWorld.getBlockState(pos);
-            this.scheduledTick(blockState, serverWorld, pos, serverWorld.getRandom());
-        }
+        instance.scheduleBlockTick(pos, block, delay, tickPriority);
     }
 
 }

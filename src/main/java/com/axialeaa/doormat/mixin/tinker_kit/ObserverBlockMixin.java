@@ -34,16 +34,20 @@ public abstract class ObserverBlockMixin {
         return TinkerKitUtils.getFlags(block, original) | Block.FORCE_STATE;
     }
 
+    @WrapOperation(method = "scheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
+    private void scheduleOrCall(ServerWorld instance, BlockPos pos, Block block, int i, Operation<Void> original) {
+        int delay = Math.max(TinkerKitUtils.getDelay(block, i), 1);
+        TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
+
+        instance.scheduleBlockTick(pos, block, delay, tickPriority);
+    }
+
     @WrapOperation(method = "scheduleTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/WorldAccess;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
     private void scheduleOrCall(WorldAccess instance, BlockPos pos, Block block, int i, Operation<Void> original) {
-        int delay = TinkerKitUtils.getDelay(block, i);
+        int delay = Math.max(TinkerKitUtils.getDelay(block, i), 1);
+        TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
 
-        if (delay > 0) {
-            TickPriority tickPriority = TinkerKitUtils.getTickPriority(block);
-            instance.scheduleBlockTick(pos, block, delay, tickPriority);
-        }
-        else if (instance instanceof ServerWorld serverWorld)
-            this.scheduledTick(serverWorld.getBlockState(pos), serverWorld, pos, serverWorld.getRandom());
+        instance.scheduleBlockTick(pos, block, delay, tickPriority);
     }
 
 }

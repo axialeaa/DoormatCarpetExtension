@@ -1,54 +1,83 @@
 package com.axialeaa.doormat.registry;
 
-import com.axialeaa.doormat.Doormat;
+import com.axialeaa.doormat.setting.DoormatSettings;
+import com.axialeaa.doormat.tinker_kit.Serializer;
 import com.axialeaa.doormat.tinker_kit.TinkerType;
 import com.axialeaa.doormat.tinker_kit.UpdateType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.util.math.MathHelper;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.world.tick.TickPriority;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class DoormatTinkerTypes {
 
-    public static final List<TinkerType<?, ?>> LIST = new ArrayList<>();
-
     public static final TinkerType<Integer, Integer> QC = new TinkerType<>(
         "quasiconnectivity",
-        integer -> integer,
-        integer -> MathHelper.clamp(integer, 0, Doormat.MAX_QC_RANGE),
-        JsonElement::getAsInt,
-        JsonPrimitive::new
+        Integer.class,
+
+        DoormatSettings.commandQC,
+        Stream.of(0, 1),
+        IntegerArgumentType.integer(0),
+
+        new Serializer<>(
+            Function.identity(),
+            Function.identity(),
+            JsonElement::getAsInt,
+            JsonPrimitive::new
+        )
     );
 
     public static final TinkerType<Integer, Integer> DELAY = new TinkerType<>(
         "delay",
-        integer -> integer,
-        integer -> MathHelper.clamp(integer, 0, 72000),
-        JsonElement::getAsInt,
-        JsonPrimitive::new
+        Integer.class,
+
+        DoormatSettings.commandDelay,
+        Stream.of(0, 2, 4),
+        IntegerArgumentType.integer(0, 72000),
+
+        new Serializer<>(
+            Function.identity(),
+            Function.identity(),
+            JsonElement::getAsInt,
+            JsonPrimitive::new
+        )
     );
 
     public static final TinkerType<String, UpdateType> UPDATE_TYPE = new TinkerType<>(
         "updatetype",
-        updateType -> updateType.name().toLowerCase(Locale.ROOT),
-        string -> UpdateType.valueOf(string.toUpperCase(Locale.ROOT)),
-        JsonElement::getAsString,
-        JsonPrimitive::new
+        String.class,
+
+        DoormatSettings.commandUpdateType,
+        Stream.of(UpdateType.values()),
+        StringArgumentType.string(),
+
+        new Serializer<>(
+            UpdateType::valueOf,
+            Enum::name,
+            JsonElement::getAsString,
+            JsonPrimitive::new
+        )
     );
 
     public static final TinkerType<Integer, TickPriority> TICK_PRIORITY = new TinkerType<>(
         "tickpriority",
-        TickPriority::getIndex,
-        TickPriority::byIndex,
-        JsonElement::getAsInt,
-        JsonPrimitive::new
+        Integer.class,
+
+        DoormatSettings.commandTickPriority,
+        Stream.of(TickPriority.values()),
+        IntegerArgumentType.integer(TickPriority.EXTREMELY_HIGH.getIndex(), TickPriority.EXTREMELY_LOW.getIndex()),
+
+        new Serializer<>(
+            TickPriority::byIndex,
+            TickPriority::getIndex,
+            JsonElement::getAsInt,
+            JsonPrimitive::new
+        )
     );
 
-    public static void init() {
-        Doormat.LOGGER.info("Registering {} Tinker Types!", Doormat.MOD_NAME);
-    }
+    public static void noop() {}
 
 }

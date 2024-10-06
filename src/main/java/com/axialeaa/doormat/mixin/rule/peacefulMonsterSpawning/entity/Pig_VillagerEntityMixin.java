@@ -19,7 +19,7 @@ public class Pig_VillagerEntityMixin {
      */
     @ModifyExpressionValue(method = "onStruckByLightning", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private Difficulty bypassPeacefulConversionCheck(Difficulty original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original;
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? Difficulty.EASY : original;
     }
 
 }

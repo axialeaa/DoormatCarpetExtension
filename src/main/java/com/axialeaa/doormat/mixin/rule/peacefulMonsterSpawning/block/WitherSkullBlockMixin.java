@@ -15,7 +15,7 @@ public class WitherSkullBlockMixin {
      */
     @ModifyExpressionValue(method = { "onPlaced(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/entity/SkullBlockEntity;)V", "canDispense" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private static Difficulty bypassPeacefulDespawnCheck(Difficulty original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original;
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? Difficulty.EASY : original;
     }
 
 }

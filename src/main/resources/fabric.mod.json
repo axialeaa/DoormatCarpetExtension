@@ -18,6 +18,9 @@
 	"entrypoints": {
 		"main": [
           "com.axialeaa.doormat.Doormat"
+		],
+		"tinker_kit": [
+			"com.axialeaa.doormat.DoormatTinkerKit"
 		]
 	},
 	"custom": {

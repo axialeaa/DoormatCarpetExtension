@@ -1,67 +1,59 @@
 package com.axialeaa.doormat.tinker_kit;
 
-import com.axialeaa.doormat.registry.DoormatTinkerTypes;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import com.mojang.brigadier.arguments.ArgumentType;
+import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import net.minecraft.block.Block;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import org.apache.commons.lang3.function.ToBooleanBiFunction;
 import org.jetbrains.annotations.Nullable;
 import java.lang.constant.ConstantDesc;
 import java.util.*;
-import java.util.function.Function;
+import java.util.function.BiPredicate;
 import java.util.stream.Stream;
 
 /**
- * @param <W> write
- * @param <R> read
+ * @param <W> serialize
+ * @param <R> deserialize
  */
 public class TinkerType<W extends ConstantDesc, R> {
 
-    static final List<ToBooleanBiFunction<Block, TinkerType<?, ?>>> CONDITIONS = new ArrayList<>();
+    public static final List<TinkerType<?, ?>> TYPES = new ArrayList<>();
 
-    final Map<Block, R> defaultValues = new HashMap<>();
-    final Map<Block, R> transientValues = new HashMap<>();
+    final Map<Block, R> defaultValues = new Object2ObjectArrayMap<>();
+    final Map<Block, R> transientValues = new Object2ObjectArrayMap<>();
 
     /**
      * Defines the name of this Tinker Type. This is used for the command as well as the json field.
      */
-    public final String name;
-    /**
-     * Defines a pathway from the readable value (stored in the hashmaps) and a writable value (stored in the json file). This allows us to save the values from the transient map into a format json can parse.
-     */
-    public final Function<R, W> write;
-    /**
-     * Defines a pathway from the writable value (stored in the json file) and a readable value (stored in the hashmaps). This allows us to extract the values from the json file, "jiggle them around" a bit, and save them to the transient map in a way that can be parsed by the game without any expensive and repetitive conversions.
-     */
-    public final Function<W, R> read;
-    /**
-     * Defines a pathway from a {@link JsonElement} to a writable value that can be operated on.
-     */
-    public final Function<JsonElement, W> parseJsonFunction;
-    /**
-     * Defines a pathway from a writable value to a {@link JsonPrimitive} that can be parsed by the config writer.
-     */
-    public final Function<W, JsonPrimitive> jsonParse;
+    final String name;
+    final Class<W> writeClass;
+    final Serializer<W, R> serializer;
+    public final TinkerTypeCommand<W, R> command;
 
-    public TinkerType(String name, Function<R, W> write, Function<W, R> read, Function<JsonElement, W> parseJsonFunction, Function<W, JsonPrimitive> jsonParse) {
+    public TinkerType(
+        String name,
+        Class<W> writeClass,
+
+        String commandRule,
+        Stream<R> commandSuggestions,
+        ArgumentType<W> commandArgumentType,
+
+        Serializer<W, R> serializer
+    ) {
         this.name = name;
-        this.write = write;
-        this.read = read;
+        this.writeClass = writeClass;
+        this.serializer = serializer;
+        this.command = new TinkerTypeCommand<>(this, commandRule, commandSuggestions, commandArgumentType);
 
-        this.parseJsonFunction = parseJsonFunction;
-        this.jsonParse = jsonParse;
-
-        DoormatTinkerTypes.LIST.add(this);
+        TYPES.add(this);
     }
 
     /**
-     * @return true if this tinker type can modify the component passed through {@code block}.
+     * @return true if this Tinker Type can modify the component passed through {@code block}.
      */
     public boolean canModify(Block block) {
-        for (ToBooleanBiFunction<Block, TinkerType<?, ?>> condition : CONDITIONS) {
-            if (!condition.applyAsBoolean(block, this))
+        for (BiPredicate<Block, TinkerType<?, ?>> condition : TinkerKitUtils.MODIFICATION_PREDICATES) {
+            if (!condition.test(block, this))
                 return false;
         }
 
@@ -81,7 +73,7 @@ public class TinkerType<W extends ConstantDesc, R> {
     }
 
     /**
-     * Converts a list of all modifiable blocks (by <code>entries</code>) into a list of their keys, sorts them
+     * Converts a list of all modifiable blocks into a list of their keys, sorts them
      * alphabetically, and then re-interprets the blocks from the keys.
      *
      * @return a sorted list of blocks ordered alphabetically by their keys.
@@ -111,10 +103,12 @@ public class TinkerType<W extends ConstantDesc, R> {
     }
 
     private Map<Block, R> getValues() {
-        Map<Block, R> map = new HashMap<>();
+        Map<Block, R> map = new Object2ObjectArrayMap<>();
 
-        if (!this.defaultValues.isEmpty())
-            map.putAll(this.defaultValues);
+        if (this.defaultValues.isEmpty())
+            return map;
+
+        map.putAll(this.defaultValues);
 
         if (!this.transientValues.isEmpty())
             map.putAll(this.transientValues);
@@ -123,7 +117,7 @@ public class TinkerType<W extends ConstantDesc, R> {
     }
 
     /**
-     * @param block the block to get the modified value of.
+     * @param block the block to get the modified defaultValue of.
      * @return the default value assigned to the <code>block</code>.
      */
     public @Nullable R getValue(Block block) {
@@ -141,21 +135,11 @@ public class TinkerType<W extends ConstantDesc, R> {
         if (!this.canModify(block))
             throw new IllegalArgumentException("Failed to set %s to a new %s value: %s!".formatted(TinkerKitUtils.getTranslatedName(block), this.name, value));
 
-        this.transientValues.putIfAbsent(block, value);
+        this.transientValues.put(block, value);
     }
 
     public void reset(Block block) {
         this.transientValues.remove(block);
-    }
-
-    public @Nullable R getRFromElement(JsonElement element) {
-        W value = this.parseJsonFunction.apply(element);
-        return this.read.apply(value);
-    }
-
-    public JsonPrimitive getPrimitiveFromR(R value) {
-        W applied = write.apply(value);
-        return this.jsonParse.apply(applied);
     }
 
 }

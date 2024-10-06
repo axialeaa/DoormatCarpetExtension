@@ -15,7 +15,7 @@ public class TrialSpawnerLogicMixin {
      */
     @ModifyExpressionValue(method = "canActivate", at = @At(value = "FIELD", target = "Lnet/minecraft/world/Difficulty;PEACEFUL:Lnet/minecraft/world/Difficulty;"))
     private Difficulty allowPeacefulSpawns(Difficulty original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original;
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? Difficulty.EASY : original;
     }
 
 }

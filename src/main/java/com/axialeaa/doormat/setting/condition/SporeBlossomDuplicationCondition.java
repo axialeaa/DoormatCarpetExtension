@@ -7,14 +7,4 @@ public class SporeBlossomDuplicationCondition extends ModAbsenceCondition {
         return "florum-sporum";
     }
 
-    @Override
-    public String getModName() {
-        return "Florum Sporum";
-    }
-
-    @Override
-    public String getRuleName() {
-        return "sporeBlossomDuplication";
-    }
-
 }

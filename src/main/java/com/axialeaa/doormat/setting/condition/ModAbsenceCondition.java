@@ -8,14 +8,10 @@ public abstract class ModAbsenceCondition implements Rule.Condition {
 
     public abstract String getModId();
 
-    public abstract String getModName();
-
-    public abstract String getRuleName();
-
     @Override
     public boolean shouldRegister() {
         if (FabricLoader.getInstance().isModLoaded(this.getModId())) {
-            Doormat.LOGGER.warn("{} detected! Bypassing registration of rule {}.", this.getModName(), this.getRuleName());
+            Doormat.LOGGER.warn("Mod with ID {} detected! Bypassing registration of carpet rule.", this.getModId());
             return false;
         }
 

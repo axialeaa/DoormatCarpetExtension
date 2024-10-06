@@ -1,12 +1,8 @@
-package com.axialeaa.doormat.command;
+package com.axialeaa.doormat.tinker_kit;
 
 import carpet.utils.CommandHelper;
 import carpet.utils.Messenger;
 import com.axialeaa.doormat.Doormat;
-import com.axialeaa.doormat.registry.DoormatTinkerTypeCommands;
-import com.axialeaa.doormat.tinker_kit.ConfigFile;
-import com.axialeaa.doormat.tinker_kit.TinkerKitUtils;
-import com.axialeaa.doormat.tinker_kit.TinkerType;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -18,7 +14,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.ServerCommandSource;
 import org.apache.commons.lang3.StringUtils;
 import java.lang.constant.ConstantDesc;
-import java.util.Objects;
 import java.util.stream.Stream;
 import static net.minecraft.command.CommandSource.suggestMatching;
 import static net.minecraft.server.command.CommandManager.argument;
@@ -38,7 +33,6 @@ public class TinkerTypeCommand<W extends ConstantDesc, R> {
      * The name of the carpet rule associated with this command.
      */
     public final String rule;
-    public final Class<W> writeClass;
     /**
      * A stream of objects defining the autocompletion suggestions for the command.
      */
@@ -50,16 +44,17 @@ public class TinkerTypeCommand<W extends ConstantDesc, R> {
 
     private final String ALIAS;
 
-    public TinkerTypeCommand(TinkerType<W, R> type, String rule, Class<W> writeClass, Stream<W> suggestions, ArgumentType<W> argumentType) {
+    public TinkerTypeCommand(TinkerType<W, R> type, String rule, String[] suggestions, ArgumentType<W> argumentType) {
         this.type = type;
         this.rule = rule;
-        this.writeClass = writeClass;
-        this.suggestions = suggestions.map(Objects::toString).toList().toArray(new String[0]);
+        this.suggestions = suggestions;
         this.argumentType = argumentType;
 
         this.ALIAS = this.type.name;
+    }
 
-        DoormatTinkerTypeCommands.LIST.add(this);
+    public TinkerTypeCommand(TinkerType<W, R> type, String rule, Stream<R> suggestions, ArgumentType<W> argumentType) {
+        this(type, rule, suggestions.map(value -> type.serializer.serialize(value).toString()).toArray(String[]::new), argumentType);
     }
 
     /**
@@ -97,14 +92,14 @@ public class TinkerTypeCommand<W extends ConstantDesc, R> {
                     .then(literal("all")
                         .executes(ctx -> this.setAll(
                             ctx.getSource(),
-                            this.type.read.apply(ctx.getArgument("value", this.writeClass))
+                            this.type.serializer.deserialize(ctx.getArgument("value", this.type.writeClass))
                         ))
                     )
                     .then(argument("block", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.BLOCK))
                         .suggests((ctx, builder) -> suggestMatching(this.type.getBlockKeys(), builder))
                         .executes(ctx -> this.set(ctx.getSource(),
                             RegistryEntryReferenceArgumentType.getRegistryEntry(ctx, "block", RegistryKeys.BLOCK).value(),
-                            this.type.read.apply(ctx.getArgument("value", this.writeClass))
+                            this.type.serializer.deserialize(ctx.getArgument("value", this.type.writeClass))
                         ))
                     )
                 )
@@ -272,7 +267,7 @@ public class TinkerTypeCommand<W extends ConstantDesc, R> {
     }
 
     private int load(ServerCommandSource source) {
-        if (ConfigFile.loadFromFile(source.getServer())) {
+        if (TinkerKitConfig.loadFromFile(source.getServer())) {
             Messenger.m(source, "w Successfully loaded values from config file");
             return Command.SINGLE_SUCCESS;
         }
@@ -290,7 +285,7 @@ public class TinkerTypeCommand<W extends ConstantDesc, R> {
     }
 
     private boolean updateFile(ServerCommandSource source) {
-        if (ConfigFile.updateFile(source.getServer()))
+        if (TinkerKitConfig.updateFile(source.getServer()))
             return true;
 
         Messenger.m(source, "r Failed to update config file. Check the log output for more info!");

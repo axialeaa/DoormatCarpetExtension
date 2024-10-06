@@ -2,7 +2,6 @@ package com.axialeaa.doormat.setting.enum_option.function;
 
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import org.apache.commons.lang3.function.ToBooleanBiFunction;
 
 public enum DisablePetAttackingMode {
 
@@ -19,22 +18,29 @@ public enum DisablePetAttackingMode {
      */
     OWNED ((player, pet) -> pet.isOwner(player));
 
-    private final ToBooleanBiFunction<PlayerEntity, TameableEntity> function;
+    private final DisablePetAttackingPredicate predicate;
 
     DisablePetAttackingMode(boolean negateDamage) {
-        this.function = (player, pet) -> negateDamage;
+        this((player, pet) -> negateDamage);
     }
 
-    DisablePetAttackingMode(ToBooleanBiFunction<PlayerEntity, TameableEntity> function) {
-        this.function = function;
+    DisablePetAttackingMode(DisablePetAttackingPredicate predicate) {
+        this.predicate = predicate;
     }
 
     public boolean shouldNegateDamage(PlayerEntity player, TameableEntity pet) {
-        return this.function.applyAsBoolean(player, pet);
+        return this.predicate.shouldNegateDamage(player, pet);
     }
 
     public boolean isEnabled() {
         return this != FALSE;
+    }
+
+    @FunctionalInterface
+    public interface DisablePetAttackingPredicate {
+
+        boolean shouldNegateDamage(PlayerEntity player, TameableEntity pet);
+
     }
 
 }

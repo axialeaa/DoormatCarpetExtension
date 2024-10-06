@@ -97,6 +97,9 @@ public class DoormatSettings {
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean deepslateDungeons = false;
 
+    @Rule( categories = { SURVIVAL, DOORMAT } )
+    public static boolean disableArmadilloShedding = false;
+
     @Rule( categories = { CREATIVE, SURVIVAL, DOORMAT } )
     public static boolean disableBedTooFarWarning = false;
 
@@ -214,9 +217,6 @@ public class DoormatSettings {
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean mossSpreadToStoneBricks = false;
-
-    @Rule( categories = { CREATIVE, DOORMAT } )
-    public static boolean observerHalfDelay = false;
 
     @Rule( categories = { FEATURE, DOORMAT } )
     public static boolean openDoubleDoors = false;

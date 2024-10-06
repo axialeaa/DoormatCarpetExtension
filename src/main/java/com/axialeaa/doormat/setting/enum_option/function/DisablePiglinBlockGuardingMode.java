@@ -1,7 +1,6 @@
 package com.axialeaa.doormat.setting.enum_option.function;
 
 import net.minecraft.entity.player.PlayerEntity;
-import org.apache.commons.lang3.function.ToBooleanBiFunction;
 
 public enum DisablePiglinBlockGuardingMode {
 
@@ -22,18 +21,25 @@ public enum DisablePiglinBlockGuardingMode {
      */
     SNEAKING ((player, blockOpen) -> player.isSneaking());
 
-    private final ToBooleanBiFunction<PlayerEntity, Boolean> function;
+    private final DisablePiglinBlockGuardingPredicate predicate;
 
     DisablePiglinBlockGuardingMode(boolean negateAnger) {
-        this.function = (player, blockOpen) -> negateAnger;
+        this((player, blockOpen) -> negateAnger);
     }
 
-    DisablePiglinBlockGuardingMode(ToBooleanBiFunction<PlayerEntity, Boolean> function) {
-        this.function = function;
+    DisablePiglinBlockGuardingMode(DisablePiglinBlockGuardingPredicate predicate) {
+        this.predicate = predicate;
     }
 
     public boolean shouldNegateAnger(PlayerEntity player, boolean blockOpen) {
-        return this.function.applyAsBoolean(player, blockOpen);
+        return this.predicate.shouldNegateAnger(player, blockOpen);
+    }
+
+    @FunctionalInterface
+    public interface DisablePiglinBlockGuardingPredicate {
+
+        boolean shouldNegateAnger(PlayerEntity player, boolean blockOpen);
+
     }
 
 }

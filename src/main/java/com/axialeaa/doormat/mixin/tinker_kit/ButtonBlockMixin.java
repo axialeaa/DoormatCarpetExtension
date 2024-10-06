@@ -34,7 +34,7 @@ public abstract class ButtonBlockMixin {
         return TinkerKitUtils.shouldUpdateNeighbours(sourceBlock);
     }
 
-    @WrapOperation(method = "powerOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
+    @WrapOperation(method = { "powerOn", "tryPowerWithProjectiles" }, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;scheduleBlockTick(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/Block;I)V"))
     private void modifyDelay(World instance, BlockPos pos, Block block, int i, Operation<Void> original) {
         int delay = TinkerKitUtils.getDelay(block, i);
 

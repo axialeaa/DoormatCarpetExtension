@@ -13,7 +13,7 @@ public class BadOmenStatusEffectMixin {
 
     @WrapOperation(method = "applyUpdateEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private Difficulty allowPeacefulEffect(ServerWorld instance, Operation<Difficulty> original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original.call(instance);
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? Difficulty.EASY : original.call(instance);
     }
 
 }

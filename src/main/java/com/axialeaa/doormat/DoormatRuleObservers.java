@@ -19,9 +19,9 @@ public class DoormatRuleObservers {
         Object2IntMap<String> units = TimeArgumentTypeAccessor.getUnits();
 
         if ((boolean) value) {
-            units.putIfAbsent("m", 1200);
-            units.putIfAbsent("h", 72000);
-            units.putIfAbsent("w", 168000);
+            units.put("m", 1200);
+            units.put("h", 72000);
+            units.put("w", 168000);
         }
         else {
             units.removeInt("m");

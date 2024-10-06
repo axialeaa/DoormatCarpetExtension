@@ -6,14 +6,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 
 /**
- * Defines a block that comparators can read through, separately from {@link BlockState#isSolidBlock(BlockView, BlockPos)}.
+ * Defines a block that comparators can deserialize through, separately from {@link BlockState#isSolidBlock(BlockView, BlockPos)}.
  * @see ComparatorBlockMixin
  * @see WorldMixin
  */
 public interface ComparatorSolidBlock {
 
     /**
-     * @return whether comparators can read through this block.
+     * @return whether comparators can deserialize through this block.
      */
     boolean isValid(BlockState state);
 

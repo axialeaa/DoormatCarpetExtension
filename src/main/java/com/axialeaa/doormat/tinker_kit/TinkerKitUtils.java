@@ -2,6 +2,7 @@ package com.axialeaa.doormat.tinker_kit;
 
 import carpet.CarpetSettings;
 import carpet.utils.Translations;
+import com.axialeaa.doormat.Doormat;
 import com.axialeaa.doormat.registry.DoormatTinkerTypes;
 import com.axialeaa.doormat.setting.DoormatSettings;
 import net.minecraft.block.AbstractRedstoneGateBlock;
@@ -16,8 +17,19 @@ import net.minecraft.world.RedstoneView;
 import net.minecraft.world.World;
 import net.minecraft.world.tick.TickPriority;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 public class TinkerKitUtils {
+
+    /**
+     * <p>A modification predicate is a boolean condition that must be satisfied in order for a certain block's behaviour to be modified by a {@link TinkerType}. This allows for the modification's availability to change at any time during runtime unlike the predicates we may have used to {@link TinkerKitRegistry#putBlocksByPredicate(Predicate, Entry[]) register a block}.
+     *
+     * <p>This leaves us with a lot of power to change the way the <b>Tinker Kit</b> operates, and we should use it with caution. It is unwise to create a predicate that completely suppresses the ability to modify a block's behaviour, for example.
+     */
+    static final List<BiPredicate<Block, TinkerType<?, ?>>> MODIFICATION_PREDICATES = new ArrayList<>();
 
     /**
      * @param block the block to get the key of.
@@ -34,7 +46,7 @@ public class TinkerKitUtils {
     public static String getTranslatedName(Block block) {
         String key = block.getTranslationKey();
         String namespace = Registries.BLOCK.getId(block).getNamespace();
-        String path = "assets/%s/lang/%s.json".formatted(namespace, CarpetSettings.language);
+        String path = Doormat.TRANSLATION_PATH.formatted(namespace, CarpetSettings.language);
 
         return Translations.getTranslationFromResourcePath(path).get(key);
     }

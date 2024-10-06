@@ -17,7 +17,7 @@ public class SculkShriekerBlockEntityMixin {
      */
     @WrapOperation(method = "canWarn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;getDifficulty()Lnet/minecraft/world/Difficulty;"))
     private Difficulty allowPeacefulSpawns(ServerWorld instance, Operation<Difficulty> original) {
-        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? null : original.call(instance);
+        return DoormatSettings.peacefulMonsterSpawning.isEnabled() ? Difficulty.EASY : original.call(instance);
     }
 
 }

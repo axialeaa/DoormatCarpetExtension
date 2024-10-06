@@ -9,7 +9,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.FallibleItemDispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPointer;
@@ -46,7 +45,6 @@ public class BuryItemDispenserBehaviour extends FallibleItemDispenserBehavior {
         if (!serverWorld.setBlockState(blockPos, this.susState, Block.NOTIFY_ALL))
             return stack;
 
-        MinecraftClient.getInstance().particleManager.addBlockBreakParticles(blockPos, this.susState);
         BlockEntity blockEntity = serverWorld.getBlockEntity(blockPos);
 
         if (blockEntity instanceof SingleStackSetter singleStackSetter) {

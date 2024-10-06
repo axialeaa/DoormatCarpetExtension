@@ -2,7 +2,6 @@ package com.axialeaa.doormat.setting.enum_option.function;
 
 import net.minecraft.block.entity.ChiseledBookshelfBlockEntity;
 import net.minecraft.util.math.MathHelper;
-import java.util.function.ToIntFunction;
 
 public enum ChiseledBookshelfFullnessSignalMode {
 
@@ -24,14 +23,21 @@ public enum ChiseledBookshelfFullnessSignalMode {
         return MathHelper.lerpPositive(bookCount / (float) size, 0, 15);
     });
 
-    private final ToIntFunction<ChiseledBookshelfBlockEntity> function;
+    private final ChiseledBookshelfFullnessSignalFunction function;
 
-    ChiseledBookshelfFullnessSignalMode(ToIntFunction<ChiseledBookshelfBlockEntity> function) {
+    ChiseledBookshelfFullnessSignalMode(ChiseledBookshelfFullnessSignalFunction function) {
         this.function = function;
     }
 
     public int getOutput(ChiseledBookshelfBlockEntity blockEntity) {
-        return this.function.applyAsInt(blockEntity);
+        return this.function.getOutput(blockEntity);
+    }
+
+    @FunctionalInterface
+    public interface ChiseledBookshelfFullnessSignalFunction {
+
+        int getOutput(ChiseledBookshelfBlockEntity blockEntity);
+
     }
 
 }

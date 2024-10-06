@@ -1,6 +1,5 @@
 package com.axialeaa.doormat.setting.enum_option.function;
 
-import com.axialeaa.doormat.util.function.ToBooleanTriFunction;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
@@ -20,7 +19,7 @@ public enum PeacefulMonsterSpawningMode {
      */
     TRUE (true),
     /**
-     * Spawns the entity if the spawn position is anywhere below the maximum y level as read by the {@link Heightmap.Type#MOTION_BLOCKING_NO_LEAVES} heightmap.
+     * Spawns the entity if the spawn position is anywhere below the maximum y level as deserialize by the {@link Heightmap.Type#MOTION_BLOCKING_NO_LEAVES} heightmap.
      * @see <a href="https://github.com/axialeaa/DoormatCarpetExtension/wiki/Using-peacefulMonsterSpawning#below_surface-and-heightmaps">Using peacefulMonsterSpawning§Below Surface and Heightmaps</a>
      */
     BELOW_SURFACE ((world, pos, reason) -> {
@@ -45,22 +44,29 @@ public enum PeacefulMonsterSpawningMode {
         return !natural && !chunkGen;
     });
 
-    private final ToBooleanTriFunction<World, BlockPos, SpawnReason> function;
+    private final PeacefulMonsterSpawningPredicate predicate;
 
     PeacefulMonsterSpawningMode(boolean canSpawn) {
-        this.function = (world, pos, reason) -> canSpawn;
+        this((world, pos, reason) -> canSpawn);
     }
 
-    PeacefulMonsterSpawningMode(ToBooleanTriFunction<World, BlockPos, SpawnReason> function) {
-        this.function = function;
+    PeacefulMonsterSpawningMode(PeacefulMonsterSpawningPredicate predicate) {
+        this.predicate = predicate;
     }
 
     public boolean canSpawn(World world, BlockPos pos, SpawnReason reason) {
-        return this.function.apply(world, pos, reason);
+        return this.predicate.canSpawn(world, pos, reason);
     }
 
     public boolean isEnabled() {
         return this != FALSE;
+    }
+
+    @FunctionalInterface
+    public interface PeacefulMonsterSpawningPredicate {
+
+        boolean canSpawn(World world, BlockPos pos, SpawnReason reason);
+
     }
 
 }
