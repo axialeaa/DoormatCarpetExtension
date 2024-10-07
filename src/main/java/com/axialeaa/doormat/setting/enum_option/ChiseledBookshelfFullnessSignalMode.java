@@ -1,9 +1,10 @@
-package com.axialeaa.doormat.setting.enum_option.function;
+package com.axialeaa.doormat.setting.enum_option;
 
+import com.axialeaa.doormat.setting.enum_option.function.ChiseledBookshelfFullnessSignalFunction;
 import net.minecraft.block.entity.ChiseledBookshelfBlockEntity;
 import net.minecraft.util.math.MathHelper;
 
-public enum ChiseledBookshelfFullnessSignalMode {
+public enum ChiseledBookshelfFullnessSignalMode implements ChiseledBookshelfFullnessSignalFunction {
 
     /**
      * Retains the vanilla behaviour of outputting a signal strength equivalent to the ordinal of the slot previously extracted from or inserted into.
@@ -29,15 +30,9 @@ public enum ChiseledBookshelfFullnessSignalMode {
         this.function = function;
     }
 
+    @Override
     public int getOutput(ChiseledBookshelfBlockEntity blockEntity) {
         return this.function.getOutput(blockEntity);
-    }
-
-    @FunctionalInterface
-    public interface ChiseledBookshelfFullnessSignalFunction {
-
-        int getOutput(ChiseledBookshelfBlockEntity blockEntity);
-
     }
 
 }

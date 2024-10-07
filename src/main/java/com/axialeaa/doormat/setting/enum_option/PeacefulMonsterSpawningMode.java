@@ -1,5 +1,6 @@
-package com.axialeaa.doormat.setting.enum_option.function;
+package com.axialeaa.doormat.setting.enum_option;
 
+import com.axialeaa.doormat.setting.enum_option.function.PeacefulMonsterSpawningPredicate;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
@@ -8,7 +9,7 @@ import net.minecraft.world.World;
 /**
  * @see <a href="https://github.com/axialeaa/DoormatCarpetExtension/wiki/Using-peacefulMonsterSpawning">Using peacefulMonsterSpawning</a>
  */
-public enum PeacefulMonsterSpawningMode {
+public enum PeacefulMonsterSpawningMode implements PeacefulMonsterSpawningPredicate {
 
     /**
      * Retains vanilla peaceful mode behaviour.
@@ -54,19 +55,13 @@ public enum PeacefulMonsterSpawningMode {
         this.predicate = predicate;
     }
 
+    @Override
     public boolean canSpawn(World world, BlockPos pos, SpawnReason reason) {
         return this.predicate.canSpawn(world, pos, reason);
     }
 
     public boolean isEnabled() {
         return this != FALSE;
-    }
-
-    @FunctionalInterface
-    public interface PeacefulMonsterSpawningPredicate {
-
-        boolean canSpawn(World world, BlockPos pos, SpawnReason reason);
-
     }
 
 }

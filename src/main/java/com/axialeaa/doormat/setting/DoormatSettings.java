@@ -5,7 +5,6 @@ import carpet.api.settings.Rule;
 import carpet.api.settings.Validators;
 import com.axialeaa.doormat.setting.condition.*;
 import com.axialeaa.doormat.setting.enum_option.*;
-import com.axialeaa.doormat.setting.enum_option.function.*;
 import com.axialeaa.doormat.setting.validator.*;
 
 import static carpet.api.settings.RuleCategory.*;

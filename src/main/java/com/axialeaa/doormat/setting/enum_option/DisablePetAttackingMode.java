@@ -1,9 +1,10 @@
-package com.axialeaa.doormat.setting.enum_option.function;
+package com.axialeaa.doormat.setting.enum_option;
 
+import com.axialeaa.doormat.setting.enum_option.function.DisablePetAttackingPredicate;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 
-public enum DisablePetAttackingMode {
+public enum DisablePetAttackingMode implements DisablePetAttackingPredicate {
 
     /**
      * Allows all players to hit all tamed pets.
@@ -28,19 +29,13 @@ public enum DisablePetAttackingMode {
         this.predicate = predicate;
     }
 
+    @Override
     public boolean shouldNegateDamage(PlayerEntity player, TameableEntity pet) {
         return this.predicate.shouldNegateDamage(player, pet);
     }
 
     public boolean isEnabled() {
         return this != FALSE;
-    }
-
-    @FunctionalInterface
-    public interface DisablePetAttackingPredicate {
-
-        boolean shouldNegateDamage(PlayerEntity player, TameableEntity pet);
-
     }
 
 }

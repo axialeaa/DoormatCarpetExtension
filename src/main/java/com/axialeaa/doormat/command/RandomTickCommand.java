@@ -6,8 +6,7 @@ import com.axialeaa.doormat.setting.DoormatSettings;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
@@ -15,7 +14,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
-
 import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
@@ -26,7 +24,7 @@ public class RandomTickCommand {
      * Stores a list of block positions to random tick next game tick, alongside the number of random ticks to send. This is a list and not a single entry for the offchance that two commands are run in the same tick.
      * @see RandomTickCommand#sendRandomTicks(ServerWorld)
      */
-    public static final Object2IntMap<BlockPos> SCHEDULED_POSITIONS = new Object2IntOpenHashMap<>();
+    public static final Object2IntArrayMap<BlockPos> SCHEDULED_POSITIONS = new Object2IntArrayMap<>();
 
     /**
      *<pre> .
@@ -96,19 +94,25 @@ public class RandomTickCommand {
         if (SCHEDULED_POSITIONS.isEmpty())
             return;
 
-        SCHEDULED_POSITIONS.forEach((pos, count) -> {
-            for (int i = 0; i < count; i++) {
-                BlockState blockState = world.getBlockState(pos);
+        Random random = world.getRandom();
 
-                if (!blockState.hasRandomTicks()) // If the block at this position no longer supports random ticks (it grows), break the loop
-                    break;
+        for (BlockPos pos : SCHEDULED_POSITIONS.keySet()) {
+            int count = SCHEDULED_POSITIONS.getInt(pos);
 
-                Random random = world.getRandom();
-                blockState.randomTick(world, pos, random);
-            }
+            sendRandomTick(world, pos, count, random);
+            SCHEDULED_POSITIONS.remove(pos, count);
+        }
+    }
 
-            SCHEDULED_POSITIONS.remove(pos, (int) count);
-        });
+    private static void sendRandomTick(ServerWorld world, BlockPos pos, int count, Random random) {
+        for (int i = 0; i < count; i++) {
+            BlockState blockState = world.getBlockState(pos);
+
+            if (!blockState.hasRandomTicks()) // If the block at this position no longer supports random ticks (it grows), break the loop
+                return;
+
+            blockState.randomTick(world, pos, random);
+        }
     }
 
 }

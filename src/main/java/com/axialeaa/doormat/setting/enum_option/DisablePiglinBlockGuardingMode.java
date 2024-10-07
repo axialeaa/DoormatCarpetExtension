@@ -1,8 +1,9 @@
-package com.axialeaa.doormat.setting.enum_option.function;
+package com.axialeaa.doormat.setting.enum_option;
 
+import com.axialeaa.doormat.setting.enum_option.function.DisablePiglinBlockGuardingPredicate;
 import net.minecraft.entity.player.PlayerEntity;
 
-public enum DisablePiglinBlockGuardingMode {
+public enum DisablePiglinBlockGuardingMode implements DisablePiglinBlockGuardingPredicate {
 
     /**
      * Allows piglins to be aggravated by players interacting with gold blocks or loot containers in any way.
@@ -31,15 +32,9 @@ public enum DisablePiglinBlockGuardingMode {
         this.predicate = predicate;
     }
 
+    @Override
     public boolean shouldNegateAnger(PlayerEntity player, boolean blockOpen) {
         return this.predicate.shouldNegateAnger(player, blockOpen);
-    }
-
-    @FunctionalInterface
-    public interface DisablePiglinBlockGuardingPredicate {
-
-        boolean shouldNegateAnger(PlayerEntity player, boolean blockOpen);
-
     }
 
 }
