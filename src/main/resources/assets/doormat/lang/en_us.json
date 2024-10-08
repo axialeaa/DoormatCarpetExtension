@@ -63,6 +63,7 @@
   "carpet.rule.disablePrematureBlockFalling.desc": "Disables shape updates scheduling gravity-affected blocks to fall even when they aren't able to",
   "carpet.rule.disableShulkerReproduction.desc": "Disables shulkers duplicating when hit by bullets",
   "carpet.rule.disableShulkerReproduction.extra.0": "Intended to be used in tandem with carpet's shulkerSpawningInEndCities.",
+  "carpet.rule.disableWaterMiningSlowdown.desc": "Disables the mining speed debuff when submerged in water",
   "carpet.rule.dispensersBuryItems.desc": "Allows dispensers to bury custom item stacks inside sand or gravel, turning them into suspicious blocks which players can brush",
   "carpet.rule.dragonEggFallingDelay.desc": "The time it takes for dragon eggs to fall after receiving a shape update, in ticks",
   "carpet.rule.endExitIgnoreLeaves.desc": "Players teleporting back to spawn from the end dimension will ignore leaves when deciding where to land, just like other entities",

@@ -132,6 +132,9 @@ public class DoormatSettings {
     @Rule( categories = { CREATIVE, SURVIVAL, DOORMAT } )
     public static boolean disableShulkerReproduction = false;
 
+    @Rule( categories = { CREATIVE, DOORMAT } )
+    public static boolean disableWaterMiningSlowdown = false;
+
     @Rule( categories = { DISPENSER, DOORMAT } )
     public static boolean dispensersBuryItems = false;
 
