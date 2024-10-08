@@ -67,7 +67,7 @@ public class RandomTickCommand {
             return 0;
         }
 
-        SCHEDULED_POSITIONS.putIfAbsent(pos, count);
+        SCHEDULED_POSITIONS.put(pos, count);
         Messenger.m(source, "w Sent %s random tick(s) to the block at ".formatted(count), Messenger.tp("c", pos));
 
         return Command.SINGLE_SUCCESS;
@@ -105,9 +105,9 @@ public class RandomTickCommand {
     }
 
     private static void sendRandomTick(ServerWorld world, BlockPos pos, int count, Random random) {
-        for (int i = 0; i < count; i++) {
-            BlockState blockState = world.getBlockState(pos);
+        BlockState blockState = world.getBlockState(pos);
 
+        for (int i = 0; i < count; i++) {
             if (!blockState.hasRandomTicks()) // If the block at this position no longer supports random ticks (it grows), break the loop
                 return;
 
